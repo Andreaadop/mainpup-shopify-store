@@ -2,19 +2,21 @@
 // Saves to ./temporary screenshots/screenshot-N[-label].png (auto-incremented).
 // Optional --eval runs JS in the page before screenshotting (e.g. to set state).
 //
-// Puppeteer install location: C:/Users/aracy/AppData/Local/Temp/puppeteer-test/
-// Chrome cache:               C:/Users/aracy/.cache/puppeteer/
+// Puppeteer install location is resolved dynamically per machine:
+//   - Default:  <OS temp dir>/puppeteer-test/
+//   - Override: set PUPPETEER_ROOT env var to a custom path
 //
-// If puppeteer is not yet installed there:
-//   cd C:/Users/aracy/AppData/Local/Temp/puppeteer-test
+// If puppeteer is not yet installed there, install it:
+//   cd <OS temp dir>/puppeteer-test
 //   npm init -y
 //   npm install puppeteer
 
 import { readdir, mkdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
 
-const PUPPETEER_ROOT = "C:/Users/aracy/AppData/Local/Temp/puppeteer-test";
+const PUPPETEER_ROOT = process.env.PUPPETEER_ROOT || join(tmpdir(), "puppeteer-test");
 const SCREENSHOT_DIR = resolve("./temporary screenshots");
 
 const url = process.argv[2];

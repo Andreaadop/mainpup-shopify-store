@@ -95,7 +95,7 @@ Stay pragmatic. Stay reliable. Keep learning.
 - If the server is already running, do not start a second instance.
 
 ### Screenshot Workflow
-- Puppeteer is installed at `C:/Users/aracy/AppData/Local/Temp/puppeteer-test/`. Chrome cache is at `C:/Users/aracy/.cache/puppeteer/`.
+- Puppeteer is installed at `<OS temp dir>/puppeteer-test/` (path resolved dynamically per machine via `os.tmpdir()`). Override by setting the `PUPPETEER_ROOT` env var.
 - **Always screenshot from localhost:** `node screenshot.mjs http://localhost:3000`
 - Screenshots are saved automatically to `./temporary screenshots/screenshot-N.png` (auto-incremented, never overwritten).
 - Optional label suffix: `node screenshot.mjs http://localhost:3000 label` → saves as `screenshot-N-label.png`

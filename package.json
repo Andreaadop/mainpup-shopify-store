@@ -1,0 +1,11 @@
+{
+  "name": "mainpup-shopify-store",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node serve.mjs",
+    "screenshot": "node screenshot.mjs"
+  },
+  "dependencies": {}
+}

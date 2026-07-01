@@ -1,0 +1,16 @@
+.env
+credentials.json
+token.json
+shopify-key.txt
+.mcp.json
+*-key.txt
+*-keys.txt
+*.secret
+node_modules/
+.tmp/
+temporary screenshots/
+vendor/
+theme/
+*.log
+.DS_Store
+Thumbs.db

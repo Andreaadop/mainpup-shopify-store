@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Past-Lives Quiz — mainpups</title>
+<meta name="description" content="Every pet has a secret past. Take the mainpups quiz to find out what yours was up to." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#F8EEE5',
+          'cream-deep': '#EFE2D3',
+          pink: '#F7D8F8',
+          peri: '#ABC5FE',
+          scarlet: '#F31F13',
+          burgundy: '#6C1736',
+          'burgundy-soft': '#8B2849',
+          navy: '#0B2D4F',
+          'navy-soft': '#1B4275',
+        },
+        fontFamily: {
+          display: ['Remaid', 'Georgia', 'serif'],
+          sans: ['Spline Sans', 'system-ui', 'sans-serif'],
+        },
+        letterSpacing: {
+          'tightest': '-0.04em',
+          'headline': '-0.03em',
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  @font-face {
+    font-family: 'Remaid';
+    src: url('../brand_assets/font/Remaid.ttf') format('truetype'),
+         url('../brand_assets/font/Remaid.otf') format('opentype');
+    font-display: swap;
+  }
+
+  html, body { background: #F8EEE5; }
+  body {
+    font-family: 'Spline Sans', system-ui, sans-serif;
+    color: #0B2D4F;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle paper grain overlay across whole viewport */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.4 0 0 0 0 0.18 0 0 0 0 0.21 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+
+  /* Decorative ambient color blobs (very subtle) */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 15% 10%, rgba(247, 216, 248, 0.35), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 90%, rgba(171, 197, 254, 0.25), transparent 65%);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: flex; }
+
+  /* Spring-style fade-up for screen entrance */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .anim-fade-up   { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .anim-fade-in   { animation: fadeIn 0.8s ease both; }
+  .anim-scale-in  { animation: scaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+  .delay-6 { animation-delay: 0.6s; }
+  .delay-7 { animation-delay: 0.7s; }
+  .delay-8 { animation-delay: 0.8s; }
+
+  /* Massive background question number */
+  .q-number-bg {
+    font-family: 'Remaid', Georgia, serif;
+    color: #EFE2D3;
+    font-size: clamp(180px, 30vw, 380px);
+    line-height: 0.85;
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    user-select: none;
+  }
+
+  /* Headline display */
+  .display {
+    font-family: 'Remaid', Georgia, serif;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  /* Answer card */
+  .answer-card {
+    background: #FBF4EA;
+    border: 1.5px solid rgba(11, 45, 79, 0.12);
+    border-radius: 18px;
+    padding: 18px 22px;
+    text-align: left;
+    cursor: pointer;
+    transform: translateY(0);
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 200ms ease,
+                border-color 200ms ease,
+                box-shadow 250ms ease;
+    box-shadow: 0 1px 0 rgba(11, 45, 79, 0.05);
+    color: #0B2D4F;
+    font-size: 17px;
+    line-height: 1.45;
+    width: 100%;
+  }
+  .answer-card:hover {
+    transform: translateY(-2px);
+    background: #FFFBF5;
+    border-color: rgba(108, 23, 54, 0.45);
+    box-shadow:
+      0 12px 28px -10px rgba(108, 23, 54, 0.28),
+      0 4px 10px -4px rgba(108, 23, 54, 0.15),
+      inset 0 0 0 1px rgba(108, 23, 54, 0.04);
+  }
+  .answer-card:active { transform: translateY(0); }
+  .answer-card:focus-visible {
+    outline: 2px solid #F31F13;
+    outline-offset: 2px;
+  }
+  .answer-card.selected {
+    background: #6C1736;
+    color: #F8EEE5;
+    border-color: #6C1736;
+    box-shadow:
+      0 14px 32px -10px rgba(108, 23, 54, 0.45),
+      0 6px 12px -4px rgba(243, 31, 19, 0.2),
+      inset 0 0 0 1px rgba(248, 238, 229, 0.1);
+  }
+  .answer-card.selected .answer-letter {
+    background: #F8EEE5;
+    color: #6C1736;
+  }
+  .answer-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #EFE2D3;
+    color: #6C1736;
+    font-family: 'Remaid', Georgia, serif;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  /* Primary CTA */
+  .btn-primary {
+    background: #F31F13;
+    color: #F8EEE5;
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                background 200ms ease,
+                box-shadow 250ms ease;
+    box-shadow:
+      0 8px 18px -6px rgba(243, 31, 19, 0.45),
+      0 3px 8px -2px rgba(108, 23, 54, 0.18);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    background: #d11a10;
+    box-shadow:
+      0 14px 28px -8px rgba(243, 31, 19, 0.55),
+      0 6px 12px -3px rgba(108, 23, 54, 0.25);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:focus-visible { outline: 2px solid #6C1736; outline-offset: 3px; }
+  .btn-primary:disabled {
+    background: #d4c2b3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Secondary CTA */
+  .btn-secondary {
+    background: transparent;
+    color: #6C1736;
+    border: 1.5px solid #6C1736;
+    border-radius: 999px;
+    padding: 13px 26px;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), background 200ms ease;
+  }
+  .btn-secondary:hover {
+    background: #6C1736;
+    color: #F8EEE5;
+    transform: translateY(-2px);
+  }
+  .btn-secondary:active { transform: translateY(0); }
+  .btn-secondary:focus-visible { outline: 2px solid #F31F13; outline-offset: 3px; }
+
+  /* Text input */
+  .text-input {
+    font-family: 'Remaid', Georgia, serif;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(11, 45, 79, 0.22);
+    color: #6C1736;
+    font-size: clamp(40px, 7vw, 72px);
+    text-align: center;
+    padding: 8px 4px;
+    width: 100%;
+    max-width: 600px;
+    letter-spacing: -0.03em;
+    transition: border-color 250ms ease;
+  }
+  .text-input:focus {
+    outline: none;
+    border-bottom-color: #F31F13;
+  }
+  .text-input::placeholder {
+    color: rgba(11, 45, 79, 0.25);
+    font-style: italic;
+  }
+
+  /* Pet-type big card */
+  .pet-card {
+    background: #FBF4EA;
+    border: 1.5px solid rgba(11, 45, 79, 0.12);
+    border-radius: 28px;
+    padding: 32px 24px;
+    cursor: pointer;
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), background 200ms ease, border-color 200ms ease, box-shadow 250ms ease;
+    box-shadow: 0 2px 0 rgba(11, 45, 79, 0.05);
+  }
+  .pet-card:hover {
+    transform: translateY(-4px);
+    background: #FFFBF5;
+    border-color: rgba(108, 23, 54, 0.5);
+    box-shadow:
+      0 18px 36px -12px rgba(108, 23, 54, 0.3),
+      0 6px 14px -4px rgba(108, 23, 54, 0.18);
+  }
+  .pet-card:focus-visible { outline: 2px solid #F31F13; outline-offset: 3px; }
+
+  /* Gender pill button row */
+  .pill-btn {
+    background: transparent;
+    color: #0B2D4F;
+    border: 1.5px solid rgba(11, 45, 79, 0.18);
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 200ms ease, background 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+  .pill-btn:hover {
+    background: #6C1736;
+    color: #F8EEE5;
+    border-color: #6C1736;
+    transform: translateY(-2px);
+  }
+  .pill-btn:focus-visible { outline: 2px solid #F31F13; outline-offset: 3px; }
+
+  /* Progress bar */
+  .progress-track {
+    background: rgba(108, 23, 54, 0.15);
+    height: 3px;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: #6C1736;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Result archetype "stamp" badge */
+  .stamp {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1.5px solid #6C1736;
+    border-radius: 4px;
+    color: #6C1736;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 600;
+    transform: rotate(-2deg);
+  }
+
+  /* Loading dots for result reveal */
+  @keyframes pulse-dot {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+  .loading-dot {
+    width: 12px; height: 12px; border-radius: 50%; background: #6C1736;
+    animation: pulse-dot 1.4s ease-in-out infinite;
+    display: inline-block;
+  }
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Selection on text */
+  ::selection { background: #6C1736; color: #F8EEE5; }
+
+  /* Result page bullets */
+  .obs-bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(11, 45, 79, 0.12);
+  }
+  .obs-bullet:last-child { border-bottom: none; }
+  .obs-bullet::before {
+    content: '';
+    flex-shrink: 0;
+    width: 8px; height: 8px;
+    background: #F31F13;
+    border-radius: 50%;
+    margin-top: 8px;
+  }
+
+  /* Mission strip + footer */
+  .footer-line { color: rgba(11, 45, 79, 0.5); font-size: 13px; }
+
+  /* Header logo wordmark */
+  .wordmark { height: 22px; width: auto; }
+
+  /* Big background pet word on intro */
+  .bg-phrase {
+    position: absolute;
+    font-family: 'Remaid', Georgia, serif;
+    color: rgba(108, 23, 54, 0.05);
+    font-size: clamp(140px, 22vw, 320px);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  /* Email input on result */
+  .email-input {
+    width: 100%;
+    background: #FBF4EA;
+    border: 1.5px solid rgba(11, 45, 79, 0.18);
+    border-radius: 999px;
+    padding: 14px 22px;
+    font-family: 'Spline Sans', sans-serif;
+    font-size: 16px;
+    color: #0B2D4F;
+    transition: border-color 200ms ease, background 200ms ease;
+  }
+  .email-input:focus {
+    outline: none;
+    border-color: #6C1736;
+    background: #FFFBF5;
+  }
+  .email-input::placeholder { color: rgba(11, 45, 79, 0.4); }
+</style>
+</head>
+<body class="relative">
+
+<!-- HEADER (visible across all screens) -->
+<header class="relative z-10 px-6 sm:px-10 lg:px-16 pt-8 pb-2 flex items-center justify-between">
+  <a href="/" class="flex items-center gap-3 group">
+    <img src="../brand_assets/Logo/mainpup-h-blue.svg" alt="mainpups" class="wordmark" />
+  </a>
+  <a href="/" class="text-xs uppercase tracking-[0.18em] text-burgundy opacity-70 hover:opacity-100 transition-opacity">← Back to shop</a>
+</header>
+
+<main class="relative z-10">
+
+  <!-- ============================================
+       SCREEN: INTRO
+  ============================================ -->
+  <section id="screen-intro" class="screen active relative items-center justify-center min-h-[80vh] px-6 sm:px-10 lg:px-16 py-16">
+    <span class="bg-phrase" style="top: 8%; left: -3%;">past</span>
+    <span class="bg-phrase" style="bottom: 4%; right: -3%;">lives</span>
+
+    <div class="relative z-10 max-w-[820px] mx-auto text-center">
+      <p class="anim-fade-up text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-6">A mainpups inquiry</p>
+
+      <h1 class="anim-fade-up delay-1 display text-burgundy text-[clamp(60px,11vw,156px)] mb-6">
+        Every pet has<br/><em class="not-italic">a secret past.</em>
+      </h1>
+
+      <p class="anim-fade-up delay-2 text-navy text-lg sm:text-xl max-w-[560px] mx-auto mb-12 opacity-80">
+        Maybe your dog was a chef. Maybe your cat was a deposed monarch. Ten questions. Ten possible past lives. One probably belongs to your pet.
+      </p>
+
+      <div class="anim-fade-up delay-3 flex flex-col sm:flex-row gap-4 items-center justify-center">
+        <button class="btn-primary" onclick="goTo('name')">Start the inquiry &nbsp;→</button>
+        <p class="text-sm text-navy opacity-50">Takes about 2 minutes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCREEN: PET NAME
+  ============================================ -->
+  <section id="screen-name" class="screen relative items-center justify-center min-h-[80vh] px-6 sm:px-10 lg:px-16 py-12">
+    <div class="relative z-10 w-full max-w-[760px] mx-auto text-center">
+      <p class="anim-fade-up text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-8">Step 1 of 3</p>
+
+      <h2 class="anim-fade-up delay-1 text-navy text-xl sm:text-2xl mb-10">
+        First — what's your pet's name?
+      </h2>
+
+      <form class="anim-fade-up delay-2" onsubmit="event.preventDefault(); submitName();">
+        <input
+          id="petNameInput"
+          type="text"
+          class="text-input"
+          placeholder="their name..."
+          maxlength="24"
+          autocomplete="off"
+          autofocus
+        />
+        <div class="mt-12 flex items-center justify-center gap-4">
+          <button id="nameNextBtn" type="submit" class="btn-primary" disabled>Continue &nbsp;→</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCREEN: PET TYPE
+  ============================================ -->
+  <section id="screen-type" class="screen relative items-center justify-center min-h-[80vh] px-6 sm:px-10 lg:px-16 py-12">
+    <div class="relative z-10 w-full max-w-[820px] mx-auto text-center">
+      <p class="anim-fade-up text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-8">Step 2 of 3</p>
+
+      <h2 class="anim-fade-up delay-1 display text-navy text-4xl sm:text-5xl mb-10">
+        Is <span id="typeNameDisplay" class="text-burgundy">your pet</span> a dog or a cat?
+      </h2>
+
+      <div class="anim-fade-up delay-2 grid grid-cols-2 gap-5 sm:gap-8 max-w-[560px] mx-auto">
+        <button class="pet-card" onclick="selectType('dog')">
+          <div class="text-7xl sm:text-8xl mb-4">🐶</div>
+          <p class="display text-3xl text-burgundy">Dog</p>
+        </button>
+        <button class="pet-card" onclick="selectType('cat')">
+          <div class="text-7xl sm:text-8xl mb-4">🐱</div>
+          <p class="display text-3xl text-burgundy">Cat</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCREEN: PET GENDER
+  ============================================ -->
+  <section id="screen-gender" class="screen relative items-center justify-center min-h-[80vh] px-6 sm:px-10 lg:px-16 py-12">
+    <div class="relative z-10 w-full max-w-[820px] mx-auto text-center">
+      <p class="anim-fade-up text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-8">Step 3 of 3</p>
+
+      <h2 class="anim-fade-up delay-1 display text-navy text-4xl sm:text-5xl mb-4">
+        And what's <span id="genderNameDisplay" class="text-burgundy">their</span> gender?
+      </h2>
+      <p class="anim-fade-up delay-2 text-navy opacity-60 mb-10 italic text-sm">So we get the pronouns right in their profile.</p>
+
+      <div class="anim-fade-up delay-3 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <button class="pill-btn" onclick="selectGender('he')">He / Boy</button>
+        <button class="pill-btn" onclick="selectGender('she')">She / Girl</button>
+        <button class="pill-btn" onclick="selectGender('they')">They / Prefer not to say</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCREEN: QUESTION (reused for all 10)
+  ============================================ -->
+  <section id="screen-question" class="screen relative items-start justify-center min-h-[85vh] px-6 sm:px-10 lg:px-16 py-10">
+    <div id="questionBgNum" class="q-number-bg absolute" style="top: 4%; right: 4%;">01</div>
+
+    <div class="relative z-10 w-full max-w-[780px] mx-auto">
+      <!-- Progress -->
+      <div class="mb-8 flex items-center gap-4">
+        <span class="text-xs uppercase tracking-[0.22em] text-burgundy opacity-80" id="progressLabel">Question 1 of 10</span>
+        <div class="progress-track flex-1">
+          <div id="progressFill" class="progress-fill" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <!-- Question -->
+      <h2 id="questionText" class="display text-navy text-3xl sm:text-4xl lg:text-5xl mb-10 anim-fade-up">Question loading…</h2>
+
+      <!-- Answers -->
+      <div id="answerList" class="space-y-3"></div>
+
+      <!-- Footer / next -->
+      <div class="mt-10 flex items-center justify-between">
+        <button id="prevBtn" class="btn-secondary text-sm" style="visibility: hidden;" onclick="prevQuestion()">← Previous</button>
+        <button id="nextBtn" class="btn-primary" disabled onclick="nextQuestion()">Next &nbsp;→</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCREEN: RESULT LOADING
+  ============================================ -->
+  <section id="screen-loading" class="screen relative items-center justify-center min-h-[80vh] px-6 sm:px-10 lg:px-16 py-12">
+    <div class="relative z-10 max-w-[600px] mx-auto text-center">
+      <p class="anim-fade-up text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-8">Filing the report</p>
+      <h2 class="anim-fade-up delay-1 display text-burgundy text-5xl sm:text-6xl mb-10">
+        Reviewing <em class="not-italic" id="loadingName">your pet</em>'s case…
+      </h2>
+      <div class="anim-fade-up delay-2 flex gap-3 justify-center mb-12">
+        <span class="loading-dot"></span>
+        <span class="loading-dot"></span>
+        <span class="loading-dot"></span>
+      </div>
+      <p class="anim-fade-up delay-3 text-sm italic text-navy opacity-50">Cross-referencing past lives.</p>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCREEN: RESULT
+  ============================================ -->
+  <section id="screen-result" class="screen relative items-start justify-center min-h-screen px-6 sm:px-10 lg:px-16 py-12">
+    <div class="relative z-10 w-full max-w-[780px] mx-auto">
+
+      <!-- Result intro -->
+      <div class="text-center mb-8">
+        <div class="anim-fade-in stamp mb-6">CASE FILE · MAINPUPS RECORDS</div>
+        <p class="anim-fade-up delay-1 text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-3" id="resultPetName">FOR: PET NAME</p>
+        <p class="anim-fade-up delay-2 text-navy opacity-60 mb-6" id="resultPreamble">After review, the records indicate that in a previous life,<br/><span id="resultPronoun" class="font-medium">they were</span>:</p>
+      </div>
+
+      <!-- Archetype name -->
+      <h1 id="resultArchetype" class="anim-scale-in delay-3 display text-burgundy text-center text-[clamp(56px,11vw,140px)] mb-4">
+        The Archetype
+      </h1>
+
+      <!-- Quote -->
+      <p id="resultQuote" class="anim-fade-up delay-4 text-center italic text-navy text-xl sm:text-2xl mb-12 opacity-80">
+        "Some opening line."
+      </p>
+
+      <!-- Divider -->
+      <div class="anim-fade-up delay-5 flex items-center gap-4 mb-12">
+        <div class="flex-1 h-px bg-burgundy opacity-20"></div>
+        <span class="text-xs uppercase tracking-[0.22em] text-burgundy opacity-70">The dossier</span>
+        <div class="flex-1 h-px bg-burgundy opacity-20"></div>
+      </div>
+
+      <!-- Backstory -->
+      <p id="resultBackstory" class="anim-fade-up delay-6 text-navy text-lg leading-[1.7] mb-12 first-letter:font-display first-letter:text-burgundy first-letter:text-7xl first-letter:float-left first-letter:mr-3 first-letter:leading-[0.85] first-letter:mt-2">
+        Backstory text goes here.
+      </p>
+
+      <!-- Observable behaviors -->
+      <div class="anim-fade-up delay-7 mb-12">
+        <h3 class="text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-5">You'll know it's <span id="bulletPronoun">them</span> because</h3>
+        <div id="resultBullets" class="space-y-1"></div>
+      </div>
+
+      <!-- Tolerate line -->
+      <div class="anim-fade-up delay-8 mb-16 p-6 bg-pink/30 border-l-4 border-burgundy">
+        <p class="text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-2">Will tolerate</p>
+        <p id="resultTolerate" class="text-navy text-lg italic">Their product preferences.</p>
+      </div>
+
+      <!-- Email capture -->
+      <div class="anim-fade-up delay-8 mb-16 p-8 sm:p-10 bg-peri/30 rounded-2xl text-center" style="box-shadow: 0 12px 32px -12px rgba(11, 45, 79, 0.18);">
+        <h3 class="display text-burgundy text-3xl sm:text-4xl mb-3">
+          Want <span id="emailName">your pet</span>'s past life on a shirt?
+        </h3>
+        <p class="text-navy opacity-70 mb-6">We'll send 15% off + the products that match <span id="emailPronoun">them</span>.</p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-[500px] mx-auto" onsubmit="event.preventDefault(); submitEmail();">
+          <input type="email" required class="email-input" placeholder="your@email.com" />
+          <button type="submit" class="btn-primary whitespace-nowrap">Send it →</button>
+        </form>
+        <p class="text-xs italic text-navy opacity-50 mt-4">No spam. Unsubscribe whenever.</p>
+      </div>
+
+      <!-- Share -->
+      <div class="mb-16 text-center">
+        <p class="text-xs uppercase tracking-[0.22em] text-burgundy opacity-80 mb-5">Share <span id="shareName">your pet</span>'s past life</p>
+        <div class="flex gap-3 justify-center flex-wrap">
+          <button class="pill-btn" onclick="sharePlatform('twitter')">Twitter / X</button>
+          <button class="pill-btn" onclick="sharePlatform('facebook')">Facebook</button>
+          <button class="pill-btn" onclick="sharePlatform('copy')">Copy link</button>
+        </div>
+      </div>
+
+      <!-- Retake -->
+      <div class="text-center mb-16">
+        <button class="btn-secondary" onclick="resetQuiz()">Take it again for another pet →</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER (always visible) -->
+<footer class="relative z-10 px-6 sm:px-10 lg:px-16 py-10 mt-8 border-t border-burgundy/15">
+  <div class="max-w-[1200px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="footer-line">© 2026 mainpups · A portion of every order funds Venezuela earthquake recovery <a href="/" class="underline hover:text-burgundy">Learn more →</a></p>
+    <p class="footer-line italic">made with care in miami</p>
+  </div>
+</footer>
+
+<!-- =====================================================
+     QUIZ ENGINE
+===================================================== -->
+<script>
+'use strict';
+
+// ---------- STATE ----------
+const STATE = {
+  petName: '',
+  petType: '', // 'dog' | 'cat'
+  petGender: 'they', // 'he' | 'she' | 'they'
+  currentQuestion: 0,
+  answers: new Array(10).fill(null), // index of selected answer per question
+  selectedAnswerIdx: null,
+};
+
+// ---------- PRONOUN MAPS ----------
+const PRONOUNS = {
+  he:   { they: 'he', them: 'him', their: 'his', theirs: 'his', themself: 'himself',
+          is_are: 'is', has_have: 'has', was_were: 'was', does_do: 'does', s_if_singular: 's' },
+  she:  { they: 'she', them: 'her', their: 'her', theirs: 'hers', themself: 'herself',
+          is_are: 'is', has_have: 'has', was_were: 'was', does_do: 'does', s_if_singular: 's' },
+  they: { they: 'they', them: 'them', their: 'their', theirs: 'theirs', themself: 'themself',
+          is_are: 'are', has_have: 'have', was_were: 'were', does_do: 'do', s_if_singular: '' },
+};
+
+// Render a template with pronoun tokens. Handles {{They}} (capitalized) automatically.
+function renderTokens(text, gender, name) {
+  const p = PRONOUNS[gender];
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+  let out = text
+    .replace(/\{\{name\}\}/g, name)
+    .replace(/\{\{Name\}\}/g, name)
+    .replace(/\{\{they\}\}/g, p.they)
+    .replace(/\{\{them\}\}/g, p.them)
+    .replace(/\{\{their\}\}/g, p.their)
+    .replace(/\{\{theirs\}\}/g, p.theirs)
+    .replace(/\{\{themself\}\}/g, p.themself)
+    .replace(/\{\{They\}\}/g, cap(p.they))
+    .replace(/\{\{Them\}\}/g, cap(p.them))
+    .replace(/\{\{Their\}\}/g, cap(p.their))
+    .replace(/\{\{Theirs\}\}/g, cap(p.theirs))
+    .replace(/\{\{is\/are\}\}/g, p.is_are)
+    .replace(/\{\{Is\/Are\}\}/g, cap(p.is_are))
+    .replace(/\{\{has\/have\}\}/g, p.has_have)
+    .replace(/\{\{Has\/Have\}\}/g, cap(p.has_have))
+    .replace(/\{\{Has\/have\}\}/g, cap(p.has_have))
+    .replace(/\{\{was\/were\}\}/g, p.was_were)
+    .replace(/\{\{Was\/Were\}\}/g, cap(p.was_were))
+    .replace(/\{\{does\/do\}\}/g, p.does_do)
+    .replace(/\{\{Does\/Do\}\}/g, cap(p.does_do))
+    .replace(/\{\{s_if_singular\}\}/g, p.s_if_singular);
+
+  // Fix "Capitalized at start of sentence after a period" for stray pronouns
+  out = out.replace(/(^|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+
+  return out;
+}
+
+// ---------- ARCHETYPES ----------
+const ARCHETYPES = ['loungeSinger', 'cowboyPoet', 'hollywoodStar', 'therapist',
+                    'retiredSpy', 'popStar', 'chef', 'deposedMonarch',
+                    'conspiracyTheorist', 'athlete'];
+
+const ARCHETYPE_NAMES = {
+  loungeSinger: 'The Lounge Singer',
+  cowboyPoet: 'The Cowboy Poet',
+  hollywoodStar: 'The Old Hollywood Star',
+  therapist: 'The Therapist',
+  retiredSpy: 'The Retired Spy',
+  popStar: 'The Pop Star',
+  chef: 'The Chef',
+  deposedMonarch: 'The Deposed Monarch',
+  conspiracyTheorist: 'The Conspiracy Theorist',
+  athlete: 'The Athlete',
+};
+
+// ---------- PROFILES (Dog + Cat versions, tokenized) ----------
+const PROFILES = {
+  loungeSinger: {
+    dog: {
+      quote: "I do my best work after midnight.",
+      backstory: "Las Vegas, 1972. You'd find {{them}} at the Sands — three sets a night, gold collar catching the spotlight, a small but devoted following. The marriage to a poodle from Reno didn't last. Neither did the Capitol Records contract. After a brief disappearance from the public eye (1978–1982, no comment), {{they}} reemerged in suburban America to live a quieter life. {{They}} {{is/are}} now your golden retriever. The retirement {{is/are}}, allegedly, voluntary.",
+      bullets: [
+        "{{They}} {{does/do}} not howl at sirens — {{they}} howl{{s_if_singular}} along to the radio, but only certain songs",
+        "{{They}} cannot be photographed in bad lighting",
+        "{{They}} expect{{s_if_singular}} to be greeted when {{they}} enter{{s_if_singular}} a room",
+        "The 2 a.m. zoomies {{is/are}} not zoomies. That's {{their}} set.",
+      ],
+      tolerate: "anything that says VIP, anything with rhinestones, a tasteful spotlight.",
+    },
+    cat: {
+      quote: "Darling, you missed my set.",
+      backstory: "Manhattan, 1958. A residency at the Stork Club, then the Plaza, then a smaller venue you've never heard of. The press loved {{them}}. The press also destroyed {{them}}, but that's a longer story. {{They}} retired at the height of {{their}} fame, vanished for forty years, and reappeared in your living room with no explanation and no apology.",
+      bullets: [
+        "{{They}} emerge{{s_if_singular}} from another room precisely when you have guests",
+        "{{They}} expect{{s_if_singular}} applause for routine activities",
+        "{{They}} will only nap in the most dramatic patches of sunlight",
+        "{{They}} {{has/have}} never knocked anything off a counter by accident. That's {{their}} finale.",
+      ],
+      tolerate: "anything velvet, satin, or with {{their}} initials embroidered on it. Anything tacky {{is/are}} beneath {{them}}.",
+    },
+  },
+  cowboyPoet: {
+    dog: {
+      quote: "I've seen things in the backyard you wouldn't believe.",
+      backstory: "{{They}} rode through Wyoming in a hat that wasn't {{theirs}}. Lost a friend in Idaho — never talks about it. Took a job as a cattle dog for three winters, then walked off the ranch one morning and never explained why. Found {{their}} way to your front porch by sundown. Whatever {{they}} {{was/were}} looking for, {{they}} think{{s_if_singular}} it might be you. {{They}} will not confirm this. {{They}} {{is/are}} looking at the horizon.",
+      bullets: [
+        "{{They}} sigh{{s_if_singular}} deeply when you ask if {{they}} want{{s_if_singular}} to go on a walk",
+        "{{They}} stand{{s_if_singular}} still in tall grass, watching nothing in particular",
+        "{{They}} {{is/are}} not interested in your problems but somehow listen{{s_if_singular}} anyway",
+        "{{They}} will guard you with {{their}} life, but won't make a big thing of it",
+      ],
+      tolerate: "weathered leather, denim, anything with a sunset on it.",
+    },
+    cat: {
+      quote: "The plains were colder than they tell you.",
+      backstory: "Drifted west from Boston in the 1880s. Did some work {{they}} would rather not discuss. Lost a brother in a saloon over a misunderstanding. Spent twenty years on the Oregon coast in self-imposed exile, then disappeared one foggy morning. Reappeared on your couch with no luggage and a small notebook {{they}} will not let you read. {{They}} {{has/have}} not aged. You have stopped asking.",
+      bullets: [
+        "{{They}} stare{{s_if_singular}} out the window with the weight of three centuries",
+        "{{They}} come{{s_if_singular}} when called, but on {{their}} schedule, like a town witness",
+        "{{They}} mourn{{s_if_singular}} birds {{they}} {{has/have}} never met",
+        "{{Their}} purr sounds like distant thunder",
+      ],
+      tolerate: "anything earth-toned, anything embroidered, anything that smells of cedar.",
+    },
+  },
+  hollywoodStar: {
+    dog: {
+      quote: "I don't do interviews.",
+      backstory: "Studio era. Three pictures with Cary Grant, one with Hepburn, the rest {{they}} {{is/are}} contractually unable to discuss. There {{was/were}} a scandal. There {{was/were}} a comeback. There {{was/were}}, eventually, a quiet exit from Beverly Hills under a different name. {{They}} now live{{s_if_singular}} with you, a development {{they}} refer{{s_if_singular}} to in {{their}} memoirs as \"the next chapter.\" The memoirs {{is/are}} unpublished. {{They}} {{is/are}} the only one writing them.",
+      bullets: [
+        "{{They}} pose{{s_if_singular}}, even when no one {{is/are}} looking",
+        "{{Their}} left side {{is/are}} {{their}} good side and {{they}} know{{s_if_singular}} it",
+        "{{They}} respond{{s_if_singular}} to attention but never seek{{s_if_singular}} it (do not insult {{them}} by suggesting {{they}} {{does/do}})",
+        "{{They}} {{has/have}} favorite chairs the way other pets have favorite people",
+      ],
+      tolerate: "black-and-white photography, monogrammed anything, a single fresh rose by {{their}} bed.",
+    },
+    cat: {
+      quote: "I retired. I did not disappear.",
+      backstory: "Born in 1931 at MGM. Walked off the set of a film you've heard of and refused to ever name it. Married four times — two of them famous, two of them not, all of them brief. Last seen publicly in 1964, drinking a martini at the Beverly Hills Hotel. {{They}} turned up at your back door in 2023 with no explanation and a slight British accent {{they}} {{does/do}} not always remember to maintain.",
+      bullets: [
+        "{{They}} sit{{s_if_singular}} with {{their}} tail wrapped around {{their}} paws like a press photo",
+        "{{They}} watch{{s_if_singular}} old films with you and judges silently",
+        "{{They}} {{has/have}} never knocked anything off a table without a reason",
+        "The ear flicker means get out. You have been warned.",
+      ],
+      tolerate: "silk, white roses, the idea of a gilded mirror.",
+    },
+  },
+  therapist: {
+    dog: {
+      quote: "I'm not going to tell you what to do.",
+      backstory: "Trained at a small but respected institute in the Pacific Northwest. Specialized in middle-aged anxiety and unresolved childhood things. Practiced for thirty-six years, never once raised {{their}} voice, retired with honors. Came to you in {{their}} next life. {{They}} {{has/have}} no plans to take on new patients. You {{is/are}} the exception. You {{is/are}} always the exception.",
+      bullets: [
+        "{{They}} hold{{s_if_singular}} eye contact for an uncomfortable but somehow useful amount of time",
+        "{{They}} show{{s_if_singular}} up in the room when you're crying without being called",
+        "{{They}} sigh{{s_if_singular}} with you, never at you",
+        "{{They}} absorb{{s_if_singular}} your bad day the way a sponge absorbs water, and never asks for credit",
+      ],
+      tolerate: "soft neutrals, anything cable-knit, a quiet room.",
+    },
+    cat: {
+      quote: "Tell me more about your mother.",
+      backstory: "{{They}} wrote three books before {{they}} stopped publishing. {{They}} still get{{s_if_singular}} letters. {{They}} {{does/do}} not reply. {{They}} practice{{s_if_singular}} now from your couch, where {{they}} take{{s_if_singular}} only one client (you) and charges nothing (everything). {{They}} {{has/have}} been listening. {{They}} {{has/have}} formed opinions. {{They}} {{is/are}} too polite to share them unprompted, but the door {{is/are}}, of course, always open.",
+      bullets: [
+        "{{They}} enter{{s_if_singular}} the room when you're spiraling and lies down within sight",
+        "{{They}} blink{{s_if_singular}} at you very slowly, like a benediction",
+        "{{They}} {{has/have}} never once judged you out loud",
+        "{{They}} {{is/are}} judging you. Quietly. Lovingly.",
+      ],
+      tolerate: "linen, raw silk, anything in earth tones, a small notebook for notes {{they}} will never write.",
+    },
+  },
+  retiredSpy: {
+    dog: {
+      quote: "I cannot confirm or deny that.",
+      backstory: "Three decades in the field. Posted in Vienna, Cairo, and a city you've never heard of. Survived four assassination attempts, three of them on the same Tuesday. Retired under a new name, in a new town, in a small house with a fence {{they}} could clear if {{they}} had to. {{They}} chose this life. {{They}} could leave it tomorrow. {{They}} won't.",
+      bullets: [
+        "{{They}} notice{{s_if_singular}} the mailman before the mailman notices anything",
+        "{{They}} {{has/have}} a primary exit and three backups",
+        "{{They}} sleep{{s_if_singular}} lightly even when {{they}} appear{{s_if_singular}} to be unconscious",
+        "{{They}} trust{{s_if_singular}} you completely but {{has/have}} run the analysis",
+      ],
+      tolerate: "dark canvas, weathered brass, anything in deep navy.",
+    },
+    cat: {
+      quote: "I never officially worked for them.",
+      backstory: "KGB-adjacent, 1970s, the kind of operative who never appeared on a list because {{they}} never finished a mission with a body count. {{They}} defected sometime in the late '80s and lived in three countries before settling here. {{They}} {{does/do}} not discuss the past. {{They}} {{does/do}} not discuss the present. {{They}} {{is/are}} watching the window. The window {{is/are}} fine.",
+      bullets: [
+        "{{They}} know{{s_if_singular}} when someone {{is/are}} approaching the door before the doorbell rings",
+        "{{They}} {{does/do}} not enter a room until {{they}} {{has/have}} confirmed the room",
+        "{{They}} {{has/have}} at least three hiding spots you {{does/do}} not know about",
+        "{{They}} {{has/have}} been counting the steps from the couch to the back door since you adopted {{them}}",
+      ],
+      tolerate: "charcoal grey, oxidized silver, anything with a clean line.",
+    },
+  },
+  popStar: {
+    dog: {
+      quote: "Don't @ me.",
+      backstory: "Three platinum albums by twenty-two. A breakup tour that broke records. A documentary you have not been invited to watch. {{They}} moved to a quiet town to \"focus on the music,\" which {{they}} {{is/are}} not currently making. {{They}} {{has/have}} a podcast. The podcast {{is/are}} also not currently being made. {{They}} {{is/are}}, however, fully booked.",
+      bullets: [
+        "{{They}} demand{{s_if_singular}} attention like it's a contractual obligation",
+        "{{They}} give{{s_if_singular}} you the cold shoulder when other dogs {{is/are}} around (image)",
+        "{{They}} pose{{s_if_singular}} for every photo whether you asked or not",
+        "{{They}} {{has/have}} a signature scream. You've heard it. You will hear it again.",
+      ],
+      tolerate: "chrome, neon, anything backlit, anything that looks expensive in dim light.",
+    },
+    cat: {
+      quote: "My team handles that.",
+      backstory: "{{They}} rose to fame on a song you cannot escape and {{has/have}} been milking it for nine years. {{They}} {{does/do}} collaborations now — exclusively with cats who {{is/are}} slightly less famous than {{them}}, never more. {{They}} moved in with you because the lease on {{their}} last place \"got complicated.\" {{They}} {{has/have}} been here ten months. {{They}} {{has/have}} not unpacked. The team {{is/are}} handling it.",
+      bullets: [
+        "{{They}} walk{{s_if_singular}} into every room like {{they}} {{is/are}} making an entrance",
+        "{{They}} accept{{s_if_singular}} treats with the visible disappointment of someone expecting champagne",
+        "{{They}} {{does/do}} not deign to play with toys beneath {{their}} level",
+        "{{They}} {{has/have}}, on more than one occasion, ignored you for sport",
+      ],
+      tolerate: "holographic anything, faux fur, a soft pink that's almost white.",
+    },
+  },
+  chef: {
+    dog: {
+      quote: "That's not how you cut an onion.",
+      backstory: "Trained in Lyon. Worked under three Michelin-starred chefs, walked out on all of them. Opened {{their}} own place in 2009, lost it in a divorce in 2014, {{has/have}} been freelancing ever since. {{They}} came to live with you because, in {{their}} words, \"the kitchen needed an adult.\" {{They}} {{is/are}} the adult. The kitchen {{is/are}} yours. {{They}} {{has/have}} Opinions.",
+      bullets: [
+        "{{They}} sit{{s_if_singular}} exactly underfoot while you cook, supervising",
+        "{{They}} {{is/are}} offended by the smell of garlic powder",
+        "{{They}} {{has/have}} watched you make rice wrong and {{has/have}} not recovered",
+        "{{They}} become{{s_if_singular}} deeply emotional when you eat takeout",
+      ],
+      tolerate: "linen aprons, copper pots in art form, anything that says bon appétit unironically.",
+    },
+    cat: {
+      quote: "This is not how my mother made it.",
+      backstory: "{{They}} owned a small trattoria in Rome for eighteen years. The reviews {{was/were}} excellent. {{Their}} marriage {{was/were}} not. {{They}} emigrated to New York to \"make something of {{themself}}\" and instead made a series of magnificent meals for friends who didn't deserve them. {{They}} now live{{s_if_singular}} with you. {{They}} watch{{s_if_singular}} you cook. {{They}} {{is/are}} making notes.",
+      bullets: [
+        "{{They}} sit{{s_if_singular}} on the counter like a sous chef in protest",
+        "{{They}} refuse{{s_if_singular}} to eat anything below a certain quality threshold ({{their}} threshold)",
+        "{{They}} {{has/have}} knocked over the salt twice this week, both times deliberately",
+        "{{They}} judge{{s_if_singular}} your wine choices in silence, which {{is/are}} worse than out loud",
+      ],
+      tolerate: "terracotta, fresh herbs, anything with the word cucina on it.",
+    },
+  },
+  deposedMonarch: {
+    dog: {
+      quote: "I used to have a tower.",
+      backstory: "The kingdom {{was/were}} small. The kingdom {{was/were}} real. The kingdom {{is/are}} no longer. {{They}} blame{{s_if_singular}} the merchants, the church, and {{their}} cousin (especially {{their}} cousin). {{They}} survived the uprising by going into hiding in a series of inns, then a monastery, then yours. {{They}} {{is/are}} grateful for the asylum. {{They}} would also like a throne. The couch {{is/are}} acceptable, temporarily.",
+      bullets: [
+        "{{They}} survey{{s_if_singular}} the yard from a high vantage point at dusk",
+        "{{They}} give{{s_if_singular}} you a look that says do you know who I {{was/were}}",
+        "{{They}} {{is/are}} offended when {{their}} food bowl {{is/are}} moved without consultation",
+        "{{They}} suffer{{s_if_singular}} from a brooding moodiness on overcast days",
+      ],
+      tolerate: "velvet, burgundy, anything in heavy gold thread, a small crown for special occasions.",
+    },
+    cat: {
+      quote: "In another time, you would address me as Your Grace.",
+      backstory: "{{They}} ruled a small principality from 1612 to 1638, until the conspiracy. The conspiracy {{was/were}}, in {{their}} words, \"complicated and rude.\" {{They}} {{has/have}} been in exile in seventeen different homes since then. Yours {{is/are}} the longest {{they}} {{has/have}} stayed. {{They}} {{is/are}} not, {{they}} insist{{s_if_singular}}, getting attached. {{They}} {{is/are}} biding {{their}} time. {{They}} {{is/are}} also extremely comfortable.",
+      bullets: [
+        "{{They}} walk{{s_if_singular}} ahead of you, expecting you to follow",
+        "{{They}} {{has/have}} chosen a specific window and considers it {{their}} balcony",
+        "{{They}} accept{{s_if_singular}} affection like a tax {{they}} {{is/are}} collecting",
+        "{{They}} {{has/have}}, on more than one occasion, sat in your laundry basket as if it {{was/were}} a court",
+      ],
+      tolerate: "anything jewel-toned, anything with a tassel, a small bell {{they}} alone {{is/are}} allowed to ring.",
+    },
+  },
+  conspiracyTheorist: {
+    dog: {
+      quote: "The mailman knows.",
+      backstory: "{{They}} {{has/have}} been collecting evidence since {{they}} {{was/were}} a puppy. {{They}} {{has/have}} theories about the vacuum, the Roomba, the neighbor's car, and the squirrel — especially the squirrel. {{They}} {{has/have}} tried to alert you several times. You have not been receptive. {{They}} {{is/are}} not deterred. {{They}} {{has/have}} receipts. {{They}} {{has/have}} buried them in the yard.",
+      bullets: [
+        "{{They}} bark{{s_if_singular}} at things that {{is/are}} not, technically, there",
+        "{{They}} {{has/have}} at least four food caches and you've found none of them",
+        "{{They}} stare{{s_if_singular}} at the ceiling fan with the focused energy of someone with a working theory",
+        "{{They}} become{{s_if_singular}} inconsolable when packages arrive without explanation",
+      ],
+      tolerate: "anything camo, anything with the words I knew it, a small notebook {{they}} will chew but not write in.",
+    },
+    cat: {
+      quote: "The water in this house is being monitored.",
+      backstory: "{{They}} {{has/have}} been on alert since {{they}} {{was/were}} a kitten. {{They}} know{{s_if_singular}} the wifi password {{is/are}} fake. {{They}} know{{s_if_singular}} the houseplant {{is/are}} listening. {{They}} suspect{{s_if_singular}} the bird feeder {{is/are}} a coordinated psyop and {{they}} {{has/have}} said so, repeatedly, to anyone who will look at {{them}}. {{They}} {{does/do}} not trust the new bag of food. {{They}} {{does/do}} not trust the old bag of food either. The vet appointment {{was/were}} a setup.",
+      bullets: [
+        "{{They}} refuse{{s_if_singular}} to drink water that {{has/have}} been sitting \"too long\" — {{they}} will not specify how long",
+        "{{They}} hide{{s_if_singular}} items in places you'd never think to check, then forgets where",
+        "{{They}} watch{{s_if_singular}} television with the focused intensity of a researcher",
+        "{{They}} {{has/have}}, on multiple occasions, refused to eat until you've eaten first",
+      ],
+      tolerate: "tinfoil-coded patterns, anything in deep forest green, anything with the words I'm watching.",
+    },
+  },
+  athlete: {
+    dog: {
+      quote: "Sleep is for the weak.",
+      backstory: "{{They}} trained in the mountains. {{They}} {{has/have}} run marathons no one {{has/have}} clocked. {{They}} {{does/do}} pull-ups on the couch when you're not watching. {{Their}} diet {{is/are}} strict, {{their}} stretching routine {{is/are}} non-negotiable, and {{their}} resting heart rate {{is/are}} the envy of the dog park. {{They}} {{does/do}} not understand why you sit so much. {{They}} {{is/are}}, gently, judging you.",
+      bullets: [
+        "{{They}} {{is/are}} awake before your alarm and stretching by the time you're upright",
+        "{{They}} {{does/do}} not \"play\" — {{they}} train{{s_if_singular}}",
+        "{{They}} lose{{s_if_singular}} {{their}} mind when {{they}} see{{s_if_singular}} {{their}} leash but composes {{themself}} for the warmup",
+        "{{They}} {{has/have}} a recovery routine after walks that involves a specific corner of the rug",
+      ],
+      tolerate: "performance-coded fabrics, anything with a number on it, a small headband.",
+    },
+    cat: {
+      quote: "My fast-twitch fibers are unmatched.",
+      backstory: "{{They}} {{was/were}} almost in the Olympics. The qualifying round in Tokyo {{was/were}}, in {{their}} telling, \"rigged.\" {{They}} retired in protest and now train{{s_if_singular}} in your apartment, where the conditions {{is/are}} imperfect but acceptable. {{They}} run{{s_if_singular}} {{their}} routes at 3 a.m. {{They}} {{has/have}} a heart rate monitor. {{They}} {{does/do}} not need it. {{They}} {{has/have}} it because the data matters.",
+      bullets: [
+        "{{They}} climb{{s_if_singular}} vertical surfaces with the focus of a free soloist",
+        "{{They}} {{has/have}} a designated sprint corridor in your apartment and you have learned to step aside",
+        "{{They}} recover{{s_if_singular}} from intense activity by collapsing dramatically for ninety seconds, then resuming",
+        "{{They}} {{has/have}} a favorite high shelf that doubles as {{their}} finish line",
+      ],
+      tolerate: "mesh fabrics, anything reflective, a small water bottle that's just for {{them}}.",
+    },
+  },
+};
+
+// ---------- QUESTIONS ----------
+const QUESTIONS = [
+  {
+    text: "It's 6 a.m. Where is {{name}}?",
+    answers: [
+      { text: "Still asleep. Judging the day silently.", arcs: ['hollywoodStar', 'therapist', 'deposedMonarch'] },
+      { text: "Stretching. {{They}} {{has/have}} been awake since 5.", arcs: ['athlete'] },
+      { text: "Suspiciously alert at the window. Something is wrong.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
+      { text: "Posed in the most flattering patch of light.", arcs: ['hollywoodStar', 'loungeSinger', 'popStar'] },
+    ]
+  },
+  {
+    text: "You have guests over. {{Name}}'s move?",
+    answers: [
+      { text: "Holds court in the center of the room.", arcs: ['loungeSinger', 'popStar'] },
+      { text: "Makes a single dramatic appearance, then leaves.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "Watches from a high vantage point. Taking notes.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
+      { text: "Won't stop demanding treats in front of strangers.", arcs: ['chef', 'popStar', 'athlete'] },
+    ]
+  },
+  {
+    text: "You open a snack bag. {{Name}}…",
+    answers: [
+      { text: "Materializes at your feet. Instantly. The eye contact is unblinking.", arcs: ['chef', 'athlete'] },
+      { text: "Was already there. {{Has/have}} been watching for hours.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
+      { text: "Saunters over like it {{was/were}} {{their}} idea. Refuses to look interested.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "Begins the performance — pity eyes, trembling, possibly tears.", arcs: ['popStar', 'chef'] },
+    ]
+  },
+  {
+    text: "Pick the sound {{name}} makes most often.",
+    answers: [
+      { text: "A long, slow sigh of disappointment.", arcs: ['cowboyPoet', 'therapist'] },
+      { text: "A bark or meow that's half question, half demand.", arcs: ['popStar', 'chef'] },
+      { text: "Howling along to one specific song on the radio.", arcs: ['loungeSinger'] },
+      { text: "A suspicious low growl. At the ceiling fan.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
+    ]
+  },
+  {
+    text: "It's photo time. {{Name}}…",
+    answers: [
+      { text: "Poses without being asked. Knows {{their}} angles.", arcs: ['hollywoodStar', 'loungeSinger', 'popStar'] },
+      { text: "Hides under furniture. Privacy is non-negotiable.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
+      { text: "Walks away unless you offer something in exchange.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "Photobombs every shot enthusiastically.", arcs: ['athlete', 'chef', 'popStar'] },
+    ]
+  },
+  {
+    text: "How does {{name}} relate to exercise?",
+    answers: [
+      { text: "{{They}} train{{s_if_singular}}. {{They}} {{does/do}} not play. {{They}} {{is/are}} in {{their}} prime.", arcs: ['athlete'] },
+      { text: "{{They}} guard{{s_if_singular}} the couch from movement. The couch is {{theirs}}.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "{{They}} walk{{s_if_singular}} on {{their}} own schedule. Like a town witness.", arcs: ['cowboyPoet', 'retiredSpy'] },
+      { text: "Dramatic 30-second sprints. Then a 90-second collapse.", arcs: ['athlete', 'chef'] },
+    ]
+  },
+  {
+    text: "When you're having a bad day, {{name}}…",
+    answers: [
+      { text: "Shows up. Stays. Doesn't say anything.", arcs: ['therapist', 'cowboyPoet'] },
+      { text: "Suggests a walk. Movement solves things.", arcs: ['athlete'] },
+      { text: "Demands attention to distract you out of it.", arcs: ['popStar', 'loungeSinger'] },
+      { text: "Pretends not to notice. Somehow always in the room.", arcs: ['therapist', 'retiredSpy'] },
+    ]
+  },
+  {
+    text: "It's morning. {{Name}} notices you've opened one eye. {{Their}} move?",
+    answers: [
+      { text: "Full-body launch. Zoomies. The day must begin NOW.", arcs: ['athlete', 'popStar'] },
+      { text: "Slow blink. Returns to dramatic sleeping position.", arcs: ['hollywoodStar', 'therapist', 'loungeSinger'] },
+      { text: "Stares with intent. {{They}} {{has/have}} a list of requests.", arcs: ['chef', 'deposedMonarch'] },
+      { text: "Suspicious. Why are you awake now.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
+    ]
+  },
+  {
+    text: "{{Name}}'s outdoor ritual is…",
+    answers: [
+      { text: "Locating the exact correct spot. May take 11 minutes. The eye contact during the act is non-negotiable.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "A reconnaissance mission. Every smell is intel.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
+      { text: "An athletic event. Routes change daily. Times improve.", arcs: ['athlete'] },
+      { text: "A social tour. Every neighbor, dog, and houseplant must be greeted.", arcs: ['popStar', 'loungeSinger', 'cowboyPoet'] },
+    ]
+  },
+  {
+    text: "Pick the past life that feels most true to {{name}}.",
+    answers: [
+      { text: "Someone who used to perform under bright lights.", arcs: ['loungeSinger', 'popStar', 'hollywoodStar'] },
+      { text: "Someone who quietly developed Theories about how the world works.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
+      { text: "Someone who held space for people in pain.", arcs: ['therapist', 'cowboyPoet'] },
+      { text: "Someone who refused to lose. Ever.", arcs: ['athlete', 'chef', 'deposedMonarch'] },
+    ],
+    weight: 2,
+  },
+];
+
+// ---------- SCREEN MANAGEMENT ----------
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + screen);
+  if (el) {
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Re-trigger animations by toggling class
+    el.querySelectorAll('[class*="anim-"]').forEach(n => {
+      n.style.animation = 'none';
+      void n.offsetWidth;
+      n.style.animation = '';
+    });
+  }
+}
+
+// ---------- NAME ----------
+const nameInput = document.getElementById('petNameInput');
+const nameNextBtn = document.getElementById('nameNextBtn');
+nameInput.addEventListener('input', () => {
+  nameNextBtn.disabled = nameInput.value.trim().length === 0;
+});
+
+function submitName() {
+  const v = nameInput.value.trim();
+  if (!v) return;
+  STATE.petName = v;
+  document.getElementById('typeNameDisplay').textContent = v;
+  document.getElementById('genderNameDisplay').textContent = v;
+  goTo('type');
+}
+
+// ---------- TYPE ----------
+function selectType(t) {
+  STATE.petType = t;
+  goTo('gender');
+}
+
+// ---------- GENDER ----------
+function selectGender(g) {
+  STATE.petGender = g;
+  startQuiz();
+}
+
+// ---------- QUIZ FLOW ----------
+function startQuiz() {
+  STATE.currentQuestion = 0;
+  STATE.answers = new Array(10).fill(null);
+  goTo('question');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const idx = STATE.currentQuestion;
+  const q = QUESTIONS[idx];
+
+  // Render question text with tokens
+  document.getElementById('questionText').textContent =
+    renderTokens(q.text, STATE.petGender, STATE.petName);
+
+  // Progress
+  const pct = ((idx + 1) / QUESTIONS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Question ${idx + 1} of ${QUESTIONS.length}`;
+
+  // Background number
+  document.getElementById('questionBgNum').textContent = String(idx + 1).padStart(2, '0');
+
+  // Answers
+  const list = document.getElementById('answerList');
+  list.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.answers.forEach((a, i) => {
+    const text = renderTokens(a.text, STATE.petGender, STATE.petName);
+    const btn = document.createElement('button');
+    btn.className = 'answer-card flex items-start gap-4';
+    btn.innerHTML = `<span class="answer-letter">${letters[i]}</span><span>${text}</span>`;
+    if (STATE.answers[idx] === i) btn.classList.add('selected');
+    btn.onclick = () => selectAnswer(i);
+    list.appendChild(btn);
+  });
+
+  // Selected state for next button
+  STATE.selectedAnswerIdx = STATE.answers[idx];
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = STATE.answers[idx] === null;
+  nextBtn.textContent = idx === QUESTIONS.length - 1 ? 'Reveal past life →' : 'Next  →';
+
+  // Prev button visibility
+  document.getElementById('prevBtn').style.visibility = idx === 0 ? 'hidden' : 'visible';
+
+  // Re-trigger anim
+  const qt = document.getElementById('questionText');
+  qt.style.animation = 'none';
+  void qt.offsetWidth;
+  qt.style.animation = '';
+}
+
+function selectAnswer(idx) {
+  STATE.answers[STATE.currentQuestion] = idx;
+  STATE.selectedAnswerIdx = idx;
+  // Update UI
+  const cards = document.querySelectorAll('#answerList .answer-card');
+  cards.forEach((c, i) => c.classList.toggle('selected', i === idx));
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  if (STATE.answers[STATE.currentQuestion] === null) return;
+  if (STATE.currentQuestion < QUESTIONS.length - 1) {
+    STATE.currentQuestion++;
+    renderQuestion();
+  } else {
+    showLoadingThenResult();
+  }
+}
+
+function prevQuestion() {
+  if (STATE.currentQuestion > 0) {
+    STATE.currentQuestion--;
+    renderQuestion();
+  }
+}
+
+// ---------- SCORING ----------
+function calculateResult() {
+  const scores = {};
+  ARCHETYPES.forEach(a => scores[a] = 0);
+
+  STATE.answers.forEach((ansIdx, qIdx) => {
+    if (ansIdx === null) return;
+    const q = QUESTIONS[qIdx];
+    const weight = q.weight || 1;
+    const arcs = q.answers[ansIdx].arcs;
+    arcs.forEach(a => scores[a] += weight);
+  });
+
+  // Find winner. Tiebreaker: prefer the archetype from Q10 if tied.
+  let max = -1;
+  let winner = null;
+  const q10answer = STATE.answers[9] !== null ? QUESTIONS[9].answers[STATE.answers[9]].arcs : [];
+
+  ARCHETYPES.forEach(a => {
+    if (scores[a] > max) { max = scores[a]; winner = a; }
+    else if (scores[a] === max && q10answer.includes(a) && !q10answer.includes(winner)) {
+      winner = a;
+    }
+  });
+  return { winner, scores };
+}
+
+// ---------- RESULT ----------
+function showLoadingThenResult() {
+  document.getElementById('loadingName').textContent = STATE.petName;
+  goTo('loading');
+  setTimeout(showResult, 2400);
+}
+
+function showResult() {
+  const { winner } = calculateResult();
+  const profile = PROFILES[winner][STATE.petType];
+  const p = PRONOUNS[STATE.petGender];
+  const name = STATE.petName;
+
+  document.getElementById('resultPetName').textContent = `FOR: ${name.toUpperCase()}`;
+
+  const pronounLabel = STATE.petGender === 'they' ? 'they were' : (STATE.petGender === 'he' ? 'he was' : 'she was');
+  document.getElementById('resultPronoun').textContent = pronounLabel + ',';
+
+  document.getElementById('resultArchetype').textContent = ARCHETYPE_NAMES[winner];
+  document.getElementById('resultQuote').textContent = `"${profile.quote}"`;
+  document.getElementById('resultBackstory').textContent = renderTokens(profile.backstory, STATE.petGender, name);
+
+  // Bullets
+  const bulletsEl = document.getElementById('resultBullets');
+  bulletsEl.innerHTML = '';
+  profile.bullets.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'obs-bullet';
+    div.innerHTML = `<span class="text-navy text-[17px] leading-snug">${renderTokens(b, STATE.petGender, name)}</span>`;
+    bulletsEl.appendChild(div);
+  });
+
+  document.getElementById('bulletPronoun').textContent = p.them;
+  document.getElementById('resultTolerate').textContent = renderTokens(profile.tolerate, STATE.petGender, name);
+
+  // Email / share name
+  document.getElementById('emailName').textContent = name;
+  document.getElementById('emailPronoun').textContent = p.them;
+  document.getElementById('shareName').textContent = name + "'s";
+
+  goTo('result');
+}
+
+function submitEmail() {
+  // Placeholder — production wires to GHL via n8n
+  alert(`Thanks! We'll send ${STATE.petName}'s 15% off code shortly.`);
+}
+
+function sharePlatform(platform) {
+  const { winner } = calculateResult();
+  const archetype = ARCHETYPE_NAMES[winner];
+  const text = `My pet ${STATE.petName} was ${archetype} in a past life. mainpups says so. Take the quiz:`;
+  const url = window.location.href;
+  if (platform === 'twitter') {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text + ' ' + url)}`);
+  } else if (platform === 'facebook') {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+  } else if (platform === 'copy') {
+    navigator.clipboard.writeText(text + ' ' + url).then(() => alert('Link copied!'));
+  }
+}
+
+function resetQuiz() {
+  STATE.petName = '';
+  STATE.petType = '';
+  STATE.petGender = 'they';
+  STATE.currentQuestion = 0;
+  STATE.answers = new Array(10).fill(null);
+  nameInput.value = '';
+  nameNextBtn.disabled = true;
+  goTo('intro');
+}
+
+// ---------- INIT ----------
+window.addEventListener('DOMContentLoaded', () => {
+  // already on intro by default
+});
+</script>
+
+</body>
+</html>

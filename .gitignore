@@ -12,6 +12,7 @@ temporary screenshots/
 vendor/
 theme/
 animation-lab/libs/
+animation-lab/inspiration/
 *.log
 .DS_Store
 Thumbs.db

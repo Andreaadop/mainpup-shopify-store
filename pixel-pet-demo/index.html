@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MainPup — Pixel Pet Demo</title>
+<style>
+  :root{
+    --cream:#F7EEE1; --pink:#F6D4F2; --lightblue:#AFC9F7;
+    --red:#EE2211; --burgundy:#6B1E3C; --navy:#0E2E4E;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:"Segoe UI",system-ui,sans-serif;
+    color:var(--navy);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, var(--pink) 0%, transparent 55%),
+      radial-gradient(900px 500px at 0% 110%, var(--lightblue) 0%, transparent 50%),
+      var(--cream);
+    min-height:100%;
+  }
+
+  /* ---- mock storefront just so the pet has a stage ---- */
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 160px;}
+  .badge{display:inline-block;background:var(--burgundy);color:var(--cream);
+    font-weight:700;letter-spacing:.14em;font-size:12px;padding:6px 12px;border-radius:999px;text-transform:uppercase;}
+  h1{font-size:clamp(32px,6vw,56px);margin:.3em 0 .2em;letter-spacing:-0.03em;}
+  .sub{font-size:18px;line-height:1.7;max-width:46ch;color:#3a4a5c;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;margin-top:40px;}
+  .card{background:#fff;border:2px solid var(--navy);border-radius:16px;overflow:hidden;
+    box-shadow:0 10px 24px -14px rgba(14,46,78,.5);}
+  .card .ph{height:130px;background:linear-gradient(135deg,var(--lightblue),var(--pink));}
+  .card .body{padding:14px 16px;}
+  .card h3{margin:0 0 4px;font-size:16px;}
+  .card p{margin:0;font-size:13px;color:#6b7887;}
+
+  /* =========================================================
+     THE PIXEL PET
+     One sprite sheet (44x30 logical, 6 frames), scaled 3x,
+     rendered pixel-crisp. Two layers of animation:
+       1) walk cycle  -> background-position via steps(6)
+       2) travel      -> transform:translateX driven by JS
+     ========================================================= */
+  #pet{
+    position:fixed;
+    left:0;
+    bottom:calc(8px + env(safe-area-inset-bottom)); /* clear the home indicator / toolbar */
+    width:132px; height:90px;   /* 44x30 * 3 */
+    z-index:60;
+    cursor:pointer;
+    will-change:transform;
+    transform:translateX(-140px);
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* smaller on phones so it doesn't hog the screen */
+  @media (max-width:600px){
+    #pet{ width:88px; height:60px; }            /* 44x30 * 2 */
+    #pet .sprite{ background-size:528px 60px; animation-name:walkM; } /* 264x30 * 2 */
+    #pet::after{ left:16px; width:56px; }
+  }
+  @keyframes walkM{ from{background-position-x:0;} to{background-position-x:-528px;} }
+  #pet .sprite{
+    width:100%; height:100%;
+    background-image:url("puppy-sheet.png");
+    background-repeat:no-repeat;
+    background-size:792px 90px;          /* 264x30 * 3 */
+    image-rendering:pixelated;           /* keep hard pixels */
+    animation:walk .72s steps(6) infinite;
+    transform-origin:center bottom;
+  }
+  #pet.facing-left .sprite{ transform:scaleX(-1); }  /* flip when heading left */
+  #pet.paused .sprite{ animation-play-state:paused; }
+
+  @keyframes walk{ from{background-position-x:0;} to{background-position-x:-792px;} }
+
+  /* soft contact shadow so it sits on the floor, not floating */
+  #pet::after{
+    content:"";position:absolute;left:26px;bottom:2px;width:80px;height:12px;
+    background:radial-gradient(ellipse,rgba(14,46,78,.28),transparent 70%);
+    z-index:-1;
+  }
+
+  /* little speech bubble */
+  #bubble{
+    position:fixed;z-index:61;padding:6px 10px;background:#fff;color:var(--navy);
+    border:2px solid var(--navy);border-radius:10px;font-size:13px;font-weight:700;
+    box-shadow:0 6px 14px -8px rgba(14,46,78,.6);opacity:0;transform:translateY(6px);
+    transition:opacity .18s ease, transform .18s ease;pointer-events:none;white-space:nowrap;
+  }
+  #bubble.show{opacity:1;transform:translateY(0);}
+
+  /* accessibility: if the user asked their OS to reduce motion,
+     the pet sits still instead of walking. */
+  @media (prefers-reduced-motion: reduce){
+    #pet .sprite{ animation:none; background-position-x:-264px; }
+  }
+
+  .note{margin-top:48px;font-size:13px;color:#6b7887;line-height:1.7;
+    border-top:1px dashed #c9c0b1;padding-top:16px;}
+  code{background:#fff;border:1px solid #e2dccf;border-radius:6px;padding:1px 6px;font-size:12px;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="badge">MainPup</span>
+    <h1>Meet your shop buddy.</h1>
+    <p class="sub">Scroll around — the little pup patrols the bottom of the screen no matter where you are on the page. Hover to make it stop and say hi. Click it for a treat reaction.</p>
+
+    <div class="grid">
+      <div class="card"><div class="ph"></div><div class="body"><h3>Product One</h3><p>Placeholder card</p></div></div>
+      <div class="card"><div class="ph"></div><div class="body"><h3>Product Two</h3><p>Placeholder card</p></div></div>
+      <div class="card"><div class="ph"></div><div class="body"><h3>Product Three</h3><p>Placeholder card</p></div></div>
+      <div class="card"><div class="ph"></div><div class="body"><h3>Product Four</h3><p>Placeholder card</p></div></div>
+    </div>
+
+    <p style="height:600px;margin-top:40px;color:#9aa4b0;font-size:14px;">↕ Extra space so you can scroll and confirm the pet stays pinned to the bottom of the viewport.</p>
+
+    <div class="note">
+      <strong>How this works:</strong> one <code>puppy-sheet.png</code> (~1.3&nbsp;KB) holds 6 walk frames.
+      CSS <code>steps(6)</code> flips through them for the walk cycle; a few lines of vanilla JS move the pet
+      across the floor and flip it at the edges. No libraries, no framework. Swap the PNG to change the pet.
+    </div>
+  </div>
+
+  <!-- the pet -->
+  <div id="pet" aria-hidden="true"><div class="sprite"></div></div>
+  <div id="bubble">woof!</div>
+
+  <script>
+  (function(){
+    var pet    = document.getElementById('pet');
+    var bubble = document.getElementById('bubble');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var W = pet.offsetWidth || 132;   // real width (132 desktop / 88 mobile)
+    var x = -W;                  // start just off the left edge
+    var dir = 1;                 // 1 = right, -1 = left
+    var speed = 0.9;             // px per frame (~54px/s at 60fps) — gentle
+    var paused = false;
+    window.addEventListener('resize', function(){ W = pet.offsetWidth || W; });
+
+    function place(){ pet.style.transform = 'translateX(' + x + 'px)'; }
+
+    function tick(){
+      if(!paused){
+        x += dir * speed;
+        var max = window.innerWidth - W + 20;   // let it nudge just past the edge
+        if(x >= max){ dir = -1; pet.classList.add('facing-left'); }
+        else if(x <= -20){ dir = 1; pet.classList.remove('facing-left'); }
+        place();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // hover: stop and greet
+    var msgs = ['woof!','hi! 🐾','treat?','pspsps'];
+    function showBubble(text){
+      bubble.textContent = text;
+      var r = pet.getBoundingClientRect();
+      bubble.style.left = (r.left + r.width/2 - 24) + 'px';
+      bubble.style.top  = (r.top - 34) + 'px';
+      bubble.classList.add('show');
+    }
+    pet.addEventListener('mouseenter', function(){
+      paused = true; pet.classList.add('paused');
+      showBubble('hi! 🐾');
+    });
+    pet.addEventListener('mouseleave', function(){
+      paused = false; pet.classList.remove('paused');
+      bubble.classList.remove('show');
+    });
+    // works for both mouse click and touch tap: greet, then resume
+    function poke(e){
+      if(e){ e.preventDefault(); }
+      showBubble(msgs[Math.floor(Math.random()*msgs.length)]);
+      pet.classList.add('paused'); paused = true;
+      clearTimeout(pet._t);
+      pet._t = setTimeout(function(){
+        paused=false; pet.classList.remove('paused'); bubble.classList.remove('show');
+      }, 1100);
+    }
+    pet.addEventListener('click', poke);
+    pet.addEventListener('touchstart', poke, {passive:false});
+
+    if(reduce){
+      // sit still near the left, no travel
+      x = 40; place();
+    } else {
+      place();
+      requestAnimationFrame(tick);
+    }
+  })();
+  </script>
+</body>
+</html>

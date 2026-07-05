@@ -5,6 +5,9 @@ shopify-key.txt
 .mcp.json
 *-key.txt
 *-keys.txt
+*apikey*.txt
+google-*.txt
+google-*.json
 *.secret
 node_modules/
 .tmp/

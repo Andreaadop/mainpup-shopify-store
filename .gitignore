@@ -16,6 +16,8 @@ vendor/
 theme/
 animation-lab/libs/
 animation-lab/inspiration/
+brand_assets/references/awesome-nanobanana-pro/
+designsforproducts/
 *.log
 .DS_Store
 Thumbs.db

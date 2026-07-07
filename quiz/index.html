@@ -976,16 +976,16 @@ const QUESTIONS = [
   {
     text: "It's 6 a.m. Where is {{name}}?",
     answers: [
-      { text: "Still asleep. Judging the day silently.", arcs: ['hollywoodStar', 'therapist', 'deposedMonarch'] },
+      { text: "Still asleep. Mornings are for other people.", arcs: ['hollywoodStar', 'therapist', 'deposedMonarch'] },
       { text: "Stretching. {{They}} {{has/have}} been awake since 5.", arcs: ['athlete'] },
       { text: "Suspiciously alert at the window. Something is wrong.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
-      { text: "Posed in the most flattering patch of light.", arcs: ['hollywoodStar', 'loungeSinger', 'popStar'] },
+      { text: "Flopped over. Belly up. Waiting for scratches.", arcs: ['hollywoodStar', 'loungeSinger', 'popStar'] },
     ]
   },
   {
     text: "You have guests over. {{Name}}'s move?",
     answers: [
-      { text: "Holds court in the center of the room.", arcs: ['loungeSinger', 'popStar'] },
+      { text: "Looking for someone to scratch her belly. Every guest is a candidate.", arcs: ['loungeSinger', 'popStar'] },
       { text: "Makes a single dramatic appearance, then leaves.", arcs: ['hollywoodStar', 'deposedMonarch'] },
       { text: "Watches from a high vantage point. Taking notes.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
       { text: "Won't stop demanding treats in front of strangers.", arcs: ['chef', 'popStar', 'athlete'] },
@@ -996,7 +996,7 @@ const QUESTIONS = [
     answers: [
       { text: "Materializes at your feet. Instantly. The eye contact is unblinking.", arcs: ['chef', 'athlete'] },
       { text: "Was already there. {{Has/have}} been watching for hours.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
-      { text: "Saunters over like it {{was/were}} {{their}} idea. Refuses to look interested.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "Pretends not to care. But watches from across the room. Not fooling anyone.", arcs: ['hollywoodStar', 'deposedMonarch'] },
       { text: "Begins the performance — pity eyes, trembling, possibly tears.", arcs: ['popStar', 'chef'] },
     ]
   },
@@ -1004,26 +1004,26 @@ const QUESTIONS = [
     text: "Pick the sound {{name}} makes most often.",
     answers: [
       { text: "A long, slow sigh of disappointment.", arcs: ['cowboyPoet', 'therapist'] },
-      { text: "A bark or meow that's half question, half demand.", arcs: ['popStar', 'chef'] },
+      { text: "A specific whine that means she wants something. Now.", arcs: ['popStar', 'chef'] },
       { text: "Howling along to one specific song on the radio.", arcs: ['loungeSinger'] },
-      { text: "A suspicious low growl. At the ceiling fan.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
+      { text: "A low growl at nothing you can see. Something is out there.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
     ]
   },
   {
     text: "It's photo time. {{Name}}…",
     answers: [
-      { text: "Poses without being asked. Knows {{their}} angles.", arcs: ['hollywoodStar', 'loungeSinger', 'popStar'] },
+      { text: "Looks right at the camera. Every time. Perfect.", arcs: ['hollywoodStar', 'loungeSinger', 'popStar'] },
       { text: "Hides under furniture. Privacy is non-negotiable.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
-      { text: "Walks away unless you offer something in exchange.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "Walks away. Unless there's a treat involved.", arcs: ['hollywoodStar', 'deposedMonarch'] },
       { text: "Photobombs every shot enthusiastically.", arcs: ['athlete', 'chef', 'popStar'] },
     ]
   },
   {
     text: "How does {{name}} relate to exercise?",
     answers: [
-      { text: "{{They}} train{{s_if_singular}}. {{They}} {{does/do}} not play. {{They}} {{is/are}} in {{their}} prime.", arcs: ['athlete'] },
-      { text: "{{They}} guard{{s_if_singular}} the couch from movement. The couch is {{theirs}}.", arcs: ['hollywoodStar', 'deposedMonarch'] },
-      { text: "{{They}} walk{{s_if_singular}} on {{their}} own schedule. Like a town witness.", arcs: ['cowboyPoet', 'retiredSpy'] },
+      { text: "All-day energy. Every walk should be longer. {{They}} {{is/are}} ready for anything.", arcs: ['athlete'] },
+      { text: "The couch is {{their}} office. Movement is optional.", arcs: ['hollywoodStar', 'deposedMonarch'] },
+      { text: "Walks slowly. Stops to sniff everything. In {{their}} own world.", arcs: ['cowboyPoet', 'retiredSpy'] },
       { text: "Dramatic 30-second sprints. Then a 90-second collapse.", arcs: ['athlete', 'chef'] },
     ]
   },
@@ -1031,8 +1031,8 @@ const QUESTIONS = [
     text: "When you're having a bad day, {{name}}…",
     answers: [
       { text: "Shows up. Stays. Doesn't say anything.", arcs: ['therapist', 'cowboyPoet'] },
-      { text: "Suggests a walk. Movement solves things.", arcs: ['athlete'] },
-      { text: "Demands attention to distract you out of it.", arcs: ['popStar', 'loungeSinger'] },
+      { text: "Wants to go for a walk. {{They}} think{{s_if_singular}} fresh air fixes everything.", arcs: ['athlete'] },
+      { text: "Gets in your lap. Won't leave. Trying to fix it.", arcs: ['popStar', 'loungeSinger'] },
       { text: "Pretends not to notice. Somehow always in the room.", arcs: ['therapist', 'retiredSpy'] },
     ]
   },
@@ -1041,7 +1041,7 @@ const QUESTIONS = [
     answers: [
       { text: "Full-body launch. Zoomies. The day must begin NOW.", arcs: ['athlete', 'popStar'] },
       { text: "Slow blink. Returns to dramatic sleeping position.", arcs: ['hollywoodStar', 'therapist', 'loungeSinger'] },
-      { text: "Stares with intent. {{They}} {{has/have}} a list of requests.", arcs: ['chef', 'deposedMonarch'] },
+      { text: "Stares. Directly. {{They}} {{has/have}} needs and it's time.", arcs: ['chef', 'deposedMonarch'] },
       { text: "Suspicious. Why are you awake now.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
     ]
   },
@@ -1049,18 +1049,18 @@ const QUESTIONS = [
     text: "{{Name}}'s outdoor ritual is…",
     answers: [
       { text: "Locating the exact correct spot. May take 11 minutes. The eye contact during the act is non-negotiable.", arcs: ['hollywoodStar', 'deposedMonarch'] },
-      { text: "A reconnaissance mission. Every smell is intel.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
-      { text: "An athletic event. Routes change daily. Times improve.", arcs: ['athlete'] },
+      { text: "Sniffs everything. Every blade of grass has a story.", arcs: ['retiredSpy', 'conspiracyTheorist'] },
+      { text: "Pulls the leash. Wants to go faster. Everywhere at once.", arcs: ['athlete'] },
       { text: "A social tour. Every neighbor, dog, and houseplant must be greeted.", arcs: ['popStar', 'loungeSinger', 'cowboyPoet'] },
     ]
   },
   {
-    text: "Pick the past life that feels most true to {{name}}.",
+    text: "{{Name}}'s happiest moment is when {{they}} {{is/are}}…",
     answers: [
-      { text: "Someone who used to perform under bright lights.", arcs: ['loungeSinger', 'popStar', 'hollywoodStar'] },
-      { text: "Someone who quietly developed Theories about how the world works.", arcs: ['conspiracyTheorist', 'retiredSpy'] },
-      { text: "Someone who held space for people in pain.", arcs: ['therapist', 'cowboyPoet'] },
-      { text: "Someone who refused to lose. Ever.", arcs: ['athlete', 'chef', 'deposedMonarch'] },
+      { text: "The center of attention. Everyone loving her.", arcs: ['loungeSinger', 'popStar', 'hollywoodStar'] },
+      { text: "On a walk. Sniffing everything. Outside.", arcs: ['cowboyPoet', 'athlete'] },
+      { text: "Right next to you. Whatever you're doing.", arcs: ['therapist', 'chef'] },
+      { text: "In {{their}} favorite spot. Watching the world go by.", arcs: ['retiredSpy', 'conspiracyTheorist', 'deposedMonarch'] },
     ],
     weight: 2,
   },

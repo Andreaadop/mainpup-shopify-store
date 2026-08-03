@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact us — we actually read it | mainpups</title>
+<meta name="description" content="Questions about a proof, an order, or your pet's big debut? Message the mainpups studio — a real human (and one nosy dog named Kiwi) reads every note.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:ital,wght@0,300..700;1,300..700&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { cream:'#F8EEE5', blush:'#F7D8F8', peri:'#ABC5FE', scarlet:'#F31F13', burgundy:'#6C1736', navy:'#0B2D4F', sand:'#EFDCC9' },
+    fontFamily: { display:['Remaid','Spline Sans','sans-serif'], body:['"Spline Sans"','sans-serif'] },
+  }}
+}
+</script>
+<style>
+  @font-face { font-family:'Remaid'; src:url('../brand_assets/font/Remaid.otf') format('opentype'); font-display:swap; }
+  body { font-family:'Spline Sans',sans-serif; background:#F8EEE5; color:#0B2D4F; line-height:1.7; }
+  h1,.display { font-family:'Remaid','Spline Sans',sans-serif; letter-spacing:-0.015em; line-height:1.05; }
+  h2,h3 { font-family:'Pixelify Sans','Spline Sans',sans-serif; letter-spacing:.005em; line-height:1.15; }
+  .pixel { font-family:'Spline Sans',system-ui,sans-serif; font-weight:700; letter-spacing:.08em; }
+  .win-font { font-family:'Pixelify Sans',monospace; letter-spacing:.01em; }
+
+  :root {
+    --win-dither: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4'><rect x='0' y='0' width='1' height='1' fill='white' fill-opacity='.10'/><rect x='2' y='2' width='1' height='1' fill='white' fill-opacity='.10'/><rect x='1' y='1' width='1' height='1' fill='black' fill-opacity='.16'/><rect x='3' y='3' width='1' height='1' fill='black' fill-opacity='.16'/></svg>");
+    --tear-svg: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='26' preserveAspectRatio='none'><path fill='white' d='M0,13 12,5 26,16 40,6 52,15 68,4 82,14 96,7 112,17 126,6 140,13 154,3 170,15 184,8 198,17 214,6 228,14 242,5 256,16 270,7 286,15 300,4 314,14 328,8 344,17 358,6 372,13 386,5 400,13 400,26 0,26 Z'/></svg>");
+  }
+
+  /* photographed paper textures */
+  .tex-bg { background-repeat:no-repeat; background-position:center; background-size:cover; }
+  .tex-grass { background-image:url('../brand_assets/textures/web/grass_green_01.webp'); }
+  .on-grass-title { color:#F8EEE5; text-shadow:-1.5px -1.5px 0 #0B2D4F,1.5px -1.5px 0 #0B2D4F,-1.5px 1.5px 0 #0B2D4F,1.5px 1.5px 0 #0B2D4F,0 4px 12px rgba(11,45,79,.75); }
+
+  /* ripped-paper section edges (shared system) */
+  .torn-top {
+    --tear-h:26px; --tear-shift:0px;
+    -webkit-mask-image:var(--tear-svg),linear-gradient(#000,#000);
+            mask-image:var(--tear-svg),linear-gradient(#000,#000);
+    -webkit-mask-size:400px var(--tear-h),100% calc(100% - var(--tear-h) + 2px);
+            mask-size:400px var(--tear-h),100% calc(100% - var(--tear-h) + 2px);
+    -webkit-mask-position:var(--tear-shift) top,left bottom;
+            mask-position:var(--tear-shift) top,left bottom;
+    -webkit-mask-repeat:repeat-x,no-repeat; mask-repeat:repeat-x,no-repeat;
+    filter:drop-shadow(0 -2px 3px rgba(11,45,79,.20));
+  }
+  .tear-up {
+    --tear-h:26px; --tear-shift:0px;
+    position:absolute; left:0; right:0; top:0; height:var(--tear-h);
+    transform:translateY(-100%); pointer-events:none;
+    -webkit-mask-image:var(--tear-svg); mask-image:var(--tear-svg);
+    -webkit-mask-size:400px 100%; mask-size:400px 100%;
+    -webkit-mask-repeat:repeat-x; mask-repeat:repeat-x;
+    -webkit-mask-position:var(--tear-shift) top; mask-position:var(--tear-shift) top;
+    filter:drop-shadow(0 -2px 3px rgba(11,45,79,.20));
+  }
+
+  /* dog paw reaching up to boop the Send button */
+  .reach-paw {
+    --paw-rot:-38deg;
+    position:absolute; bottom:-168px; right:12%; width:clamp(84px,7.5vw,100px);
+    transform:rotate(var(--paw-rot)); transform-origin:bottom center;
+    pointer-events:none; z-index:1;
+    filter:drop-shadow(0 -4px 10px rgba(11,45,79,.3));
+    animation:paw-reach 1.9s ease-in-out infinite;
+  }
+  @keyframes paw-reach { 0%,100%{transform:rotate(var(--paw-rot)) translateY(0);} 50%{transform:rotate(var(--paw-rot)) translateY(-13px);} }
+  @media (max-width:640px){ .reach-paw{ --paw-rot:-12deg; right:-2%; bottom:-104px; width:88px; } }
+
+  /* Win95 materials */
+  .win-titlebar { background-image:var(--win-dither),linear-gradient(90deg,#0B2D4F 0%,#2E5B9E 55%,#6C8FD1 100%); background-size:4px 4px,100% 100%; border:2px solid #0B2D4F; box-shadow:inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 0 rgba(2,15,33,.45),0 12px 26px -12px rgba(11,45,79,.55); }
+  .win-btn { background-image:var(--win-dither),linear-gradient(180deg,#3E6FB8,#16406F); background-size:4px 4px,100% 100%; border:2px solid #0B2D4F; color:#fff; box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(2,15,33,.5),2px 2px 0 rgba(2,15,33,.35); }
+
+  /* interactive language */
+  .btn { transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s ease,background-color .18s ease; will-change:transform; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn:active { transform:translateY(1px); }
+  .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, label:focus-within { outline:3px solid #F31F13; outline-offset:3px; }
+  .btn-hard { border:3px solid #0B2D4F; box-shadow:5px 5px 0 #0B2D4F; }
+  .btn-hard:hover { transform:translate(-2px,-2px); box-shadow:7px 7px 0 #0B2D4F; }
+  .btn-hard:active { transform:translate(2px,2px); box-shadow:2px 2px 0 #0B2D4F; }
+  .hard { border:3px solid #0B2D4F; box-shadow:6px 6px 0 #0B2D4F; }
+  .hard-sm { border:2.5px solid #0B2D4F; box-shadow:4px 4px 0 #0B2D4F; }
+  .sticker { border:6px solid #fff; box-shadow:0 14px 28px -10px rgba(108,23,54,.35),0 3px 8px rgba(11,45,79,.12); }
+  .navlink { position:relative; transition:color .18s ease; }
+  .navlink::after { content:''; position:absolute; left:0; bottom:-3px; height:2px; width:100%; background:#F31F13; transform:scaleX(0); transform-origin:left; transition:transform .22s cubic-bezier(.22,1,.36,1); }
+  .navlink:hover::after, .navlink:focus-visible::after, .navlink[aria-current="page"]::after { transform:scaleX(1); }
+
+  /* form fields */
+  .field { width:100%; background:#fff; border:2.5px solid #0B2D4F; border-radius:12px; padding:.7rem .9rem; font-size:1rem; color:#0B2D4F; transition:box-shadow .15s ease, border-color .15s ease; }
+  .field::placeholder { color:rgba(11,45,79,.4); }
+  .field:hover { box-shadow:3px 3px 0 rgba(11,45,79,.18); }
+  .field:focus { outline:none; border-color:#0B2D4F; box-shadow:4px 4px 0 #0B2D4F; }
+  .flabel { font-weight:700; font-size:.8rem; letter-spacing:.02em; color:rgba(11,45,79,.75); text-transform:uppercase; }
+
+  /* upload dropzone */
+  .dropzone { border:2.5px dashed #0B2D4F; border-radius:16px; background:#fff; transition:background-color .15s ease, border-color .15s ease; }
+  .dropzone:hover, .dropzone.drag { background:#FFF7E7; border-color:#F31F13; }
+
+  /* accordion */
+  .acc-panel { display:grid; grid-template-rows:0fr; transition:grid-template-rows .28s ease; }
+  .acc-panel > div { overflow:hidden; }
+  details.acc[open] .acc-panel { grid-template-rows:1fr; }
+  .acc summary { list-style:none; cursor:pointer; }
+  .acc summary::-webkit-details-marker { display:none; }
+  .acc .chev { transition:transform .25s ease; }
+  details.acc[open] .chev { transform:rotate(180deg); }
+
+  /* contact method cards */
+  .method .ico { transition:transform .25s cubic-bezier(.22,1,.36,1); }
+  .method:hover .ico { transform:translateY(-4px) rotate(-6deg) scale(1.06); }
+
+  /* MSN Messenger widget */
+  .msn-win { font-family:Tahoma,Verdana,Geneva,sans-serif; width:210px; border:1px solid #16407a; border-radius:8px; overflow:hidden; background:#eaf2fd; box-shadow:0 12px 26px -6px rgba(11,45,79,.55),0 3px 8px rgba(11,45,79,.35); }
+  .msn-bar { display:flex; align-items:center; gap:7px; padding:5px 9px 6px; font-size:.72rem; font-weight:bold; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.28); background:linear-gradient(180deg,#7cb6f2 0%,#3d7cc9 45%,#285fa8 100%); border-bottom:1px solid #16407a; box-shadow:inset 0 1px 0 rgba(255,255,255,.45); }
+  .msn-status { width:9px; height:9px; border-radius:50%; flex:none; background:radial-gradient(circle at 35% 30%,#c6ffbe,#2fbf28 72%); box-shadow:0 0 5px #45d13a,inset 0 0 2px rgba(255,255,255,.85); }
+  .msn-msg { padding:9px 11px 11px; font-size:.82rem; line-height:1.42; color:#173a6b; background:linear-gradient(180deg,#ffffff 0%,#eaf2fd 100%); }
+  .msn-msg b { color:#2f6fc0; }
+  .msn-win:hover { animation:msn-nudge .4s ease; }
+  @keyframes msn-nudge { 0%,100%{transform:translate(0,0);} 20%{transform:translate(-3px,2px);} 40%{transform:translate(3px,-2px);} 60%{transform:translate(-2px,1px);} 80%{transform:translate(2px,-1px);} }
+
+  /* toast */
+  .toast { position:fixed; left:50%; bottom:40px; transform:translateX(-50%) translateY(20px); opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:80; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* scroll reveal */
+  .reveal { opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } .reveal{opacity:1; transform:none;} }
+</style>
+</head>
+<body class="bg-white text-navy antialiased overflow-x-hidden">
+
+<!-- ============ HEADER (shared) ============ -->
+<header class="fixed top-3 md:top-5 left-1/2 -translate-x-1/2 z-50 w-[min(96vw,72rem)]">
+  <div class="win-titlebar rounded-full flex items-center justify-between pl-5 pr-2.5 py-2">
+    <a href="index.html" aria-label="mainpups home" class="flex items-center gap-1.5">
+      <img src="../brand_assets/Logo/mainpup-h-white2.svg" alt="mainpups" class="h-7 w-auto">
+      <span class="win-font text-white/70 text-base hidden md:inline" aria-hidden="true">.exe</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 win-font text-[1.05rem]">
+      <a href="index.html#shop" class="navlink text-white">Shop</a>
+      <a href="index.html#pack" class="navlink text-white">The Pack</a>
+      <a href="index.html#story" class="navlink text-white">Our Story</a>
+      <a href="contact.html" class="navlink text-white" aria-current="page">Contact</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="index.html#shop" class="win-btn btn win-font inline-flex items-center gap-2 text-white text-[.95rem] rounded-full px-4 py-1.5">Shop →</a>
+      <span class="win-btn hidden sm:inline-flex items-center justify-center w-9 h-9 text-white text-base rounded-full select-none" aria-hidden="true">✕</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ===== Band 1 · Say hi + form (white) ===== -->
+  <section class="bg-white pt-24 md:pt-28 pb-16 md:pb-20 relative">
+    <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+
+      <!-- intro -->
+      <div class="lg:sticky lg:top-28 reveal">
+        <p class="pixel inline-block bg-cream border-2 border-navy rounded-full px-4 py-1.5 text-navy font-bold tracking-[.14em] uppercase text-xs shadow-[3px_3px_0_#0B2D4F] mb-5 rotate-[-2deg]">Contact the studio ✦</p>
+        <h1 class="text-navy text-[clamp(2.4rem,6vw,4rem)]">Say hi. We're<br>basically always online.</h1>
+        <p class="mt-5 text-navy/80 max-w-md text-lg">Proof questions, order check-ins, a photo you're not sure about, or just want to show off your dog — send it over. A real human reads every message (and Kiwi supervises).</p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <span class="hard-sm bg-cream rounded-full px-4 py-2 text-sm font-bold flex items-center gap-2">🕑 Replies in ~1 business day</span>
+          <span class="hard-sm bg-cream rounded-full px-4 py-2 text-sm font-bold flex items-center gap-2">🐾 No bots, promise</span>
+        </div>
+
+        <!-- Kiwi peeking with an MSN nudge -->
+        <div class="mt-10 hidden lg:flex items-end gap-3">
+          <img src="../brand_assets/models/kiwi/_MG_6381.jpg" alt="Kiwi, the studio dog" class="sticker rounded-full w-24 h-24 object-cover object-top rotate-[-4deg]">
+          <div class="msn-win mb-2" role="img" aria-label="Kiwi says: type it, I'll fetch Andrea">
+            <div class="msn-bar"><span class="msn-status"></span>Kiwi — Online</div>
+            <div class="msn-msg"><b>Kiwi says:</b> type it here, I'll go fetch Andrea 🐾</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- form window -->
+      <div class="reveal">
+        <div class="hard rounded-3xl overflow-hidden bg-white">
+          <!-- title bar -->
+          <div class="win-titlebar flex items-center justify-between px-4 py-2.5 rounded-none border-0 border-b-[3px]">
+            <span class="win-font text-white text-sm flex items-center gap-2">📨 compose_message.exe</span>
+            <span class="flex items-center gap-1.5" aria-hidden="true">
+              <span class="w-4 h-4 grid place-items-center bg-white/90 border border-navy rounded-[3px] text-[10px] font-bold text-navy">_</span>
+              <span class="w-4 h-4 grid place-items-center bg-white/90 border border-navy rounded-[3px] text-[10px] font-bold text-navy">□</span>
+              <span class="w-4 h-4 grid place-items-center bg-white/90 border border-navy rounded-[3px] text-[10px] font-bold text-navy">✕</span>
+            </span>
+          </div>
+
+          <form id="contact-form" class="p-6 md:p-8 space-y-5" novalidate>
+            <div class="grid sm:grid-cols-2 gap-5">
+              <label class="block">
+                <span class="flabel block mb-2">Your name</span>
+                <input name="name" type="text" required class="field" placeholder="Andrea &amp; Kiwi">
+              </label>
+              <label class="block">
+                <span class="flabel block mb-2">Email</span>
+                <input name="email" type="email" required class="field" placeholder="you@email.com">
+              </label>
+            </div>
+
+            <label class="block">
+              <span class="flabel block mb-2">What's this about?</span>
+              <select name="topic" class="field">
+                <option>A proof or my design</option>
+                <option>An existing order</option>
+                <option>Photo help before I buy</option>
+                <option>Wholesale / collab</option>
+                <option>Just saying hi 👋</option>
+              </select>
+            </label>
+
+            <label class="block">
+              <span class="flabel block mb-2">Message</span>
+              <textarea name="message" rows="5" required class="field resize-y" placeholder="Tell us everything — the more detail, the better the proof."></textarea>
+            </label>
+
+            <div>
+              <span class="flabel block mb-2">Add a photo (optional)</span>
+              <label id="dropzone" class="dropzone flex items-center gap-4 p-4 cursor-pointer">
+                <span class="shrink-0 grid place-items-center w-12 h-12 rounded-full bg-cream border-2 border-navy text-2xl" aria-hidden="true">🐾</span>
+                <span class="flex-1">
+                  <span id="dz-title" class="block font-bold text-navy">Attach your pet's photo</span>
+                  <span id="dz-sub" class="block text-sm text-navy/60">Drag &amp; drop or tap — helps us answer faster.</span>
+                </span>
+                <input id="file" name="photo" type="file" accept="image/*" class="sr-only">
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-hard w-full bg-peri text-navy font-bold rounded-full px-6 py-4 text-lg">Send it →</button>
+            <p class="text-xs text-navy/55 text-center">Prefer email? <a href="mailto:andrea@mainpups.com" class="text-burgundy underline underline-offset-2 hover:text-scarlet">andrea@mainpups.com</a> works too.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- paw reaching up toward the Send button from the grass below -->
+    <img src="../brand_assets/dog objects/web/dog-paw.webp" alt="" aria-hidden="true" class="reach-paw">
+  </section>
+
+  <!-- ===== Band 2 · Other ways to reach us (grass) ===== -->
+  <section class="torn-top -mt-6 tex-bg tex-grass bg-cream py-14 md:py-20 relative z-10">
+    <div class="max-w-6xl mx-auto px-5">
+      <h2 class="on-grass-title text-[clamp(1.7rem,3.5vw,2.6rem)] text-center">Other ways to bark at us</h2>
+      <div class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <a href="mailto:andrea@mainpups.com" class="method reveal bg-white hard-sm rounded-2xl p-5 rotate-[-1deg] block">
+          <p class="ico text-4xl mb-3" aria-hidden="true">✉️</p>
+          <h3 class="font-bold text-navy">Email</h3>
+          <p class="text-sm text-navy/70 mt-1 break-words">andrea@mainpups.com</p>
+        </a>
+        <a href="#" class="method reveal bg-white hard-sm rounded-2xl p-5 sm:translate-y-3 block">
+          <p class="ico text-4xl mb-3" aria-hidden="true">📸</p>
+          <h3 class="font-bold text-navy">Instagram</h3>
+          <p class="text-sm text-navy/70 mt-1">@mainpups — DMs open</p>
+        </a>
+        <a href="#" class="method reveal bg-white hard-sm rounded-2xl p-5 rotate-[1deg] block">
+          <p class="ico text-4xl mb-3" aria-hidden="true">🎬</p>
+          <h3 class="font-bold text-navy">TikTok</h3>
+          <p class="text-sm text-navy/70 mt-1">@mainpups — proof reveals</p>
+        </a>
+        <div class="method reveal bg-white hard-sm rounded-2xl p-5 sm:translate-y-3">
+          <p class="ico text-4xl mb-3" aria-hidden="true">📍</p>
+          <h3 class="font-bold text-navy">The studio</h3>
+          <p class="text-sm text-navy/70 mt-1">Made with care in Miami, FL</p>
+        </div>
+      </div>
+
+      <!-- promise card on the grass -->
+      <div class="max-w-3xl mx-auto px-5 mt-14">
+        <div class="reveal bg-white hard rounded-3xl p-6 md:p-9 text-center relative">
+          <img src="../brand_assets/stickers/web/approved-by-kiwi_pink-scallop-seal_new.webp" alt="" aria-hidden="true" class="absolute -top-8 -left-4 md:-left-8 w-20 md:w-24 rotate-[-10deg] pointer-events-none drop-shadow">
+          <p class="display text-navy text-[clamp(1.5rem,3vw,2.2rem)]">Every message gets a real reply — usually within one business day.</p>
+          <p class="text-navy/70 mt-2">No ticket numbers, no "your call is important to us." Just Andrea, and one very involved dog.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Band 3 · Quick answers (white) ===== -->
+  <section class="torn-top -mt-6 bg-white py-14 md:py-20 relative z-20">
+    <div class="max-w-3xl mx-auto px-5">
+      <h2 class="text-navy text-[clamp(1.7rem,3.5vw,2.6rem)] mb-6 reveal">Before you write — quick answers</h2>
+      <div class="reveal">
+        <details class="acc border-b-2 border-navy/15 py-4" open>
+          <summary class="flex items-center justify-between gap-4">
+            <span class="font-bold text-navy text-lg">How fast will I hear back?</span>
+            <span class="chev text-navy" aria-hidden="true">▾</span>
+          </summary>
+          <div class="acc-panel"><div><p class="pt-3 text-navy/80">Usually within one business day, often much sooner. If it's about an in-progress proof, we'll fold it right into your order thread.</p></div></div>
+        </details>
+        <details class="acc border-b-2 border-navy/15 py-4">
+          <summary class="flex items-center justify-between gap-4">
+            <span class="font-bold text-navy text-lg">Where's my order?</span>
+            <span class="chev text-navy" aria-hidden="true">▾</span>
+          </summary>
+          <div class="acc-panel"><div><p class="pt-3 text-navy/80">Every piece is made after you approve your proof — typically 5–10 business days to your door. Include your order number here and we'll pull it up fast.</p></div></div>
+        </details>
+        <details class="acc border-b-2 border-navy/15 py-4">
+          <summary class="flex items-center justify-between gap-4">
+            <span class="font-bold text-navy text-lg">Can I change my proof?</span>
+            <span class="chev text-navy" aria-hidden="true">▾</span>
+          </summary>
+          <div class="acc-panel"><div><p class="pt-3 text-navy/80">Always. Proof revisions are free and nothing prints until you say go — that's the whole promise. Tell us what to tweak and we'll send a new one.</p></div></div>
+        </details>
+        <details class="acc border-b-2 border-navy/15 py-4">
+          <summary class="flex items-center justify-between gap-4">
+            <span class="font-bold text-navy text-lg">Something arrived wrong.</span>
+            <span class="chev text-navy" aria-hidden="true">▾</span>
+          </summary>
+          <div class="acc-panel"><div><p class="pt-3 text-navy/80">We'll make it right — remake or refund. Send a photo of the issue with your order number and we'll sort it same day.</p></div></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER (shared) ============ -->
+<footer class="torn-top -mt-6 bg-navy text-cream relative z-30">
+  <div class="absolute -top-16 right-8 md:right-16 flex items-end gap-3">
+    <div class="msn-win mb-10 hidden sm:block" role="img" aria-label="Kiwi says: still here?">
+      <div class="msn-bar"><span class="msn-status"></span>Kiwi — Online</div>
+      <div class="msn-msg"><b>Kiwi says:</b> still here? 🐾</div>
+    </div>
+    <img src="../brand_assets/models/kiwi/_MG_6381.jpg" alt="Kiwi peeking over the footer" class="sticker rounded-full w-24 h-24 object-cover object-top rotate-3">
+  </div>
+
+  <div class="max-w-6xl mx-auto px-5 pt-20 pb-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">Shop</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="index.html#shop" class="hover:text-cream">Apparel</a></li>
+          <li><a href="index.html#shop" class="hover:text-cream">Home</a></li>
+          <li><a href="index.html#shop" class="hover:text-cream">Wall Art</a></li>
+          <li><a href="index.html#shop" class="hover:text-cream">For Your Pet</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">Learn</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="index.html#pack" class="hover:text-cream">The Pack</a></li>
+          <li><a href="#" class="hover:text-cream">Journal</a></li>
+          <li><a href="#" class="hover:text-cream">Photo Tips</a></li>
+          <li><a href="contact.html" class="hover:text-cream">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">About</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="index.html#story" class="hover:text-cream">Our Story</a></li>
+          <li><a href="#" class="hover:text-cream">Mission</a></li>
+          <li><a href="#" class="hover:text-cream">The Kiwi Chronicles</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">Contact</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="mailto:andrea@mainpups.com" class="hover:text-cream">andrea@mainpups.com</a></li>
+          <li><a href="#" class="hover:text-cream">Instagram: @mainpups</a></li>
+          <li><a href="#" class="hover:text-cream">TikTok: @mainpups</a></li>
+          <li>Miami, FL</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="mt-12 text-center text-cream/70 text-sm">A portion of every mainpups order funds recovery for the June 24, 2026 earthquake in Venezuela.
+      <a href="#" class="text-blush underline underline-offset-4 decoration-2 hover:text-cream">Learn more →</a>
+    </p>
+
+    <div class="mt-8 pt-6 border-t border-cream/15 flex flex-col md:flex-row items-center justify-between gap-3 text-cream/60 text-sm">
+      <p>© 2026 mainpups</p>
+      <div class="flex flex-wrap gap-5">
+        <a href="#" class="hover:text-cream">Privacy Policy</a>
+        <a href="#" class="hover:text-cream">Terms of Service</a>
+        <a href="#" class="hover:text-cream">Shipping &amp; Returns</a>
+      </div>
+      <p>Made with care in Miami</p>
+    </div>
+  </div>
+</footer>
+
+<!-- toast -->
+<div id="toast" class="toast bg-navy text-cream font-bold rounded-full px-6 py-3 shadow-lg">Message sent 🐾</div>
+
+<script>
+(function(){
+  var $ = function(s){return document.querySelector(s);};
+
+  // scroll reveal
+  var reveals=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    },{rootMargin:'0px 0px -8% 0px'});
+    reveals.forEach(function(el){ io.observe(el); });
+    // safety net: never leave content stuck hidden (no-scroll captures, edge cases)
+    setTimeout(function(){ reveals.forEach(function(el){ el.classList.add('in'); }); }, 1400);
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // dropzone
+  var dz=$('#dropzone'), file=$('#file');
+  ['dragover','dragenter'].forEach(function(e){ dz.addEventListener(e,function(ev){ ev.preventDefault(); dz.classList.add('drag'); }); });
+  ['dragleave','drop'].forEach(function(e){ dz.addEventListener(e,function(){ dz.classList.remove('drag'); }); });
+  dz.addEventListener('drop',function(ev){ ev.preventDefault(); if(ev.dataTransfer.files[0]){ file.files=ev.dataTransfer.files; setFile(ev.dataTransfer.files[0]); } });
+  file.addEventListener('change',function(){ if(file.files[0]) setFile(file.files[0]); });
+  function setFile(f){ $('#dz-title').textContent='Photo attached: '+f.name; $('#dz-sub').textContent="Great — that gives us a head start."; dz.style.borderStyle='solid'; }
+
+  // form submit (demo)
+  var toast=$('#toast'), tt;
+  $('#contact-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!this.checkValidity()){ this.reportValidity(); return; }
+    toast.textContent='Message sent 🐾  Kiwi is on it.'; toast.classList.add('show');
+    clearTimeout(tt); tt=setTimeout(function(){ toast.classList.remove('show'); },2600);
+    this.reset(); $('#dz-title').textContent='Attach your pet’s photo'; $('#dz-sub').textContent='Drag & drop or tap — helps us answer faster.'; dz.style.borderStyle='dashed';
+  });
+
+  // subtle random tear offset per section (matches homepage seams)
+  document.querySelectorAll('.torn-top').forEach(function(el,i){ el.style.setProperty('--tear-shift',(i*37%80-40)+'px'); });
+})();
+</script>
+</body>
+</html>

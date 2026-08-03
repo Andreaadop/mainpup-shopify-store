@@ -696,5 +696,108 @@ tailwind.config = {
 </script>
 <!-- ===== /ZOOM-LIGHTBOX ===== -->
 
+
+<!-- ===== KIWI-CHAT (footer Kiwi → click-to-open chat bubble) ===== -->
+<style>
+  .kiwi-launch { cursor:pointer; position:relative; display:inline-block; transition:transform .2s cubic-bezier(.22,1,.36,1); }
+  .kiwi-launch:hover { transform:translateY(-3px) scale(1.03); }
+  .kiwi-launch:focus-visible { outline:3px solid #F7D8F8; outline-offset:4px; border-radius:14px; }
+  .kiwi-dot {
+    position:absolute; top:10px; right:6px; width:15px; height:15px; border-radius:50%;
+    background:#F31F13; border:2px solid #fff; animation:kiwi-pulse 1.9s ease-in-out infinite; pointer-events:none;
+  }
+  @keyframes kiwi-pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(243,31,19,.5); } 50%{ box-shadow:0 0 0 7px rgba(243,31,19,0); } }
+
+  /* "click me" speech bubble sitting next to the Kiwi head */
+  .kiwi-hint {
+    align-self:center; margin-bottom:26px; position:relative; cursor:pointer; white-space:nowrap;
+    background:#fff; border:2px solid #0B2D4F; border-radius:12px; padding:.34rem .66rem;
+    font-family:'Pixelify Sans',monospace; font-weight:700; font-size:.74rem; color:#0B2D4F;
+    box-shadow:2px 2px 0 #0B2D4F; animation:kiwi-bob 2.4s ease-in-out infinite;
+  }
+  .kiwi-hint::after { content:''; position:absolute; right:-9px; top:50%; transform:translateY(-50%);
+    border:7px solid transparent; border-left-color:#0B2D4F; }
+  .kiwi-hint::before { content:''; position:absolute; right:-6px; top:50%; transform:translateY(-50%);
+    border:5px solid transparent; border-left-color:#fff; z-index:1; }
+  @keyframes kiwi-bob { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+
+  .msn-win { transition:opacity .18s ease; transform-origin:bottom right; }
+  .msn-win.kiwi-closed { display:none !important; }
+  .msn-win.kiwi-pop { animation:kiwi-pop .26s cubic-bezier(.22,1,.36,1); }
+  @keyframes kiwi-pop { from{ opacity:0; transform:translateY(8px) scale(.92); } to{ opacity:1; transform:none; } }
+  .msn-close {
+    margin-left:auto; cursor:pointer; width:16px; height:16px; line-height:13px; text-align:center; font-size:.66rem;
+    color:#fff; background:linear-gradient(180deg,#e2665c,#c8140a); border:1px solid #7c0a04; border-radius:3px;
+  }
+  .msn-close:hover { filter:brightness(1.08); }
+  .msn-cta {
+    display:inline-flex; align-items:center; gap:.35rem; margin-top:10px; font-family:'Pixelify Sans',monospace;
+    font-size:.78rem; font-weight:700; color:#fff; text-decoration:none; padding:.42rem .72rem; border-radius:7px;
+    border:1px solid #16407a; background:linear-gradient(180deg,#7cb6f2,#285fa8);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 2px 4px rgba(11,45,79,.3); transition:transform .14s ease;
+  }
+  .msn-cta:hover { transform:translateY(-1px); }
+  .msn-cta:focus-visible { outline:3px solid #F7D8F8; outline-offset:2px; }
+  @media (prefers-reduced-motion:reduce){ .kiwi-dot, .kiwi-hint, .msn-win.kiwi-pop { animation:none; } }
+</style>
+<script>
+(function(){
+  var win=document.querySelector('footer .msn-win');
+  if(!win || win.dataset.kiwiChat) return;
+  var row=win.parentElement;
+  var kiwi=row ? row.querySelector('img') : null;
+  if(!kiwi) return;
+  win.dataset.kiwiChat='1';
+
+  // rewrite the bubble: dry-funny line + a button to the contact page
+  win.classList.remove('hidden');       // allow it on mobile once opened
+  win.classList.add('kiwi-closed');     // start collapsed
+  win.setAttribute('role','dialog');
+  win.setAttribute('aria-label','Chat with Kiwi');
+  var bar=win.querySelector('.msn-bar');
+  if(bar){
+    var x=document.createElement('span');
+    x.className='msn-close'; x.textContent='✕'; x.setAttribute('aria-label','Close');
+    x.addEventListener('click', function(e){ e.stopPropagation(); closeIt(); });
+    bar.appendChild(x);
+  }
+  var msg=win.querySelector('.msn-msg');
+  if(msg){
+    msg.innerHTML='<b>Kiwi:</b> psst — I can’t type, no thumbs. But my humans read everything and reply fast. 🐾'
+      + '<br><a class="msn-cta" href="contact.html">Reach the humans →</a>';
+  }
+
+  // wrap the Kiwi head so it becomes a launcher with a "new message" dot
+  var wrap=document.createElement('span');
+  wrap.className='kiwi-launch';
+  wrap.setAttribute('role','button');
+  wrap.setAttribute('tabindex','0');
+  wrap.setAttribute('aria-label','Chat with Kiwi');
+  wrap.setAttribute('aria-expanded','false');
+  row.insertBefore(wrap, kiwi);
+  wrap.appendChild(kiwi);
+  var dot=document.createElement('span'); dot.className='kiwi-dot'; dot.setAttribute('aria-hidden','true');
+  wrap.appendChild(dot);
+
+  // "click me" hint bubble next to the head (also opens the chat)
+  var hint=document.createElement('button');
+  hint.type='button';
+  hint.className='kiwi-hint';
+  hint.textContent='psst — need a human?';
+  hint.setAttribute('aria-label','Chat with Kiwi');
+  row.insertBefore(hint, wrap);
+
+  function openIt(){ win.classList.remove('kiwi-closed'); win.classList.add('kiwi-pop'); dot.style.display='none'; hint.style.display='none'; wrap.setAttribute('aria-expanded','true'); }
+  function closeIt(){ win.classList.add('kiwi-closed'); win.classList.remove('kiwi-pop'); dot.style.display=''; hint.style.display=''; wrap.setAttribute('aria-expanded','false'); }
+  function toggle(){ win.classList.contains('kiwi-closed') ? openIt() : closeIt(); }
+
+  wrap.addEventListener('click', toggle);
+  hint.addEventListener('click', toggle);
+  wrap.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !win.classList.contains('kiwi-closed')) closeIt(); });
+})();
+</script>
+<!-- ===== /KIWI-CHAT ===== -->
+
 </body>
 </html>

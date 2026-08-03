@@ -3,6 +3,7 @@
   "buildCommand": null,
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/", "destination": "/homepage/index.html" }
+    { "source": "/", "destination": "/homepage/index.html" },
+    { "source": "/((?!homepage/).*\\.html)", "destination": "/homepage/$1" }
   ]
 }

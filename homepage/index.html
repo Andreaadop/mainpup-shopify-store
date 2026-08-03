@@ -42,11 +42,13 @@ tailwind.config = {
     font-display: swap;
   }
   /* utility "label voice": eyebrows, chips, captions, metadata (Coral Pixels retired) */
-  .pixel { font-family: 'Spline Sans', system-ui, sans-serif; font-weight: 700; letter-spacing: .08em; }
+  .pixel { font-family: 'Pixelify Sans', 'Spline Sans', system-ui, sans-serif; font-weight: 700; letter-spacing: .06em; }
 
 
   body { font-family: 'Spline Sans', sans-serif; background: #F8EEE5; color: #0B2D4F; line-height: 1.7; }
   h1, h2, .display { font-family: 'Remaid', 'Spline Sans', sans-serif; letter-spacing: -0.015em; line-height: 1.0; }
+  /* secondary headings (product names, step titles) use the pixel nav font — main section H2s stay Remaid */
+  h3 { font-family: 'Pixelify Sans', 'Spline Sans', sans-serif; letter-spacing: .01em; }
 
   /* Y2K outlined type */
   .outline-type { color: transparent; -webkit-text-stroke: 2px #6C1736; }
@@ -610,7 +612,7 @@ tailwind.config = {
 
 <!-- ============ 2 · TICKER ============ -->
 <div class="marquee win-marquee py-3" aria-hidden="true">
-  <div class="marquee-track" style="--speed:26s">
+  <div class="marquee-track" style="--speed:42s">
     <div class="flex items-center gap-8 pr-8 win-font text-navy font-bold tracking-[.08em] uppercase text-base whitespace-nowrap">
       <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
       <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
@@ -742,7 +744,7 @@ tailwind.config = {
 
 <!-- ============ marquee 2 (reverse) ============ -->
 <div class="marquee win-marquee-peri py-3" aria-hidden="true">
-  <div class="marquee-track rev" style="--speed:30s">
+  <div class="marquee-track rev" style="--speed:48s">
     <div class="flex items-center gap-8 pr-8 win-font text-navy font-bold tracking-[.08em] uppercase text-base whitespace-nowrap">
       <span>Upload a photo</span><span class="text-burgundy">★</span>
       <span>Approve the proof</span><span class="text-scarlet">★</span>
@@ -1771,7 +1773,7 @@ tailwind.config = {
   const section = document.querySelector('#shop');
   if (reduced || !wrap || !section || !window.gsap) return;
 
-  gsap.set(wrap, { xPercent: -118, yPercent: -50, rotation: -3 });
+  gsap.set(wrap, { xPercent: -140, yPercent: -50, rotation: -3 });
   const qx = gsap.quickTo(wrap, 'xPercent', { duration: .5, ease: 'power3' });
   const qy = gsap.quickTo(wrap, 'y',        { duration: .3, ease: 'power2' });
 
@@ -1784,8 +1786,8 @@ tailwind.config = {
       // keep the paw clear of the top heading and the bottom border (marquee)
       const ty = Math.max(140, Math.min(r.height - 210, py - r.top));
       wrap.style.top = ty + 'px';
-      if (!out) { out = true; qx(62); }                       // reach well out from the left border
-    } else if (out) { out = false; qx(-118); }
+      if (!out) { out = true; qx(0); }                        // arm flush with the border, no cream gap
+    } else if (out) { out = false; qx(-140); }
   };
   const ping = () => { if (!raf) raf = requestAnimationFrame(update); };
   addEventListener('pointermove', e => { py = e.clientY; ping(); }, { passive: true });

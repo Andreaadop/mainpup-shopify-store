@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Pet Portraits, Shirts & Gifts | mainpups</title>
+<meta name="description" content="Custom portraits, shirts, mugs, and pillows for the pet who's the main character of your home. Upload a photo, approve the proof, then we print.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:ital,wght@0,300..700;1,300..700&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<!-- ransom-clipping display fonts (used on hero-title hover) -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Abril+Fatface&family=Bungee&family=Special+Elite&family=Rye&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cream:    '#F8EEE5',
+        blush:    '#F7D8F8',
+        peri:     '#ABC5FE',
+        scarlet:  '#F31F13',
+        burgundy: '#6C1736',
+        navy:     '#0B2D4F',
+        sand:     '#EFDCC9',
+      },
+      fontFamily: {
+        display: ['Remaid', 'Spline Sans', 'sans-serif'],
+        body: ['"Spline Sans"', 'sans-serif'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  @font-face {
+    font-family: 'Remaid';
+    src: url('/brand_assets/font/Remaid.otf') format('opentype');
+    font-display: swap;
+  }
+  /* utility "label voice": eyebrows, chips, captions, metadata (Coral Pixels retired) */
+  .pixel { font-family: 'Spline Sans', system-ui, sans-serif; font-weight: 700; letter-spacing: .08em; }
+
+
+  body { font-family: 'Spline Sans', sans-serif; background: #F8EEE5; color: #0B2D4F; line-height: 1.7; }
+  h1, h2, .display { font-family: 'Remaid', 'Spline Sans', sans-serif; letter-spacing: -0.015em; line-height: 1.0; }
+
+  /* Y2K outlined type */
+  .outline-type { color: transparent; -webkit-text-stroke: 2px #6C1736; }
+  .outline-type-navy { color: transparent; -webkit-text-stroke: 2px #0B2D4F; }
+  .outline-ghost { color: transparent; -webkit-text-stroke: 1.5px rgba(11,45,79,.18); }
+
+  /* paper grain */
+  .grain { position: relative; }
+  .grain::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .grain > * { position: relative; z-index: 1; }
+
+  /* dot-grid paper (founder section) */
+  .dotgrid { background-image: radial-gradient(rgba(11,45,79,.14) 1.2px, transparent 1.2px); background-size: 22px 22px; }
+
+  /* photographed brand-color paper / grass textures (brand_assets/textures/web) */
+  .tex-bg    { background-repeat: no-repeat; background-position: center; background-size: cover; }
+  .tex-peri  { background-image: url('/brand_assets/textures/web/paper_periwinkle_dot_01.webp'); }
+  .tex-pink  { background-image: url('/brand_assets/textures/web/paper_pink_soft_01.webp'); }
+  .tex-grass { background-image: url('/brand_assets/textures/web/grass_green_01.webp'); }
+  /* Pack heading sits directly on the grass — no card, readability comes from a dark edge + drop shadow */
+  .pack-eyebrow { color: #FFEA9E; text-shadow: 0 1px 2px rgba(11,45,79,.95), 0 0 6px rgba(11,45,79,.7); }
+  .pack-head {
+    color: #F8EEE5;
+    text-shadow:
+      -1.5px -1.5px 0 #0B2D4F, 1.5px -1.5px 0 #0B2D4F, -1.5px 1.5px 0 #0B2D4F, 1.5px 1.5px 0 #0B2D4F,
+      0 4px 12px rgba(11,45,79,.75);
+  }
+  .pack-lede { color: #F8EEE5; font-weight: 600; text-shadow: 0 1px 2px rgba(11,45,79,.98), 0 0 5px rgba(11,45,79,.85); }
+
+  /* checkerboard strips */
+  .checker {
+    height: 22px;
+    background: repeating-conic-gradient(#0B2D4F 0% 25%, #F8EEE5 0% 50%);
+    background-size: 22px 22px;
+  }
+
+  /* torn-paper section edges — each section's own (textured) paper rips along its
+     top, revealing the section above through the notches. No hard outline; a soft
+     shadow lifts the edge. --tear-shift is scrubbed on scroll so the rip re-forms
+     as the next section slides in. */
+  :root {
+    --tear-svg: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='26' preserveAspectRatio='none'><path fill='white' d='M0,13 12,5 26,16 40,6 52,15 68,4 82,14 96,7 112,17 126,6 140,13 154,3 170,15 184,8 198,17 214,6 228,14 242,5 256,16 270,7 286,15 300,4 314,14 328,8 344,17 358,6 372,13 386,5 400,13 400,26 0,26 Z'/></svg>");
+  }
+  .torn-top {
+    --tear-h: 26px;
+    --tear-shift: 0px;
+    -webkit-mask-image: var(--tear-svg), linear-gradient(#000,#000);
+            mask-image: var(--tear-svg), linear-gradient(#000,#000);
+    -webkit-mask-size: 400px var(--tear-h), 100% calc(100% - var(--tear-h) + 2px);
+            mask-size: 400px var(--tear-h), 100% calc(100% - var(--tear-h) + 2px);
+    -webkit-mask-position: var(--tear-shift) top, left bottom;
+            mask-position: var(--tear-shift) top, left bottom;
+    -webkit-mask-repeat: repeat-x, no-repeat;
+            mask-repeat: repeat-x, no-repeat;
+    filter: drop-shadow(0 -2px 3px rgba(11,45,79,.20));
+  }
+
+  /* top-edge-only torn strip — for sections whose overflow must stay visible
+     (e.g. the footer, where Kiwi peeks above the top edge). Sits just above the
+     element and rips into whatever is behind it, no clipping of children. */
+  .tear-up {
+    --tear-h: 26px;
+    --tear-shift: 0px;
+    position: absolute; left: 0; right: 0; top: 0; height: var(--tear-h);
+    transform: translateY(-100%); pointer-events: none;
+    -webkit-mask-image: var(--tear-svg); mask-image: var(--tear-svg);
+    -webkit-mask-size: 400px 100%; mask-size: 400px 100%;
+    -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+    -webkit-mask-position: var(--tear-shift) top; mask-position: var(--tear-shift) top;
+    filter: drop-shadow(0 -2px 3px rgba(11,45,79,.20));
+  }
+
+  /* marquee */
+  .marquee { overflow: hidden; }
+  /* pink Win95 toolbar material for the ticker (same dither + bevel as the nav bar) */
+  .win-marquee {
+    background-image:
+      var(--win-dither),
+      linear-gradient(180deg, #F7D8F8 0%, #E7A6DC 100%);
+    background-size: 4px 4px, 100% 100%;
+    border-top: 2px solid #0B2D4F;
+    border-bottom: 2px solid #0B2D4F;
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.5),
+      inset 0 -3px 0 rgba(2,15,33,.32);
+  }
+  /* periwinkle variant of the same Win95 toolbar material (marquee 2) */
+  .win-marquee-peri {
+    background-image:
+      var(--win-dither),
+      linear-gradient(180deg, #C7D8FF 0%, #93B0F5 100%);
+    background-size: 4px 4px, 100% 100%;
+    border-top: 2px solid #0B2D4F;
+    border-bottom: 2px solid #0B2D4F;
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.5),
+      inset 0 -3px 0 rgba(2,15,33,.32);
+  }
+  .marquee-track { display: flex; width: max-content; animation: marquee var(--speed, 26s) linear infinite; }
+  .marquee-track.rev { animation-direction: reverse; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* sticker + hard Y2K shadow language */
+  .sticker {
+    border: 6px solid #fff;
+    box-shadow: 0 14px 28px -10px rgba(108, 23, 54, .35), 0 3px 8px rgba(11, 45, 79, .12);
+  }
+  .arch { border-radius: 46% 46% 14px 14px / 38% 38% 14px 14px; }
+  .hard { border: 3px solid #0B2D4F; box-shadow: 6px 6px 0 #0B2D4F; }
+  .hard-sm { border: 2.5px solid #0B2D4F; box-shadow: 4px 4px 0 #0B2D4F; }
+
+  /* polaroid — a real photo print: white frame, soft cast shadow (not the Y2K hard offset) */
+  .polaroid { background: #fff; padding: 12px 12px 0 12px; border: 1px solid rgba(11,45,79,.06);
+    box-shadow: 0 1px 2px rgba(11,45,79,.25), 0 10px 18px -6px rgba(11,45,79,.45), 0 26px 40px -14px rgba(11,45,79,.5); }
+  .polaroid figcaption { font-family: 'Spline Sans', system-ui, sans-serif; font-weight: 600; font-size: .82rem; color: rgba(11,45,79,.8); padding: .5rem .15rem .6rem; letter-spacing: .04em; }
+  .polaroid { transition: transform .35s cubic-bezier(.22,1.4,.36,1), box-shadow .35s ease; }
+  .polaroid:hover { transform: rotate(0deg) translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 2px 4px rgba(11,45,79,.28), 0 18px 28px -8px rgba(11,45,79,.5), 0 40px 56px -18px rgba(11,45,79,.55); }
+
+  /* speech bubble */
+  .bubble {
+    position: relative; background: #fff; color: #0B2D4F;
+    border: 2px solid #0B2D4F; border-radius: 16px 20px 18px 22px;
+    padding: .45rem .85rem; font-size: .9rem; font-weight: 500; line-height: 1.35;
+    box-shadow: 4px 4px 0 rgba(11,45,79,.85);
+  }
+  .bubble::after {
+    content: ''; position: absolute; width: 12px; height: 12px; background: #fff;
+    border-left: 2px solid #0B2D4F; border-bottom: 2px solid #0B2D4F;
+    bottom: -8px; left: 26px; transform: rotate(-55deg) skewX(-15deg);
+  }
+  .bubble-r::after { left: auto; right: 26px; transform: rotate(-125deg) skewX(15deg); }
+
+  /* 90s MSN Messenger chat window (footer corner) */
+  .msn-win {
+    font-family: Tahoma, Verdana, Geneva, sans-serif; width: 194px;
+    border: 1px solid #16407a; border-radius: 8px; overflow: hidden; background: #eaf2fd;
+    box-shadow: 0 12px 26px -6px rgba(11,45,79,.55), 0 3px 8px rgba(11,45,79,.35);
+  }
+  .msn-bar {
+    display: flex; align-items: center; gap: 7px; padding: 5px 9px 6px;
+    font-size: .72rem; font-weight: bold; color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,.28);
+    background: linear-gradient(180deg, #7cb6f2 0%, #3d7cc9 45%, #285fa8 100%);
+    border-bottom: 1px solid #16407a; box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  .msn-status {
+    width: 9px; height: 9px; border-radius: 50%; flex: none;
+    background: radial-gradient(circle at 35% 30%, #c6ffbe, #2fbf28 72%);
+    box-shadow: 0 0 5px #45d13a, inset 0 0 2px rgba(255,255,255,.85);
+  }
+  .msn-msg {
+    padding: 9px 11px 11px; font-size: .82rem; line-height: 1.42; color: #173a6b;
+    background: linear-gradient(180deg, #ffffff 0%, #eaf2fd 100%);
+  }
+  .msn-msg b { color: #2f6fc0; }
+  .msn-win:hover { animation: msn-nudge .4s ease; }
+  @keyframes msn-nudge {
+    0%,100% { transform: translate(0,0); } 20% { transform: translate(-3px,2px); }
+    40% { transform: translate(3px,-2px); } 60% { transform: translate(-2px,1px); } 80% { transform: translate(2px,-1px); }
+  }
+
+  /* shared Win95 dither swatch (matches the nav title bar) */
+  :root {
+    --win-dither: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4'><rect x='0' y='0' width='1' height='1' fill='white' fill-opacity='.10'/><rect x='2' y='2' width='1' height='1' fill='white' fill-opacity='.10'/><rect x='1' y='1' width='1' height='1' fill='black' fill-opacity='.16'/><rect x='3' y='3' width='1' height='1' fill='black' fill-opacity='.16'/></svg>");
+  }
+
+  /* retro OS window — same Win95 material as the nav, burgundy title bar */
+  .oswindow {
+    background: #fff; border: 2px solid #0B2D4F; border-radius: 12px; overflow: hidden;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.5), 10px 10px 0 #0B2D4F;
+  }
+  .oswindow-bar {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px 9px 15px;
+    border-bottom: 2px solid #0B2D4F;
+    background-image: var(--win-dither), linear-gradient(90deg, #6C1736 0%, #9E3358 58%, #C56B87 100%);
+    background-size: 4px 4px, 100% 100%;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.28), inset 0 -3px 0 rgba(2,15,33,.4);
+  }
+  .oswindow-ctrl {
+    width: 27px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-size: .78rem; line-height: 1; border: 2px solid #0B2D4F;
+    background-image: var(--win-dither), linear-gradient(180deg, #B4536E, #7C2542);
+    background-size: 4px 4px, 100% 100%;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(2,15,33,.45);
+  }
+
+  /* interactive states */
+  .btn { transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s ease, background-color .18s ease; will-change: transform; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #F31F13; outline-offset: 3px; }
+
+  .btn-hard { border: 3px solid #0B2D4F; box-shadow: 5px 5px 0 #0B2D4F; }
+  .btn-hard:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #0B2D4F; }
+  .btn-hard:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #0B2D4F; }
+
+  /* tennis ball that rolls after the cursor across the products section */
+  .tennis-ball { position: absolute; left: 0; top: 0; width: clamp(70px, 7vw, 96px);
+    z-index: 40; pointer-events: none; opacity: 0; will-change: transform;
+    filter: drop-shadow(0 7px 9px rgba(11,45,79,.32)); }
+  .tennis-ball img { display: block; width: 100%; }
+
+  .tile-wrap { perspective: 700px; }
+  .tile { transition: box-shadow .3s ease; transform-style: preserve-3d; will-change: transform; }
+
+  .navlink { position: relative; transition: color .18s ease; }
+  .navlink::after {
+    content: ''; position: absolute; left: 0; bottom: -3px; height: 2px; width: 100%;
+    background: #F31F13; transform: scaleX(0); transform-origin: left;
+    transition: transform .22s cubic-bezier(.22,1,.36,1);
+  }
+  .navlink:hover::after, .navlink:focus-visible::after { transform: scaleX(1); }
+
+  /* rotating circular text + starbursts */
+  .spin-slow { animation: spin 18s linear infinite; transform-origin: center; }
+  .spin-slower { animation: spin 40s linear infinite; transform-origin: center; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* hero char animation setup (JS splits; chars sit in masks) */
+  .char-mask { display: inline-block; overflow: hidden; vertical-align: bottom; }
+  .char { display: inline-block; will-change: transform; }
+
+  /* liquid glass lens (haoqi-style hover, CSS-approximation tier) */
+  .glass-lens {
+    position: absolute; left: 0; top: 0; width: 130px; height: 130px; border-radius: 50%;
+    pointer-events: none; opacity: 0; z-index: 30; will-change: transform;
+    backdrop-filter: blur(7px) saturate(1.65) brightness(1.06);
+    -webkit-backdrop-filter: blur(7px) saturate(1.65) brightness(1.06);
+    border: 1.5px solid rgba(255,255,255,.7);
+    box-shadow:
+      inset 10px 14px 24px -14px rgba(255,255,255,.95),
+      inset -10px -12px 24px -16px rgba(11,45,79,.45),
+      0 10px 24px -10px rgba(11,45,79,.35);
+  }
+  .glass-lens::after {
+    content: ''; position: absolute; top: 14%; left: 18%; width: 30%; height: 18%;
+    border-radius: 50%; background: rgba(255,255,255,.85); filter: blur(4px);
+    transform: rotate(-18deg);
+  }
+
+  /* the fake-OS system font: a real pixel webfont (renders any color, unlike Coral Pixels) */
+  .win-font { font-family: 'Pixelify Sans', monospace; letter-spacing: .01em; }
+
+  /* floating Win95 title-bar nav: dithered gradient, bevel highlights, pill shape */
+  .win-titlebar {
+    background-image:
+      var(--win-dither),
+      linear-gradient(90deg, #0B2D4F 0%, #2E5B9E 55%, #6C8FD1 100%);
+    background-size: 4px 4px, 100% 100%;
+    border: 2px solid #0B2D4F;
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.3),
+      inset 0 -3px 0 rgba(2,15,33,.45),
+      0 12px 26px -12px rgba(11,45,79,.55);
+  }
+  .win-btn {
+    background-image:
+      var(--win-dither),
+      linear-gradient(180deg, #3E6FB8, #16406F);
+    background-size: 4px 4px, 100% 100%;
+    border: 2px solid #0B2D4F;
+    color: #fff;
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.35),
+      inset 0 -2px 0 rgba(2,15,33,.5),
+      2px 2px 0 rgba(2,15,33,.35);
+  }
+  .win-btn:active {
+    box-shadow: inset 0 2px 4px rgba(2,15,33,.6), inset 0 -1px 0 rgba(255,255,255,.15);
+  }
+
+  /* CTA buttons: same Win95 toolbar material as the nav bar + marquees (dither + bevel), brand colors */
+  .win-cta {
+    background-image: var(--win-dither), linear-gradient(180deg, var(--c1), var(--c2));
+    background-size: 4px 4px, 100% 100%;
+    border: 2px solid #0B2D4F;
+    text-shadow: 0 1px 0 rgba(2,15,33,.35);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.42),
+      inset 0 -3px 0 rgba(2,15,33,.42),
+      0 10px 22px -10px rgba(11,45,79,.5);
+  }
+  .win-cta:hover {
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.5),
+      inset 0 -3px 0 rgba(2,15,33,.42),
+      0 14px 26px -10px rgba(11,45,79,.55);
+  }
+  .win-cta:active {
+    transform: translateY(1px);
+    box-shadow: inset 0 3px 6px rgba(2,15,33,.55), inset 0 -1px 0 rgba(255,255,255,.18);
+  }
+  .win-cta--scarlet { --c1: #FF5449; --c2: #C8140A; color: #fff; }
+  .win-cta--navy    { --c1: #2E5B9E; --c2: #0B2D4F; color: #F8EEE5; }
+  .win-cta--peri    { --c1: #C7D8FF; --c2: #7FA0EA; color: #0B2D4F; text-shadow: 0 1px 0 rgba(255,255,255,.5); }
+
+  /* retro Windows cursor: pixel arrow everywhere, pixel pointing hand on interactive elements */
+  body {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='19' height='25' viewBox='0 0 19 25' shape-rendering='crispEdges'><polygon points='1,0 1,19 5,15 8,23 12,21 9,14 14,14' fill='%23000'/><polygon points='3,4 3,15 5,13 9,19 10,18 7,12 11,12' fill='%23fff'/></svg>") 1 1, auto;
+  }
+  a, button, input[type="submit"], [role="button"], .btn {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='24' viewBox='0 0 22 24' shape-rendering='crispEdges'><g fill='%23000'><rect x='8' y='0' width='5' height='14'/><rect x='4' y='9' width='15' height='12'/><rect x='6' y='21' width='11' height='2'/></g><g fill='%23fff'><rect x='9' y='1' width='3' height='12'/><rect x='5' y='10' width='13' height='10'/><rect x='7' y='20' width='9' height='2'/></g></svg>") 10 1, pointer;
+  }
+
+  /* pixel-dithered paw prints padding after the cursor */
+  .trail-paw {
+    position: fixed; z-index: 90; pointer-events: none;
+    width: 20px; height: 20px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges' fill='%230B2D4F'><rect x='0' y='3' width='2' height='2'/><rect x='3' y='1' width='2' height='2'/><rect x='7' y='1' width='2' height='2'/><rect x='10' y='3' width='2' height='2'/><rect x='3' y='6' width='6' height='1'/><rect x='2' y='7' width='3' height='1'/><rect x='6' y='7' width='4' height='1'/><rect x='2' y='8' width='8' height='1'/><rect x='3' y='9' width='2' height='1'/><rect x='6' y='9' width='3' height='1'/><rect x='4' y='10' width='4' height='1'/><rect x='1' y='6' width='1' height='1'/><rect x='10' y='6' width='1' height='1'/></svg>") center / contain no-repeat;
+    image-rendering: pixelated;
+    animation: pawfade .9s steps(5) forwards;
+  }
+  @keyframes pawfade { from { opacity: .75; } to { opacity: 0; } }
+
+  /* ===== hero: sky collage ===== */
+  .hero-sky video { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  /* poster-textured sky behind the glyph clouds, hills, and dog */
+  .hero-sky {
+    background:
+      url('/brand_assets/textures/web/sky-poster-texture.webp') center top / cover no-repeat,
+      linear-gradient(to bottom, #a9d0ef 0%, #c4e0f6 48%, #e2f1fb 100%);
+  }
+  .hero-sky canvas { display: block; width: 100%; height: 100%; }
+  .gingham-overlay {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: url('/brand_assets/hero-elements/web/gingham.webp');
+    background-size: 780px auto; mix-blend-mode: overlay; opacity: .18;
+  }
+  .sky-tint {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,0) 30%, rgba(255,255,255,0) 72%, rgba(255,255,255,.3));
+  }
+  /* hero title as live display-font text; each letter flips to a ransom "clipping" on hover */
+  .ransom { font-family: 'Remaid', 'Spline Sans', sans-serif; color: #0B2D4F; font-weight: 700; letter-spacing: -0.02em; }
+
+  /* accent "sun dog": spinning sunflower with the good dog held at its centre */
+  .sun-stage::before {
+    content: ''; position: absolute; inset: -14%; border-radius: 50%; z-index: 0;
+    background: radial-gradient(circle, rgba(255,213,74,.6) 0%, rgba(255,170,60,.28) 42%, rgba(255,170,60,0) 70%);
+  }
+  .sun-flower { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1;
+    filter: drop-shadow(0 10px 26px rgba(108,23,54,.28)); }
+  .sun-dog { position: absolute; left: 50%; top: 45%; width: 64%; transform: translate(-50%,-50%);
+    object-fit: contain; z-index: 2; filter: drop-shadow(0 6px 12px rgba(11,45,79,.3)); }
+  .glitch-line { font-size: clamp(2.2rem, 5.4vw, 4.1rem); line-height: 1.02; }
+  .glitch-word { display: inline-block; }
+  .glitch-letter { display: inline-block; position: relative; cursor: default; }
+  /* the hover "clipping": a cut-paper sticker overlaid on the letter, centered on
+     its position so the real text never shifts — only a subtle tilt/offset */
+  .rn-clip {
+    position: absolute; left: 50%; top: 50%; white-space: nowrap;
+    padding: .02em .09em; border-radius: 3px; line-height: 1; pointer-events: none;
+    box-shadow: .05em .09em 0 rgba(11,45,79,.3);
+    opacity: 0; transform: translate(-50%,-50%) rotate(0deg) scale(.82);
+    transition: opacity .12s ease, transform .18s cubic-bezier(.2,.8,.3,1.5);
+  }
+  .rn-clip.is-on {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,0px))) rotate(var(--rot,0deg)) scale(1.05);
+  }
+
+  .ransom-line { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: clamp(1rem,2vw,1.6rem); row-gap: .65rem; margin-bottom: .7rem; }
+  .ransom .word { display: flex; align-items: flex-end; gap: clamp(5px,.6vw,9px); }
+  .ransom img.ransom-letter {
+    height: clamp(2.7rem, 6vw, 4.8rem); width: auto; display: block;
+    filter: drop-shadow(0 3px 3px rgba(11,45,79,.32));
+    will-change: transform;
+  }
+  .spin-sunflower { animation: spin 36s linear infinite; transform-origin: center; }
+
+  /* ===== hero: rotating floating garments with a glitch cut ===== */
+  .garment-stage { overflow: visible; }
+  /* source videos stay in the DOM (decoding) but are drawn to canvas, not shown directly */
+  .garment-src { position: absolute; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+  .garment-canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    filter: drop-shadow(0 18px 24px rgba(11,45,79,.22));
+    will-change: transform, clip-path, filter;
+  }
+  /* the glitch burst: RGB-split + horizontal slice displacement on the canvas */
+  .garment-stage.glitching .garment-canvas { animation: garmentGlitch .42s steps(1,end) both; }
+  @keyframes garmentGlitch {
+    0%   { clip-path: inset(0 0 0 0);     transform: translate(0,0);            filter: drop-shadow(4px 0 0 rgba(243,31,19,.9)) drop-shadow(-4px 0 0 rgba(171,197,254,.9)); }
+    18%  { clip-path: inset(6% 0 66% 0);  transform: translate(-9px,0) skewX(-7deg); filter: hue-rotate(-30deg) saturate(1.7) drop-shadow(6px 0 0 rgba(243,31,19,.9)) drop-shadow(-6px 0 0 rgba(171,197,254,.9)); }
+    36%  { clip-path: inset(58% 0 10% 0); transform: translate(10px,0) skewX(6deg);  filter: hue-rotate(24deg) saturate(1.5) drop-shadow(-7px 0 0 rgba(243,31,19,.9)) drop-shadow(7px 0 0 rgba(171,197,254,.9)); }
+    54%  { clip-path: inset(28% 0 42% 0); transform: translate(-5px,0);          filter: contrast(1.5) saturate(1.6); }
+    72%  { clip-path: inset(0 0 0 0);     transform: translate(4px,0) scale(1.01); filter: drop-shadow(3px 0 0 rgba(243,31,19,.8)) drop-shadow(-3px 0 0 rgba(171,197,254,.8)); }
+    100% { clip-path: inset(0 0 0 0);     transform: translate(0,0);            filter: drop-shadow(0 18px 24px rgba(11,45,79,.22)); }
+  }
+  /* scanline sheet that flashes only during the glitch */
+  .garment-scan {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 2;
+    background: repeating-linear-gradient(0deg, rgba(11,45,79,.14) 0 2px, transparent 2px 4px);
+    mix-blend-mode: multiply;
+  }
+  .garment-stage.glitching .garment-scan { animation: scanFlash .42s steps(2,end) both; }
+  @keyframes scanFlash { 0%,100% { opacity: 0; } 20% { opacity: .8; transform: translateY(-6px); } 60% { opacity: .5; transform: translateY(5px); } }
+  .hero-sticker {
+    position: absolute; will-change: transform;
+    filter: drop-shadow(0 3px 5px rgba(11,45,79,.26)) drop-shadow(0 1px 2px rgba(11,45,79,.2));
+  }
+
+  /* stickers slapped onto lower sections — same physical language as the hero */
+  .page-sticker {
+    position: absolute; z-index: 20; pointer-events: none;
+    filter: drop-shadow(0 3px 5px rgba(11,45,79,.24)) drop-shadow(0 1px 2px rgba(11,45,79,.18));
+  }
+
+  /* inline ransom words inside Remaid headlines */
+  [data-ransom] { display: inline-flex; align-items: baseline; gap: .06em; transform: translateY(.08em); }
+  [data-ransom] img { height: .92em; width: auto; display: inline-block; filter: drop-shadow(0 2px 2px rgba(11,45,79,.3)); }
+
+  /* product tile as die-cut sticker (replaces the hard keyline in the grid) */
+  .tile-sticker {
+    border: 6px solid #fff;
+    box-shadow: 0 16px 26px -14px rgba(108,23,54,.32), 0 4px 10px -4px rgba(11,45,79,.18);
+  }
+
+  /* composition-notebook speckle divider */
+  .speckle-strip {
+    height: 26px;
+    background-image: url('/brand_assets/textures/web/notebook_ink_navy.webp');
+    background-size: 360px auto; background-repeat: repeat;
+  }
+
+  /* notebook-ink speckle section background (Kiwi + Andrea intro) */
+  .speckle-bg {
+    background-color: #F8EEE5;
+    background-image: url('/brand_assets/textures/web/notebook_ink_navy.webp');
+    background-size: 900px auto; background-repeat: repeat;
+  }
+
+
+  /* holographic foil filling display text (Y2K shimmer, used once) */
+  .foil-text {
+    background: url('/brand_assets/textures/web/holographic_foil_01.webp') center / cover;
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; -webkit-text-stroke: 0; opacity: .6;
+  }
+
+  /* paws that lunge up from a section border to swipe at the cursor */
+  .snatch-paw {
+    position: absolute; bottom: 0; left: 50%; width: clamp(74px, 9vw, 132px);
+    pointer-events: none; z-index: 30; transform-origin: bottom center;
+    filter: drop-shadow(0 -7px 10px rgba(11,45,79,.3));
+    will-change: transform;
+  }
+  /* a paw that swipes in from the left edge when the cursor nears the first headline */
+  .side-paw { position: absolute; left: 0; top: 0; width: clamp(96px, 11vw, 152px);
+    pointer-events: none; z-index: 30; transform-origin: left center; will-change: transform; }
+  .side-paw img { display: block; width: 100%; transform: rotate(90deg);
+    filter: drop-shadow(8px 0 11px rgba(11,45,79,.3)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .spin-slow, .spin-slower, .spin-sunflower { animation: none; }
+    .trail-paw, .snatch-paw, .side-paw, .tennis-ball { display: none; }
+  }
+</style>
+</head>
+<body class="bg-cream text-navy antialiased overflow-x-hidden">
+
+<!-- ============ HEADER ============ -->
+<header class="fixed top-3 md:top-5 left-1/2 -translate-x-1/2 z-50 w-[min(96vw,72rem)]">
+  <div class="win-titlebar rounded-full flex items-center justify-between pl-5 pr-2.5 py-2">
+    <a href="#" aria-label="mainpups home" class="flex items-center gap-1.5">
+      <img src="/brand_assets/Logo/mainpup-h-white2.svg" alt="mainpups" class="h-7 w-auto">
+      <span class="win-font text-white/70 text-base hidden md:inline" aria-hidden="true">.exe</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 win-font text-[1.05rem]">
+      <a href="#shop" class="navlink text-white">Shop</a>
+      <a href="#pack" class="navlink text-white">The Pack</a>
+      <a href="#story" class="navlink text-white">Our Story</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="#" class="win-btn btn win-font inline-flex items-center gap-2 text-white text-[.95rem] rounded-full px-4 py-1.5">
+        Cart <span class="inline-flex items-center justify-center bg-scarlet text-white text-[.7rem] rounded-full w-5 h-5">0</span>
+      </a>
+      <span class="win-btn hidden sm:inline-flex items-center justify-center w-9 h-9 text-white text-base rounded-full select-none" aria-hidden="true">✕</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1 · HERO ============ -->
+<section id="hero" class="relative overflow-hidden bg-white min-h-[92svh] flex flex-col">
+  <!-- sky: poster-textured backdrop behind the hills and dog -->
+  <div class="hero-sky absolute -inset-x-4 -inset-y-6 z-0" aria-hidden="true">
+    <div class="gingham-overlay"></div>
+    <div class="sky-tint"></div>
+  </div>
+
+  <div class="max-w-6xl w-full mx-auto px-5 pt-24 md:pt-28 pb-[10vh] md:pb-[9vh] grid md:grid-cols-[1.1fr_.9fr] items-center gap-8 relative flex-1">
+    <div class="max-w-2xl relative z-20">
+      <p class="hero-eyebrow inline-block bg-white/95 border-2 border-navy rounded-full px-4 py-1 text-navy font-bold tracking-[.14em] uppercase text-sm pixel rotate-[-2deg] shadow-[3px_3px_0_#0B2D4F] mb-7">A mainpups inquiry ✦</p>
+      <h1 class="sr-only">Custom gifts for the main character of your home.</h1>
+      <div id="ransom-headline" class="ransom" aria-hidden="true" data-text="CUSTOM GIFTS|FOR THE|MAIN CHARACTER|OF YOUR HOME"></div>
+      <p class="hero-sub mt-6 text-lg md:text-xl text-navy/90 max-w-xl [text-shadow:0_1px_10px_rgba(255,255,255,.6)]">Portraits, shirts, mugs, and pillows — each one starts with a photo of your dog or cat. You approve the proof before we ever charge you.</p>
+      <div class="hero-cta mt-9">
+        <a href="#shop" id="magnetic-cta" class="btn win-cta win-cta--scarlet inline-block font-bold rounded-full px-8 py-4 text-lg">Shop the collection →</a>
+      </div>
+    </div>
+
+    <!-- rotating floating garments: transparent clips drawn to a canvas, glitch cut between them -->
+    <div class="garment-stage relative z-[24] pointer-events-none justify-self-center md:justify-self-end self-center w-[min(74vw,380px)] md:w-[min(45vw,590px)] md:-ml-28 lg:-ml-40 md:-mt-6 aspect-square" data-garment-stage aria-hidden="true">
+      <canvas class="garment-canvas" data-garment-canvas></canvas>
+      <video class="garment-src" autoplay muted loop playsinline preload="auto"
+             src="/brand_assets/product-videos/web/tee_kiwi_walk_3s.webm"></video>
+      <video class="garment-src" muted loop playsinline preload="auto"
+             src="/brand_assets/product-videos/web/tee_charlie_walk_3s.webm"></video>
+      <div class="garment-scan"></div>
+    </div>
+  </div>
+
+  <!-- hills along the bottom edge (natural aspect; excess hangs below the fold so the skyline stays intact) -->
+  <img src="/brand_assets/hero-elements/web/green-hills.webp" alt="" aria-hidden="true"
+       class="hero-hills absolute bottom-[-14vw] md:bottom-[-19vw] left-[-6%] w-[112%] max-w-none z-[3] pointer-events-none">
+
+  <!-- stickers slapped on the hero (visible on mobile too, tucked to the edges) -->
+  <img src="/brand_assets/stickers/web/free-treats-inside_red-ticket_used.webp" alt="" aria-hidden="true"
+       class="hero-sticker z-[16] w-24 sm:w-40 md:w-64 -left-5 sm:-left-16 md:-left-24 bottom-[8%] top-auto sm:top-[44%] sm:bottom-auto rotate-[-14deg]">
+  <img src="/brand_assets/stickers/web/handle-with-care-contains-dog-hair_red-navy-pill_used.webp" alt="" aria-hidden="true"
+       class="hero-sticker z-[16] w-28 sm:w-40 md:w-60 -right-6 sm:-right-12 md:-right-16 bottom-[5%] rotate-[8deg]">
+</section>
+
+<!-- ============ 2 · TICKER ============ -->
+<div class="marquee win-marquee py-3" aria-hidden="true">
+  <div class="marquee-track" style="--speed:26s">
+    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+      <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
+      <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
+      <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
+      <span>Only pay when you love it</span><span class="text-burgundy">✦</span>
+      <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
+      <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
+      <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
+      <span>Only pay when you love it</span><span class="text-burgundy">✦</span>
+    </div>
+    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+      <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
+      <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
+      <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
+      <span>Only pay when you love it</span><span class="text-burgundy">✦</span>
+      <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
+      <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
+      <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
+      <span>Only pay when you love it</span><span class="text-burgundy">✦</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3 · FEATURED PRODUCTS ============ -->
+<section id="shop" class="grain bg-cream py-16 md:py-24 relative overflow-hidden">
+  <div class="tennis-ball" data-tennis aria-hidden="true"><img src="/brand_assets/dog%20objects/web/tennisball.webp" alt=""></div>
+  <img src="/brand_assets/stickers/web/professional-napper_pink-scallop_used.webp" alt="" aria-hidden="true"
+       class="page-sticker w-24 sm:w-40 md:w-56 -right-6 sm:-right-14 md:-right-16 top-24 rotate-[12deg]">
+
+  <div class="max-w-6xl mx-auto px-5 relative">
+    <div class="reveal max-w-2xl mx-auto text-center">
+      <p class="text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">The launch collection</p>
+      <h2 class="text-navy text-[clamp(2.4rem,6vw,4.2rem)]">Made for <span class="sr-only">pets</span><span data-ransom="PETS" aria-hidden="true"></span>. Worn by their humans.</h2>
+      <p class="mt-4 text-navy/80">Everything below starts with a photo of your pet. You upload, we send you a proof to approve, then we print. No proof, no charge — that's the deal.</p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7">
+      <a href="#" class="tile-wrap group product-card block rotate-[-1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[-3deg]">Apparel</span>
+          <img src="/brand_assets/products/web/best-dog.jpg" alt="World's Best Dog custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">World's Best Dog</h3>
+          <p class="text-sm text-navy/60 italic">"it's official now. it's on a shirt."</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[2deg]">Apparel</span>
+          <img src="/brand_assets/products/web/royalty.jpg" alt="Royalty Portrait custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">Royalty Portrait</h3>
+          <p class="text-sm text-navy/60 italic">"your pet already thinks this."</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[-1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[-2deg]">Apparel</span>
+          <img src="/brand_assets/products/web/sunflower.jpg" alt="Sunflower Collage custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">Sunflower Collage</h3>
+          <p class="text-sm text-navy/60 italic">"peak summer, peak pet."</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[3deg]">Apparel</span>
+          <img src="/brand_assets/products/web/pixelated.jpg" alt="Pixel Pet retro computer custom tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">Pixel Pet</h3>
+          <p class="text-sm text-navy/60 italic">"best boy detected. loading…"</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[-3deg]">Apparel</span>
+          <img src="/brand_assets/products/web/athlete.jpg" alt="Pro Athlete trading card custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">Rookie Card</h3>
+          <p class="text-sm text-navy/60 italic">"undefeated at napping."</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[-1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[2deg]">Apparel</span>
+          <img src="/brand_assets/products/web/iconic.jpg" alt="Iconic Superstar custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">Iconic Superstar</h3>
+          <p class="text-sm text-navy/60 italic">"famous in your house, at least."</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[-2deg]">Apparel</span>
+          <img src="/brand_assets/products/web/y2k-gamer.jpg" alt="Y2K Gamer custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">Y2K Gamer</h3>
+          <p class="text-sm text-navy/60 italic">"new high score: cutest."</p>
+        </div>
+      </a>
+      <a href="#" class="tile-wrap group product-card block rotate-[-1deg]">
+        <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
+          <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[3deg]">Apparel</span>
+          <img src="/brand_assets/products/web/pop-star.jpg" alt="2000's Pop Star custom pet tee" loading="lazy" class="w-full h-full object-cover">
+        </div>
+        <div class="mt-4 px-1">
+          <h3 class="font-bold text-navy">2000's Pop Star</h3>
+          <p class="text-sm text-navy/60 italic">"frosted tips, fully committed."</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="reveal mt-14 text-center">
+      <a href="#" class="btn win-cta win-cta--navy inline-block font-bold rounded-full px-8 py-4">See the whole collection →</a>
+    </div>
+  </div>
+  <img class="snatch-paw" data-paw data-home="80" src="/brand_assets/dog%20objects/web/dog-paw.webp" alt="" aria-hidden="true">
+  <div class="side-paw" data-side-paw aria-hidden="true">
+    <img src="/brand_assets/dog%20objects/web/dog-paw-front.webp" alt="">
+  </div>
+</section>
+
+<!-- ============ marquee 2 (reverse) ============ -->
+<div class="marquee win-marquee-peri py-3" aria-hidden="true">
+  <div class="marquee-track rev" style="--speed:30s">
+    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+      <span>Upload a photo</span><span class="text-burgundy">★</span>
+      <span>Approve the proof</span><span class="text-scarlet">★</span>
+      <span>We print it</span><span class="text-burgundy">★</span>
+      <span>Your pet, immortalized</span><span class="text-scarlet">★</span>
+      <span>Upload a photo</span><span class="text-burgundy">★</span>
+      <span>Approve the proof</span><span class="text-scarlet">★</span>
+      <span>We print it</span><span class="text-burgundy">★</span>
+      <span>Your pet, immortalized</span><span class="text-scarlet">★</span>
+    </div>
+    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+      <span>Upload a photo</span><span class="text-burgundy">★</span>
+      <span>Approve the proof</span><span class="text-scarlet">★</span>
+      <span>We print it</span><span class="text-burgundy">★</span>
+      <span>Your pet, immortalized</span><span class="text-scarlet">★</span>
+      <span>Upload a photo</span><span class="text-burgundy">★</span>
+      <span>Approve the proof</span><span class="text-scarlet">★</span>
+      <span>We print it</span><span class="text-burgundy">★</span>
+      <span>Your pet, immortalized</span><span class="text-scarlet">★</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4 · HOW IT WORKS ============ -->
+<section class="tex-bg tex-peri bg-peri py-16 md:py-24 relative overflow-hidden">
+  <img src="/brand_assets/stickers/web/100-percent-that-dog_yellow-circle_new.webp" alt="" aria-hidden="true"
+       class="page-sticker w-24 sm:w-28 md:w-36 -right-6 md:-right-8 top-16 rotate-[12deg]">
+  <svg class="spin-slower absolute -bottom-20 -right-20 w-72 h-72 opacity-[.14]" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon points="50,0 57,35 90,20 65,45 100,50 65,55 90,80 57,65 50,100 43,65 10,80 35,55 0,50 35,45 10,20 43,35" fill="#0B2D4F"/>
+  </svg>
+
+  <div class="max-w-6xl mx-auto px-5 relative">
+    <div class="reveal max-w-2xl mx-auto text-center">
+      <p class="pixel inline-block bg-cream border-2 border-navy rounded-full px-4 py-1.5 text-navy font-bold tracking-[.14em] uppercase text-sm mb-5 shadow-[3px_3px_0_#0B2D4F]">Every product, every time</p>
+      <h2 class="text-navy text-[clamp(2.4rem,6vw,4.2rem)]">Here's how this actually works.</h2>
+    </div>
+
+    <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="step-card bg-white hard rounded-2xl p-6 rotate-[-1.5deg]">
+        <p class="display text-scarlet text-5xl mb-3">1</p>
+        <h3 class="font-bold text-navy text-lg">Upload your pet's photo.</h3>
+        <p class="mt-2 text-navy/75 text-[.95rem]">Any decent phone shot works. We'll tell you if it doesn't.</p>
+      </div>
+      <div class="step-card bg-white hard rounded-2xl p-6 rotate-[1deg] sm:translate-y-4">
+        <p class="display text-scarlet text-5xl mb-3">2</p>
+        <h3 class="font-bold text-navy text-lg">We send you a proof.</h3>
+        <p class="mt-2 text-navy/75 text-[.95rem]">Usually in 2–3 days. It shows exactly what the product will look like.</p>
+      </div>
+      <div class="step-card bg-white hard rounded-2xl p-6 rotate-[-1deg] relative">
+        <p class="display text-scarlet text-5xl mb-3">3</p>
+        <h3 class="font-bold text-navy text-lg">You approve it.</h3>
+        <p class="mt-2 text-navy/75 text-[.95rem]">Or ask for changes. Both are free.</p>
+        <div class="bubble absolute -top-6 right-4 rotate-2">you're overthinking this.</div>
+      </div>
+      <div class="step-card bg-white hard rounded-2xl p-6 rotate-[1.5deg] sm:translate-y-4">
+        <p class="display text-scarlet text-5xl mb-3">4</p>
+        <h3 class="font-bold text-navy text-lg">We print. We ship. You get it.</h3>
+        <p class="mt-2 text-navy/75 text-[.95rem]">Typically 5–10 business days total.</p>
+      </div>
+    </div>
+
+    <div class="reveal mt-14 bg-navy hard rounded-2xl px-8 py-12 text-center relative">
+      <img src="/brand_assets/stickers/web/approved-by-kiwi_pink-scallop-seal_new.webp" alt="" aria-hidden="true"
+           class="page-sticker w-28 md:w-36 -top-10 -left-6 md:-left-10 rotate-[-10deg]">
+      <p class="display text-cream text-[clamp(1.7rem,3.8vw,2.8rem)] max-w-3xl mx-auto">We don't charge for production until you approve the proof. That's the whole promise.</p>
+      <a href="#" class="inline-block mt-5 text-blush font-medium underline underline-offset-4 decoration-2 hover:text-cream">Read the full "what if it goes wrong" page →</a>
+    </div>
+  </div>
+  <img class="snatch-paw" data-paw data-home="26" src="/brand_assets/dog%20objects/web/dog-paw-front.webp" alt="" aria-hidden="true">
+</section>
+
+<!-- ============ 5 · THE PACK ============ -->
+<section id="pack" class="torn-top -mt-6 tex-bg tex-grass bg-cream py-16 md:py-24 relative overflow-hidden">
+  <p class="display outline-ghost absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[clamp(6rem,20vw,16rem)] whitespace-nowrap select-none pack-bg-text" aria-hidden="true">the pack</p>
+  <div class="max-w-6xl mx-auto px-5 relative">
+    <div class="reveal max-w-2xl mx-auto text-center bg-cream hard rounded-2xl p-6 md:p-8 relative">
+      <img src="/brand_assets/stickers/web/pack-member_yellow-star-seal_new.webp" alt="" aria-hidden="true"
+           class="w-20 sm:w-24 md:w-28 absolute -top-8 -right-5 md:-top-10 md:-right-9 rotate-[12deg] pointer-events-none z-10">
+      <p class="text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">The Pack</p>
+      <h2 class="text-navy text-[clamp(2.4rem,6vw,4.2rem)]">Real pets. Real people. Real <span class="sr-only">merch</span><span data-ransom="MERCH" aria-hidden="true"></span>.</h2>
+      <p class="mt-4 max-w-xl mx-auto text-navy/80">Every pet you see here belongs to a mainpups customer. If your pet ends up here, we're going to be really nice about it.</p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-2 md:grid-cols-3 gap-7 md:gap-9">
+      <figure class="polaroid pack-card rotate-[-2.5deg]">
+        <img src="/brand_assets/models/kiwi/IMG_3557.jpg" alt="Kiwi" class="w-full aspect-square object-cover border-2 border-navy/10">
+        <figcaption>kiwi · miami</figcaption>
+      </figure>
+      <figure class="polaroid pack-card rotate-[1.5deg] md:translate-y-5">
+        <img src="/brand_assets/models/apolo/PHOTO-2025-10-09-13-34-44%20(1).jpg" alt="Apolo" class="w-full aspect-square object-cover border-2 border-navy/10">
+        <figcaption>apolo</figcaption>
+      </figure>
+      <figure class="polaroid pack-card rotate-[-1deg]">
+        <img src="/brand_assets/models/kiwi/_MG_6365.jpg" alt="Kiwi mid-thought" class="w-full aspect-square object-cover border-2 border-navy/10">
+        <figcaption>kiwi, again · she insisted</figcaption>
+      </figure>
+      <figure class="polaroid pack-card rotate-[2deg]">
+        <img src="/brand_assets/models/kiwi/IMG_5911.jpg" alt="Kiwi" class="w-full aspect-square object-cover border-2 border-navy/10">
+        <figcaption>kiwi · off duty</figcaption>
+      </figure>
+      <figure class="polaroid pack-card rotate-[-1.5deg] md:translate-y-5">
+        <img src="/brand_assets/models/apolo/PHOTO-2025-10-09-13-34-44.jpg" alt="Apolo" class="w-full aspect-square object-cover border-2 border-navy/10">
+        <figcaption>apolo · repeat offender</figcaption>
+      </figure>
+      <figure class="polaroid pack-card rotate-[1deg]">
+        <img src="/brand_assets/models/kiwi/IMG_7563.jpg" alt="Kiwi" class="w-full aspect-square object-cover border-2 border-navy/10">
+        <figcaption>kiwi · contractually obligated</figcaption>
+      </figure>
+    </div>
+
+    <div class="reveal mt-14 text-center">
+      <a href="#" class="btn win-cta win-cta--navy inline-block font-bold rounded-full px-8 py-4">See the whole pack →</a>
+    </div>
+  </div>
+  <img class="snatch-paw" data-paw data-home="62" src="/brand_assets/dog%20objects/web/dog-paw.webp" alt="" aria-hidden="true">
+</section>
+
+<!-- ============ 6 · MISSION STRIP (kept sober — no y2k here) ============ -->
+<section class="torn-top -mt-6 bg-navy py-8 relative">
+  <div class="max-w-6xl mx-auto px-5 text-center">
+    <p class="text-cream/90 text-[.95rem]">A portion of every mainpups order funds recovery for the June 24, 2026 earthquake in Venezuela.
+      <a href="#" class="text-blush font-medium underline underline-offset-4 decoration-2 hover:text-cream">The story →</a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ 7 · FOUNDER NOTE ============ -->
+<section id="story" class="torn-top -mt-6 speckle-bg py-16 md:py-24 relative overflow-hidden">
+  <img src="/brand_assets/stickers/web/in-dog-we-trust_kraft-rectangle_new.webp" alt="" aria-hidden="true"
+       class="page-sticker w-24 sm:w-32 md:w-40 -right-6 md:-right-10 top-16 rotate-[9deg]">
+  <img src="/brand_assets/stickers/web/no-bad-dogs_yellow-stamp_new.webp" alt="" aria-hidden="true"
+       class="page-sticker w-24 sm:w-28 md:w-36 -left-6 md:-left-8 bottom-16 rotate-[-11deg]">
+  <div class="max-w-3xl mx-auto px-5 relative z-10">
+    <div class="reveal oswindow">
+      <div class="oswindow-bar">
+        <img src="/brand_assets/Logo/mainpup-badge-lightblue.svg" alt="" aria-hidden="true" class="w-4 h-4">
+        <span class="win-font text-white text-base">a-note-from-andrea.txt</span>
+        <span class="ml-auto flex items-center gap-1.5" aria-hidden="true">
+          <span class="oswindow-ctrl rounded-md">–</span>
+          <span class="oswindow-ctrl rounded-md">□</span>
+          <span class="oswindow-ctrl rounded-md">✕</span>
+        </span>
+      </div>
+      <div class="p-7 md:p-10 grid md:grid-cols-[auto_1fr] gap-8 items-start">
+        <img src="/brand_assets/models/kiwi/IMG_0403.jpg" alt="Kiwi, up close and thrilled about it"
+             class="sticker arch w-40 md:w-48 aspect-[3/4] object-cover -rotate-2 justify-self-center">
+        <div>
+          <p class="text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">The people behind this</p>
+          <div class="space-y-4 text-navy/85">
+            <p>Hi. I'm Andrea. My sister and I make everything here.</p>
+            <p>We started mainpups because I couldn't stop making up backstories for my dog Kiwi. She was probably a lounge singer in 1972. I have theories.</p>
+            <p>A portion of every order funds recovery efforts for the June 24 earthquake in Venezuela — a country we're personally connected to, and a place that's going to be rebuilding for years.</p>
+            <p>If we ever mess something up, email me directly: <a href="mailto:andrea@mainpups.com" class="font-semibold text-burgundy underline underline-offset-4 decoration-2 hover:text-scarlet">andrea@mainpups.com</a>. I'll actually read it.</p>
+          </div>
+          <p class="display mt-6 text-2xl text-burgundy">— Andrea &amp; Kiwi</p>
+          <p class="text-sm text-navy/60">mainpups.com · Miami</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 · EMAIL SIGNUP ============ -->
+<section class="torn-top -mt-6 tex-bg tex-pink bg-blush py-16 md:py-20 relative overflow-hidden">
+  <img src="/brand_assets/Logo/mainpup-badge-darkblue.svg" alt="" aria-hidden="true"
+       class="float-el absolute top-8 right-[8%] w-16 md:w-20 rotate-[10deg] hidden sm:block">
+  <img src="/brand_assets/stickers/web/main-pups-sniff-tested-tail-approved_red-starburst_new.webp" alt="" aria-hidden="true"
+       class="page-sticker w-20 sm:w-32 md:w-44 -left-8 sm:-left-10 md:-left-12 -bottom-3 sm:bottom-6 rotate-[10deg]">
+  <div class="max-w-5xl mx-auto px-5 relative grid md:grid-cols-[1fr_auto] items-center gap-10 md:gap-16 text-center md:text-left">
+    <div>
+      <p class="reveal text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">Get on the list</p>
+      <h2 class="reveal text-navy text-[clamp(2rem,5vw,3.4rem)]">Emails worth opening. <span class="outline-type-navy">Occasional discounts.</span> No <span class="sr-only">spam</span><span data-ransom="SPAM" aria-hidden="true"></span>.</h2>
+      <p class="reveal mt-4 text-navy/80">New drops, breed features, and the occasional past-life reveal. Two emails a week, tops.</p>
+      <form class="reveal mt-8 flex flex-col sm:flex-row gap-4 max-w-md mx-auto md:mx-0" onsubmit="return false">
+        <label for="email" class="sr-only">Email address</label>
+        <input id="email" type="email" placeholder="your@email.com"
+               class="flex-1 rounded-full border-[3px] border-navy bg-white px-5 py-3.5 text-navy placeholder:text-navy/40 shadow-[4px_4px_0_#0B2D4F] focus:outline-none">
+        <button type="submit" class="btn win-cta win-cta--scarlet font-bold rounded-full px-7 py-3.5">I'm in →</button>
+      </form>
+      <p class="reveal mt-5 text-sm text-navy/60">15% off your first order for signing up. Unsubscribe whenever.</p>
+    </div>
+    <div class="sun-stage relative aspect-square w-[min(78vw,380px)] mx-auto md:mx-0 md:justify-self-end order-first md:order-none">
+      <img class="sun-flower spin-sunflower" src="/brand_assets/hero-elements/web/sunflower.webp" alt="" aria-hidden="true">
+      <img class="sun-dog" src="/brand_assets/hero-elements/web/dog-top-layer.webp" alt="A very good dog, beaming like the sun">
+    </div>
+  </div>
+</section>
+
+<!-- hills reprise: the hero landscape closes the page, sitting on the same pink
+     paper so the texture shows through the transparent sky and the hills overlap
+     up into the signup section above -->
+<div class="tex-bg tex-pink bg-blush relative overflow-hidden -mt-10 md:-mt-12 md:h-[8vw]" aria-hidden="true">
+  <img src="/brand_assets/hero-elements/web/green-hills.webp" alt="" class="block w-full">
+</div>
+
+<!-- ============ 9 · FOOTER ============ -->
+<footer class="-mt-6 bg-navy text-cream relative">
+  <span class="tear-up bg-navy" aria-hidden="true"></span>
+  <div class="absolute -top-16 right-8 md:right-16 flex items-end gap-3">
+    <div class="msn-win mb-10 hidden sm:block" role="img" aria-label="Kiwi says: still here?">
+      <div class="msn-bar"><span class="msn-status"></span>Kiwi — Online</div>
+      <div class="msn-msg"><b>Kiwi says:</b> still here? 🐾</div>
+    </div>
+    <img src="/brand_assets/models/kiwi/_MG_6381.jpg" alt="Kiwi peeking over the footer"
+         class="sticker rounded-full w-24 h-24 object-cover object-top rotate-3">
+  </div>
+
+  <div class="max-w-6xl mx-auto px-5 pt-20 pb-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">Shop</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="#" class="hover:text-cream">Apparel</a></li>
+          <li><a href="#" class="hover:text-cream">Home</a></li>
+          <li><a href="#" class="hover:text-cream">Wall Art</a></li>
+          <li><a href="#" class="hover:text-cream">For Your Pet</a></li>
+          <li><a href="#" class="hover:text-cream">Holiday</a></li>
+          <li><a href="#" class="hover:text-cream">Memorial</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">Learn</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="#pack" class="hover:text-cream">The Pack</a></li>
+          <li><a href="#" class="hover:text-cream">Journal</a></li>
+          <li><a href="#" class="hover:text-cream">Photo Tips</a></li>
+          <li><a href="#" class="hover:text-cream">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">About</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="#story" class="hover:text-cream">Our Story</a></li>
+          <li><a href="#" class="hover:text-cream">Mission</a></li>
+          <li><a href="#" class="hover:text-cream">The Kiwi Chronicles</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pixel text-blush uppercase tracking-[.1em] text-sm mb-4">Contact</h3>
+        <ul class="space-y-2.5 text-cream/80 text-[.95rem]">
+          <li><a href="mailto:andrea@mainpups.com" class="hover:text-cream">andrea@mainpups.com</a></li>
+          <li><a href="#" class="hover:text-cream">Instagram: @mainpups</a></li>
+          <li><a href="#" class="hover:text-cream">TikTok: @mainpups</a></li>
+          <li>Miami, FL</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="mt-12 text-center text-cream/70 text-sm">A portion of every mainpups order funds recovery for the June 24, 2026 earthquake in Venezuela.
+      <a href="#" class="text-blush underline underline-offset-4 decoration-2 hover:text-cream">Learn more →</a>
+    </p>
+
+    <div class="mt-8 pt-6 border-t border-cream/15 flex flex-col md:flex-row items-center justify-between gap-3 text-cream/60 text-sm">
+      <p>© 2026 mainpups</p>
+      <div class="flex flex-wrap gap-5">
+        <a href="#" class="hover:text-cream">Privacy Policy</a>
+        <a href="#" class="hover:text-cream">Terms of Service</a>
+        <a href="#" class="hover:text-cream">Shipping &amp; Returns</a>
+      </div>
+      <p>Made with care in Miami</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const isStatic = new URLSearchParams(location.search).has('static');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = window.matchMedia('(pointer: fine)').matches;
+
+  /* ---------- ransom-note headline (always renders, even static/reduced) ----------
+     Each letter is a real magazine-cutout scan from brand_assets/letter-cutouts.
+     Seeded RNG so every load composes the same collage. */
+  (function ransomHeadline() {
+    const hosts = [...document.querySelectorAll('.ransom[data-text]')];
+    if (!hosts.length) return;
+    const counts = { A:38,B:22,C:24,D:25,E:40,F:20,G:24,H:21,I:23,J:20,K:20,L:23,M:26,N:29,O:37,P:21,Q:21,R:38,S:27,T:28,U:23,V:22,W:20,X:20,Y:21,Z:20 };
+    let seed = 47;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+    const makeLetter = (ch, cls) => {
+      const v = 1 + Math.floor(rnd() * counts[ch]);
+      const img = document.createElement('img');
+      img.src = `/brand_assets/letter-cutouts/web/letters/${ch}/${ch}${v}.webp`;
+      img.alt = '';
+      img.className = cls;
+      img.dataset.char = ch;
+      img.style.transform = `rotate(${(rnd() * 7 - 3.5).toFixed(1)}deg) translateY(${(rnd() * 5 - 2.5).toFixed(1)}px)`;
+      return img;
+    };
+    // ---- Titles: live display-font text, split into per-letter spans (hero + accents) ----
+    hosts.forEach(host => {
+      host.dataset.text.split('|').forEach(line => {
+        const lineEl = document.createElement('div');
+        lineEl.className = 'glitch-line';
+        const words = line.split(' ');
+        words.forEach((word, wi) => {
+          const w = document.createElement('span');
+          w.className = 'glitch-word';
+          for (const ch of word) {
+            const s = document.createElement('span');
+            s.className = 'glitch-letter';
+            s.textContent = ch;
+            w.appendChild(s);
+          }
+          lineEl.appendChild(w);
+          if (wi < words.length - 1) lineEl.appendChild(document.createTextNode(' '));
+        });
+        host.appendChild(lineEl);
+      });
+    });
+
+    /* inline ransom words in section headlines (still magazine cutouts) */
+    document.querySelectorAll('[data-ransom]').forEach(el => {
+      for (const ch of el.dataset.ransom) {
+        if (counts[ch]) el.appendChild(makeLetter(ch, 'ransom-inline-letter'));
+      }
+    });
+
+    /* ---------- "kidnap"-style ransom clipping on hover ----------
+       At rest the title is clean text. Hovering a letter flips it into a
+       cut-paper clipping: a different display font, a colored/textured paper
+       background frame, a new color, and a slight tilt — cycling while hovered.
+       Inspired by Codrops' LetterInteractions (kidnap) demo. */
+    {
+      const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+      const T = '/brand_assets/textures/web/';
+      // Each preset is one "clipping" look. `tex` marks the textured (paper) ones.
+      const CLIPS = [
+        { f: 'Anton',            bg: '#F31F13', c: '#F8EEE5' },
+        { f: '"Abril Fatface"',  bg: '#F8EEE5', c: '#6C1736' },
+        { f: 'Bungee',           bg: '#ABC5FE', c: '#0B2D4F' },
+        { f: '"Special Elite"',  bg: '#FFFFFF', c: '#141414' },
+        { f: 'Rye',              bg: '#FFEA9E', c: '#6C1736' },
+        { f: '"Bebas Neue"',     bg: '#0B2D4F', c: '#FFEA9E' },
+        { f: '"Pixelify Sans"',  bg: '#F7D8F8', c: '#F31F13' },
+        { f: 'Remaid',           bg: `url(${T}holographic_foil_01.webp)`,    c: '#0B2D4F', frame: '#dfe8ff', tex: 1 },
+        { f: 'Anton',            bg: `url(${T}noakabes_paper_01.webp)`,       c: '#6C1736', frame: '#efe3d0', tex: 1 },
+        { f: '"Abril Fatface"',  bg: `url(${T}poster_periwinkle_grid_01.webp)`, c: '#0B2D4F', frame: '#cdd8f6', tex: 1 },
+        { f: 'Bungee',           bg: '/brand_assets/hero-elements/web/gingham.webp', c: '#F31F13', frame: '#ffffff', tex: 1, url: 1 },
+      ];
+      // preload the textures so the first hover is instant
+      CLIPS.filter(p => p.tex).forEach(p => { const i = new Image(); i.src = p.url ? p.bg : p.bg.slice(4, -1); });
+
+      class RansomHover {
+        constructor(el) {
+          this.el = el;
+          this.char = el.textContent;
+        }
+        // The clipping is an overlay sticker centered on the letter, so the real
+        // text never moves — only a subtle tilt/offset on the sticker itself.
+        clipEl() {
+          if (this.clip) return this.clip;
+          const c = document.createElement('span');
+          c.className = 'rn-clip';
+          c.textContent = this.char;
+          c.setAttribute('aria-hidden', 'true');
+          this.el.appendChild(c);
+          this.clip = c;
+          return c;
+        }
+        style() {
+          const p = CLIPS[ri(0, CLIPS.length - 1)];
+          const c = this.clipEl();
+          c.style.fontFamily = p.f;
+          c.style.color = p.c;
+          c.style.background = p.tex ? `${p.url ? `url(${p.bg})` : p.bg} center/cover` : p.bg;
+          c.style.setProperty('--rot', (reduced ? 0 : ri(-5, 5)) + 'deg');
+          c.style.setProperty('--dx', (reduced ? 0 : ri(-3, 3)) + 'px');
+          c.style.setProperty('--dy', (reduced ? 0 : ri(-3, 3)) + 'px');
+          c.classList.add('is-on');
+        }
+        show() {
+          this.on = true;
+          this.el.style.color = 'transparent'; // hide the base glyph under the sticker
+          this.style();
+        }
+        refresh() { if (this.on) this.style(); }
+        hide() {
+          this.on = false;
+          clearInterval(this.iv);
+          this.el.style.color = '';
+          if (this.clip) this.clip.classList.remove('is-on');
+        }
+        bindHover() {
+          this.el.addEventListener('mouseenter', () => {
+            this.show();
+            if (!reduced) { clearInterval(this.iv); this.iv = setInterval(() => this.on && this.style(), 520); }
+          });
+          this.el.addEventListener('mouseleave', () => this.hide());
+        }
+      }
+
+      const insts = [...document.querySelectorAll('.ransom .glitch-letter')].map(el => new RansomHover(el));
+
+      // gentle auto-play: now and then a letter flickers into a ransom clipping on
+      // its own, so the effect is discoverable without hovering.
+      const ambient = (pool, o) => {
+        if (reduced || !pool.length) return;
+        const active = new Set();
+        const tick = () => {
+          if (active.size < o.max) {
+            const cand = pool[ri(0, pool.length - 1)];
+            if (!active.has(cand) && !cand.on) {          // never hijack a hovered letter
+              active.add(cand);
+              cand.show();
+              if (o.refresh) cand._refr = setInterval(() => cand.refresh(), o.refresh);
+              cand._off = setTimeout(() => {
+                clearInterval(cand._refr);
+                cand.hide();
+                active.delete(cand);
+              }, ri(o.showMin, o.showMax));
+            }
+          }
+          setTimeout(tick, ri(o.gapMin, o.gapMax));
+        };
+        setTimeout(tick, 2800); // start after the GSAP intro settles
+      };
+
+      // ?ambient forces the livelier touch auto-play on desktop (for previewing)
+      const forceAmbient = location.search.includes('ambient');
+      if (window.matchMedia('(hover: hover)').matches && !forceAmbient) {
+        // Desktop: react to hover, plus a sparse self-flicker on the hero title —
+        // one letter blinks every few seconds, so it hints at the effect without nagging.
+        insts.forEach(i => i.bindHover());
+        const heroInsts = insts.filter(i => i.el.closest('#hero'));
+        ambient(heroInsts, { max: 1, showMin: 300, showMax: 640, gapMin: 2600, gapMax: 4400, refresh: 0 });
+      } else if (!reduced) {
+        // Touch devices have no hover, so auto-play a few letters continuously.
+        ambient(insts, { max: 3, showMin: 1500, showMax: 2600, gapMin: 520, gapMax: 1150, refresh: 560 });
+      }
+    }
+  })();
+
+  /* slow, dreamy cloud drift (always applies) */
+  const skyVideo = document.querySelector('.hero-sky video');
+  if (skyVideo) skyVideo.playbackRate = 0.55;
+
+  if (isStatic || reduced) return; // everything is visible by default; skip choreography
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- Lenis smooth scroll, wired to ScrollTrigger ---------- */
+  const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); lenis.scrollTo(t, { offset: -70 }); }
+    });
+  });
+
+  /* ---------- hero intro: hills rise, the sunflower-dog sun comes up behind them ---------- */
+  const intro = gsap.timeline({ defaults: { ease: 'power4.out' } });
+  intro
+    .from('.hero-sky', { opacity: 0, duration: .7, ease: 'power2.out' })
+    .from('.hero-hills', { yPercent: 100, duration: 1.05, ease: 'power3.out' }, '-=.25')
+    .from('.garment-stage', { y: 200, rotate: -9, opacity: 0, duration: 1.1, ease: 'back.out(1.25)' }, '-=.7')
+    .from('.hero-eyebrow', { y: 30, opacity: 0, rotate: 6, duration: .5 }, '-=.75')
+    .from('#hero .glitch-letter', { yPercent: 60, opacity: 0, rotation: () => gsap.utils.random(-18, 18), duration: .5, ease: 'back.out(1.8)', stagger: .025 }, '-=.5')
+    .from('.hero-sub', { y: 26, opacity: 0, duration: .6 }, '-=.25')
+    .from('.hero-cta', { y: 26, opacity: 0, duration: .6 }, '-=.45')
+    .from('.hero-sticker', { scale: 0, opacity: 0, rotation: '+=24', duration: .55, ease: 'back.out(1.8)', stagger: .12 }, '-=.3');
+
+  /* ---------- floating stickers (gentle loop) ---------- */
+  document.querySelectorAll('.float-el').forEach((el, i) => {
+    gsap.to(el, {
+      y: i % 2 ? 14 : -14, rotate: '+=4',
+      duration: 2.6 + i * .5, yoyo: true, repeat: -1, ease: 'sine.inOut'
+    });
+  });
+
+  /* ---------- giant background words drift on scroll ---------- */
+  gsap.to('.pack-bg-text', {
+    xPercent: 10,
+    scrollTrigger: { trigger: '#pack', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+
+  /* ---------- generic reveals ---------- */
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.from(el, {
+      y: 40, opacity: 0, duration: .8, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 86%' }
+    });
+  });
+
+  /* ---------- torn-paper edges re-form as each section scrolls in ----------
+     Scrubbing --tear-shift slides the rip tile sideways, so the ragged contour
+     visibly changes shape as the next section rises into view. */
+  gsap.utils.toArray('.torn-top, .tear-up').forEach((el, i) => {
+    gsap.fromTo(el,
+      { '--tear-shift': (i % 2 ? 70 : -70) + 'px' },
+      {
+        '--tear-shift': (i % 2 ? -70 : 70) + 'px', ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 55%', scrub: true }
+      });
+  });
+
+  /* ---------- product cards: settle in with rotation ---------- */
+  ScrollTrigger.batch('.product-card', {
+    start: 'top 88%',
+    onEnter: batch => gsap.from(batch, {
+      y: 70, opacity: 0, rotate: (i) => (i % 2 ? 7 : -7),
+      duration: .8, stagger: .09, ease: 'back.out(1.4)', clearProps: 'opacity'
+    })
+  });
+
+  /* ---------- step cards pop ---------- */
+  ScrollTrigger.batch('.step-card', {
+    start: 'top 88%',
+    onEnter: batch => gsap.from(batch, {
+      y: 60, opacity: 0, scale: .92,
+      duration: .7, stagger: .1, ease: 'back.out(1.7)', clearProps: 'opacity'
+    })
+  });
+
+  /* ---------- polaroids: tossed onto the table ---------- */
+  ScrollTrigger.batch('.pack-card', {
+    start: 'top 88%',
+    onEnter: batch => gsap.from(batch, {
+      y: 90, opacity: 0, rotate: (i) => (i % 2 ? 12 : -12), scale: .9,
+      duration: .85, stagger: .1, ease: 'back.out(1.5)', clearProps: 'opacity'
+    })
+  });
+
+  if (fine) {
+    /* ---------- hero mouse parallax: sky + flower only (stickers stay put) ---------- */
+    (function heroParallax() {
+      const hero = document.getElementById('hero');
+      if (!hero) return;
+      const layer = (sel, amp) => {
+        const el = document.querySelector(sel);
+        if (!el) return null;
+        return {
+          amp,
+          x: gsap.quickTo(el, 'x', { duration: .7, ease: 'power2.out' }),
+          y: gsap.quickTo(el, 'y', { duration: .7, ease: 'power2.out' }),
+        };
+      };
+      const layers = [
+        layer('.hero-sky', 9),
+        layer('.garment-stage', 20),
+      ].filter(Boolean);
+      hero.addEventListener('mousemove', e => {
+        const r = hero.getBoundingClientRect();
+        const nx = ((e.clientX - r.left) / r.width - .5) * 2;
+        const ny = ((e.clientY - r.top) / r.height - .5) * 2;
+        layers.forEach(l => { l.x(-nx * l.amp); l.y(-ny * l.amp * .55); });
+      });
+      hero.addEventListener('mouseleave', () => {
+        layers.forEach(l => { l.x(0); l.y(0); });
+      });
+    })();
+
+    /* ---------- product tile 3D tilt ---------- */
+    document.querySelectorAll('.tile-wrap').forEach(wrap => {
+      const tile = wrap.querySelector('.tile');
+      const setX = gsap.quickTo(tile, 'rotationY', { duration: .4, ease: 'power2.out' });
+      const setY = gsap.quickTo(tile, 'rotationX', { duration: .4, ease: 'power2.out' });
+      wrap.addEventListener('mousemove', e => {
+        const r = wrap.getBoundingClientRect();
+        setX(((e.clientX - r.left) / r.width - .5) * 10);
+        setY(-((e.clientY - r.top) / r.height - .5) * 10);
+      });
+      wrap.addEventListener('mouseleave', () => { setX(0); setY(0); });
+    });
+
+    /* ---------- magnetic hero CTA ---------- */
+    const cta = document.getElementById('magnetic-cta');
+    if (cta) {
+      const mx = gsap.quickTo(cta, 'x', { duration: .3, ease: 'power2.out' });
+      const my = gsap.quickTo(cta, 'y', { duration: .3, ease: 'power2.out' });
+      window.addEventListener('mousemove', e => {
+        const r = cta.getBoundingClientRect();
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        const dx = e.clientX - cx, dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 130) { mx(dx * .22); my(dy * .22); } else { mx(0); my(0); }
+      });
+    }
+
+    /* ---------- pixel paw prints walking behind the cursor ----------
+       Distance-based spawn, alternating left/right of the path like real footsteps,
+       rotated to the direction of travel. Prints stay put and dither-fade. */
+    let px = null, py = null, pawSide = 1;
+    window.addEventListener('mousemove', e => {
+      if (px === null) { px = e.clientX; py = e.clientY; return; }
+      const dx = e.clientX - px, dy = e.clientY - py;
+      if (dx * dx + dy * dy < 30 * 30) return;
+      const ang = Math.atan2(dy, dx) * 180 / Math.PI + 90; // paw art points "up"
+      pawSide *= -1;
+      const lat = ang * Math.PI / 180;
+      const x = e.clientX + Math.cos(lat) * 8 * pawSide;
+      const y = e.clientY + Math.sin(lat) * 8 * pawSide;
+      px = e.clientX; py = e.clientY;
+      const s = document.createElement('span');
+      s.className = 'trail-paw';
+      s.style.left = (x - 10) + 'px';
+      s.style.top = (y - 10) + 'px';
+      s.style.transform = `rotate(${ang.toFixed(0)}deg)`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 950);
+    });
+  }
+})();
+</script>
+
+<!-- ===== hero sky: clouds video → cursor-reactive glyph field (light mode) ===== -->
+<script>
+(() => {
+  const canvas = document.querySelector('[data-hero-glyph]');
+  if (!canvas) return;
+
+  const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true });
+  if (!gl) return;
+
+  const TRAIL_MAX = 24;
+  const params = {
+    cellSize: 7, dotScale: 2.2, contrast: 1.15, brightness: 0.06,
+    mouseRadius: 118, mouseStrength: 0.13, warpStrength: 46,
+    glitchStrength: 0.4, chromaAmount: 1.4, trailDecay: 0.86,
+    tailWidth: 0.85, tailLength: 3.44, opacity: 1.0,
+    low: 0.25, high: 0.75, // adaptive luminance range (auto-tuned from the video)
+  };
+  const ink = [1.0, 1.0, 1.0]; // white cloud ink on the blue sky
+  const glyphChars = '@#W$9876543210?!abc;:+=-,._  ';
+
+  function compile(type, src) {
+    const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  function glyphAtlas(chars, size = 52) {
+    const c = document.createElement('canvas');
+    c.width = chars.length * size; c.height = size;
+    const x = c.getContext('2d');
+    x.fillStyle = '#000'; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = `700 ${Math.floor(size * 0.78)}px Menlo, Monaco, "Courier New", monospace`;
+    for (let i = 0; i < chars.length; i++) x.fillText(chars[i], i * size + size * 0.5, size * 0.54);
+    return c;
+  }
+
+  const vs = `attribute vec2 a_position; varying vec2 v_uv;
+    void main(){ v_uv=(a_position+1.0)*0.5; gl_Position=vec4(a_position,0.0,1.0); }`;
+
+  const fs = `precision highp float;
+    varying vec2 v_uv;
+    uniform sampler2D u_video; uniform sampler2D u_glyph;
+    uniform vec2 u_resolution; uniform vec2 u_video_resolution;
+    uniform float u_cell,u_dot_scale,u_brightness,u_contrast,u_mouse_radius,u_mouse_strength;
+    uniform float u_warp_strength,u_glitch_strength,u_chroma_amount,u_tail_width,u_tail_length;
+    uniform float u_glyph_count,u_time,u_trail_count,u_opacity,u_low,u_high;
+    uniform vec3 u_ink;
+    uniform vec4 u_trail[24];
+    float hash(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
+    vec2 coverUV(vec2 uv,vec2 src,vec2 dst){
+      float sa=src.x/src.y, da=dst.x/dst.y; vec2 o=uv;
+      if(da>sa){ float s=sa/da; o.y=uv.y*s+(1.0-s)*0.5; } else { float s=da/sa; o.x=uv.x*s+(1.0-s)*0.5; }
+      return o;
+    }
+    vec3 sampleVideo(vec2 uv,vec2 cell,vec2 dragDir,float inf){
+      float t=floor(u_time*24.0);
+      float line=step(0.92,hash(vec2(floor(uv.y*180.0+t),t)));
+      float n=hash(cell+vec2(t,t*0.37))-0.5;
+      float g=u_glitch_strength*(0.4+inf);
+      vec2 jit=vec2(n,hash(cell.yx+vec2(t*1.31,t))-0.5)*0.0045*g;
+      float tear=line*(hash(vec2(floor(uv.y*130.0),t*1.7))-0.5)*0.09*g;
+      vec2 b=uv+jit+vec2(tear,0.0);
+      float grid=mix(260.0,70.0,clamp(inf,0.0,1.0));
+      b=floor(b*grid)/grid;
+      float cm=u_chroma_amount*0.0022*inf*(0.8+inf*2.2);
+      vec2 cv=normalize(dragDir+vec2(0.0001))*cm;
+      return vec3(texture2D(u_video,b+cv).r, texture2D(u_video,b).g, texture2D(u_video,b-cv).b);
+    }
+    void main(){
+      vec2 frag=v_uv*u_resolution;
+      vec2 cell=floor(frag/u_cell);
+      vec2 center=(cell+0.5)*u_cell;
+      vec2 cellUV=center/u_resolution;
+      vec2 drag=vec2(0.0); float accum=0.0;
+      if(u_trail_count>0.5){
+        vec2 head=u_trail[0].xy*u_resolution;
+        float hd=distance(center,head);
+        float hm=1.0-smoothstep(u_mouse_radius*0.20,u_mouse_radius*0.95,hd);
+        drag+=normalize(u_trail[0].zw+vec2(0.0001))*hm*0.55; accum+=hm*0.55;
+      }
+      for(int i=0;i<23;i++){
+        if(float(i+1)>=u_trail_count) break;
+        vec2 a=u_trail[i].xy*u_resolution; vec2 b=u_trail[i+1].xy*u_resolution;
+        vec2 seg=b-a; float sl=length(seg); if(sl<0.0001) continue;
+        vec2 dir=seg/sl; vec2 pa=center-a;
+        float h=clamp(dot(pa,seg)/max(dot(seg,seg),0.0001),0.0,1.0);
+        vec2 closest=a+seg*h; float dist=distance(center,closest);
+        float w=u_mouse_radius*(0.16+u_tail_width*0.28);
+        float tm=1.0-smoothstep(w,w*2.35,dist);
+        float taper=mix(1.0,0.65,h);
+        float age=exp(-float(i)/max(u_tail_length,0.2));
+        float sp=length(u_trail[i].zw)+length(u_trail[i+1].zw);
+        float spm=mix(0.24,1.0,smoothstep(0.00025,0.010,sp));
+        float bk=smoothstep(0.08,0.96,hash(cell+closest*0.012+vec2(float(i)*11.7,u_time*19.0)));
+        float m=tm*taper*age*spm*bk;
+        drag+=dir*m; accum+=m;
+      }
+      float inf=clamp(accum*u_mouse_strength*1.25,0.0,1.0);
+      vec2 dragDir=normalize(drag+vec2(0.0001));
+      vec2 pstep=vec2(u_cell)/u_resolution;
+      vec2 doRaw=drag*((u_warp_strength*0.9/u_resolution)*inf);
+      vec2 dOff=floor(doRaw/max(pstep,vec2(0.00001)))*pstep;
+      float scan=(sin(center.y*0.34+u_time*70.0)*0.5+0.5)-0.5;
+      vec2 tearOff=vec2(scan*0.14*inf,0.0);
+      vec2 wave=vec2(sin((center.y+u_time*180.0)*0.03),cos((center.x-u_time*140.0)*0.028))*((u_warp_strength*0.12)/u_resolution)*inf;
+      cellUV+=dOff+tearOff+wave;
+      cellUV=clamp(cellUV,vec2(0.001),vec2(0.999));
+      vec2 videoUV=coverUV(cellUV,u_video_resolution,u_resolution);
+      videoUV=mix(vec2(0.5),videoUV,0.9);
+      vec3 col=sampleVideo(videoUV,cell,dragDir,inf);
+      float luma=dot(col,vec3(0.299,0.587,0.114));
+      // stretch to the source's actual tonal range (adaptive levels fed from JS)
+      float v=clamp((luma-u_low)/max(u_high-u_low,0.001),0.0,1.0);
+      v=clamp((v-0.5)*u_contrast+0.5+u_brightness,0.0,1.0);
+      v=clamp(v+(hash(cell+floor(u_time*55.0))-0.5)*0.35*inf,0.0,1.0);
+      // ink the CLOUDS (brighter tones) in white; leave the SKY (darker tones) as blank blue
+      float density=v;
+      float gi=floor((1.0-density)*(u_glyph_count-1.0)+0.5); // densest glyph where the cloud is brightest
+      vec2 local=(mod(frag,u_cell)-(u_cell*0.5))/(u_cell*0.5*max(u_dot_scale,0.1));
+      vec2 gl2=clamp(local*0.5+0.5,0.0,1.0);
+      float gm=texture2D(u_glyph,vec2((gi+gl2.x)/u_glyph_count,gl2.y)).r;
+      float edge=gm*smoothstep(0.02,0.5,density);     // ASCII stipple at the cloud fringe
+      float puff=smoothstep(0.46,0.90,density);        // soft solid white in the cloud bodies
+      float alpha=max(edge,puff)*u_opacity;
+      gl_FragColor=vec4(u_ink*alpha,alpha);
+    }`;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+  const U = (n) => gl.getUniformLocation(prog, n);
+  const u = {
+    video: U('u_video'), glyph: U('u_glyph'), res: U('u_resolution'), vres: U('u_video_resolution'),
+    cell: U('u_cell'), dot: U('u_dot_scale'), bright: U('u_brightness'), contrast: U('u_contrast'),
+    mr: U('u_mouse_radius'), ms: U('u_mouse_strength'), warp: U('u_warp_strength'),
+    glitch: U('u_glitch_strength'), chroma: U('u_chroma_amount'), tw: U('u_tail_width'),
+    tl: U('u_tail_length'), gc: U('u_glyph_count'), time: U('u_time'), tc: U('u_trail_count'),
+    op: U('u_opacity'), ink: U('u_ink'), trail: U('u_trail[0]'),
+    low: U('u_low'), high: U('u_high'),
+  };
+
+  const vidTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, vidTex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+  const glyTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, glyTex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, glyphAtlas(glyphChars));
+
+  const video = document.createElement('video');
+  video.src = canvas.dataset.videoSrc;
+  video.muted = true; video.loop = true; video.autoplay = true; video.playsInline = true;
+  video.crossOrigin = 'anonymous'; video.style.display = 'none';
+  document.body.appendChild(video);
+  video.play().then(() => { video.playbackRate = 0.55; }).catch(() => {});
+
+  // Adaptive levels: read the video's real luminance range so cloud vs. sky always separates.
+  // Auto-adapts to any clip (incl. a future dog video). Falls back to defaults if readback is blocked.
+  const lumaC = document.createElement('canvas'); lumaC.width = 48; lumaC.height = 27;
+  const lumaCtx = lumaC.getContext('2d', { willReadFrequently: true });
+  function sampleLevels() {
+    if (video.readyState < 2) return;
+    try {
+      lumaCtx.drawImage(video, 0, 0, 48, 27);
+      const d = lumaCtx.getImageData(0, 0, 48, 27).data;
+      const arr = [];
+      for (let i = 0; i < d.length; i += 4) arr.push(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
+      arr.sort((a, b) => a - b);
+      const pct = (q) => arr[Math.floor(q * (arr.length - 1))] / 255;
+      let lo = pct(0.12), hi = pct(0.88);
+      if (hi - lo < 0.08) { const m = (hi + lo) / 2; lo = Math.max(0, m - 0.06); hi = Math.min(1, m + 0.06); }
+      // ease toward the new range so it doesn't pop
+      params.low += (lo - params.low) * 0.5;
+      params.high += (hi - params.high) * 0.5;
+    } catch (e) { /* cross-origin video taints readback — keep current levels */ }
+  }
+  video.addEventListener('loadeddata', sampleLevels, { once: true });
+  setInterval(sampleLevels, 1000);
+
+  const mouse = { x: 0.5, y: 0.5, active: false };
+  let energy = 0, lastMove = 0;
+  const trail = [];
+  const trailU = new Float32Array(TRAIL_MAX * 4);
+
+  function onMove(e) {
+    const r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const nx = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    const ny = 1 - Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    const dx = nx - mouse.x, dy = ny - mouse.y;
+    mouse.x = nx; mouse.y = ny; mouse.active = true; lastMove = performance.now();
+    trail.unshift({ x: nx, y: ny, dx, dy });
+    if (trail.length > TRAIL_MAX) trail.length = TRAIL_MAX;
+  }
+  window.addEventListener('pointermove', onMove, { passive: true });
+  window.addEventListener('blur', () => { mouse.active = false; });
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let dpr = 1;
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
+    const h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(u.res, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+
+  function frame() {
+    resize();
+    // decay trail
+    for (let i = trail.length - 1; i >= 0; i--) {
+      trail[i].dx *= params.trailDecay; trail[i].dy *= params.trailDecay;
+      trail[i].x += trail[i].dx * 0.15; trail[i].y += trail[i].dy * 0.15;
+      if (Math.abs(trail[i].dx) + Math.abs(trail[i].dy) < 0.00006) trail.splice(i, 1);
+    }
+    trailU.fill(0);
+    const count = Math.min(trail.length, TRAIL_MAX);
+    for (let i = 0; i < count; i++) { const t = trail[i], o = i * 4; trailU[o]=t.x; trailU[o+1]=t.y; trailU[o+2]=t.dx; trailU[o+3]=t.dy; }
+    gl.uniform1f(u.tc, count); gl.uniform4fv(u.trail, trailU);
+
+    const idle = performance.now() - lastMove;
+    const target = (mouse.active || idle < 260) ? 1 : 0;
+    energy += (target - energy) * 0.09;
+    const ms = params.mouseStrength * (0.15 + energy * 0.85);
+
+    if (video.readyState >= 2) {
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, vidTex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      gl.uniform1i(u.video, 0);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, glyTex); gl.uniform1i(u.glyph, 1);
+      gl.uniform2f(u.vres, video.videoWidth || canvas.width, video.videoHeight || canvas.height);
+      gl.uniform1f(u.cell, params.cellSize * dpr);
+      gl.uniform1f(u.dot, params.dotScale);
+      gl.uniform1f(u.bright, params.brightness);
+      gl.uniform1f(u.contrast, params.contrast);
+      gl.uniform1f(u.mr, params.mouseRadius * dpr);
+      gl.uniform1f(u.ms, ms);
+      gl.uniform1f(u.warp, params.warpStrength * dpr);
+      gl.uniform1f(u.glitch, params.glitchStrength);
+      gl.uniform1f(u.chroma, params.chromaAmount);
+      gl.uniform1f(u.tw, params.tailWidth);
+      gl.uniform1f(u.tl, params.tailLength);
+      gl.uniform1f(u.gc, glyphChars.length);
+      gl.uniform1f(u.time, performance.now() * 0.001);
+      gl.uniform1f(u.op, params.opacity);
+      gl.uniform1f(u.low, params.low);
+      gl.uniform1f(u.high, params.high);
+      gl.uniform3f(u.ink, ink[0], ink[1], ink[2]);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    if (!reduced) requestAnimationFrame(frame);
+  }
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+
+<!-- ===== hero garment rotator: cycle the floating clips with a glitch cut ===== -->
+<script>
+(() => {
+  const stage = document.querySelector('[data-garment-stage]');
+  if (!stage) return;
+  const canvas = stage.querySelector('[data-garment-canvas]');
+  const vids = [...stage.querySelectorAll('.garment-src')];
+  if (!canvas || vids.length < 1) return;
+  const ctx = canvas.getContext('2d');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const HOLD = 4800;               // ms each garment stays up (clips are ~3s)
+  const RATE = 0.8;                // slow the walk a touch
+  let i = 0, busy = false;
+
+  // one decoder at a time; ease the playback speed
+  vids.forEach((v, n) => { v.playbackRate = RATE; if (n !== 0) { try { v.pause(); } catch (e) {} } });
+
+  // keep the canvas backing store matched to its displayed size (crisp on HiDPI)
+  const fit = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = stage.clientWidth, h = stage.clientHeight;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  };
+  fit();
+  window.addEventListener('resize', fit);
+
+  // draw the active clip, object-contain, preserving transparency
+  const draw = () => {
+    const v = vids[i];
+    const cw = canvas.width, ch = canvas.height;
+    ctx.clearRect(0, 0, cw, ch);
+    if (v && v.videoWidth) {
+      // crop the blank/particle margins so the garment fills the stage:
+      // keep the central 56% width, near-full height.
+      const cropX = 0.22, cropY = 0.03;
+      const sx = v.videoWidth * cropX, sy = v.videoHeight * cropY;
+      const sw = v.videoWidth * (1 - cropX * 2), sh = v.videoHeight * (1 - cropY * 2);
+      const s = Math.min(cw / sw, ch / sh);
+      const dw = sw * s, dh = sh * s;
+      ctx.drawImage(v, sx, sy, sw, sh, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+    }
+    requestAnimationFrame(draw);
+  };
+  requestAnimationFrame(draw);
+
+  const advance = () => {
+    if (busy) return; busy = true;
+    const cur = vids[i];
+    i = (i + 1) % vids.length;
+    const next = vids[i];
+    try { next.currentTime = 0; next.playbackRate = RATE; next.play(); } catch (e) {}
+
+    if (!reduced) stage.classList.add('glitching');
+    // the draw loop already reads vids[i], so the cut lands under the glitch tear
+    setTimeout(() => {
+      stage.classList.remove('glitching');
+      if (cur !== next) { try { cur.pause(); } catch (e) {} }  // free previous decoder
+      busy = false;
+    }, reduced ? 0 : 460);
+  };
+
+  if (vids.length > 1) setInterval(advance, HOLD);
+})();
+</script>
+
+<!-- paws that lunge up from section borders to swipe at the cursor -->
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const paws = [...document.querySelectorAll('[data-paw]')];
+  if (reduced || !paws.length || !window.gsap) return;
+
+  const REACH = 270;            // px: how close the cursor must be to wake a paw
+  const state = paws.map(el => {
+    el.style.left = (parseFloat(el.dataset.home) || 50) + '%';
+    gsap.set(el, { xPercent: -50, yPercent: 100, rotation: 0, scale: 1 });
+    return {
+      el, section: el.closest('section'),
+      home: (parseFloat(el.dataset.home) || 50) / 100,
+      y: gsap.quickTo(el, 'yPercent', { duration: .5, ease: 'power3' }),
+      x: gsap.quickTo(el, 'x',        { duration: .4, ease: 'power2' }),
+      r: gsap.quickTo(el, 'rotation', { duration: .5, ease: 'power2' }),
+      s: gsap.quickTo(el, 'scale',    { duration: .3, ease: 'back.out(2.2)' }),
+    };
+  });
+
+  let raf = 0, mx = -9999, my = -9999;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  const update = () => {
+    raf = 0;
+    for (const p of state) {
+      const r = p.section.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > innerHeight + 200) { p.y(100); p.s(1); continue; }
+      const homeX = r.left + r.width * p.home;
+      const dx = mx - homeX;          // cursor offset from the paw's home, horizontally
+      const dy = r.bottom - my;       // + when cursor sits above the section's bottom edge
+      const prox = Math.max(0, 1 - Math.hypot(dx, dy * 0.85) / REACH);
+      if (prox <= 0 || dy < -40) { p.y(100); p.x(0); p.r(0); p.s(1); continue; }
+      p.y(100 - prox * 96);                       // emerge further the closer the cursor is
+      p.x(clamp(dx * 0.4, -80, 80) * prox);       // lean toward the cursor
+      p.r(clamp(dx * 0.06, -22, 22));             // tilt toward it
+      p.s(prox > 0.82 ? 1.08 : 1);                // quick "snatch" pop when very close
+    }
+  };
+  const ping = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; ping(); }, { passive: true });
+  addEventListener('scroll', ping, { passive: true });
+  addEventListener('pointerleave', () => state.forEach(p => { p.y(100); p.x(0); p.r(0); p.s(1); }));
+})();
+</script>
+
+<!-- a paw that pops in from the left edge while you hover the first headline -->
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wrap = document.querySelector('[data-side-paw]');
+  const h2 = document.querySelector('#shop h2');
+  if (reduced || !wrap || !h2 || !window.gsap) return;
+  const section = wrap.closest('section');
+
+  gsap.set(wrap, { xPercent: -118, yPercent: -50, rotation: -5 });
+  // keep the paw pinned to the left edge, level with the headline's middle
+  const place = () => {
+    const sr = section.getBoundingClientRect(), hr = h2.getBoundingClientRect();
+    wrap.style.top = (hr.top - sr.top + hr.height / 2) + 'px';
+  };
+  place();
+  addEventListener('scroll', place, { passive: true });
+  addEventListener('resize', place);
+
+  let out = false;
+  const show = () => {
+    if (out) return; out = true; place();
+    gsap.to(wrap, { xPercent: 32, rotation: 7, duration: .5, ease: 'back.out(1.7)' });
+  };
+  const hide = () => {
+    if (!out) return; out = false;
+    gsap.to(wrap, { xPercent: -118, rotation: -5, duration: .4, ease: 'power2.in' });
+  };
+  h2.addEventListener('mouseenter', show);
+  h2.addEventListener('mouseleave', hide);
+})();
+</script>
+
+<!-- a tennis ball that rolls after the cursor across the products section -->
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ball = document.querySelector('[data-tennis]');
+  const section = document.querySelector('#shop');
+  if (reduced || !ball || !section || !window.gsap) return;
+
+  gsap.set(ball, { xPercent: -50, yPercent: -50, x: -200, y: -200 });
+  const qx = gsap.quickTo(ball, 'x', { duration: .38, ease: 'power3' });
+  const qy = gsap.quickTo(ball, 'y', { duration: .38, ease: 'power3' });
+  const qr = gsap.quickTo(ball, 'rotation', { duration: .55, ease: 'power2' });
+  let rot = 0, lastX = null;
+
+  section.addEventListener('pointerenter', () => gsap.to(ball, { opacity: 1, duration: .25 }));
+  section.addEventListener('pointerleave', () => { lastX = null; gsap.to(ball, { opacity: 0, duration: .25 }); });
+  section.addEventListener('pointermove', e => {
+    const r = section.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    qx(x); qy(y);
+    if (lastX !== null) { rot += (x - lastX) * 2; qr(rot); }  // roll with horizontal travel
+    lastX = x;
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

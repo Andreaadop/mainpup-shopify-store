@@ -222,7 +222,7 @@ tailwind.config = {
       <p class="pixel inline-block bg-cream border-2 border-navy rounded-full px-4 py-1.5 text-navy font-bold tracking-[.14em] uppercase text-xs shadow-[3px_3px_0_#0B2D4F] mb-4">Custom pet apparel ✦</p>
 
       <h1 class="text-navy text-[clamp(2rem,5vw,3.2rem)]">@@NAME@@</h1>
-      <p class="text-navy/70 mt-1">Dualtone custom pet tee · Comfort Colors® garment-dyed</p>
+      <p class="text-navy/70 mt-1">@@SUBTITLE@@</p>
 
       <!-- rating -->
       <div class="flex items-center gap-2 mt-3">
@@ -232,7 +232,7 @@ tailwind.config = {
 
       <!-- price -->
       <div class="mt-5 flex items-baseline gap-3">
-        <span id="price" class="display text-4xl text-burgundy">$32.99</span>
+        <span id="price" class="display text-4xl text-burgundy">@@PRICE0@@</span>
         <span class="text-sm text-navy/55">Free proof before you pay</span>
       </div>
 
@@ -331,12 +331,7 @@ tailwind.config = {
         <span class="font-bold text-navy text-lg">Fabric &amp; fit</span>
         <span class="chev text-navy" aria-hidden="true">▾</span>
       </summary>
-      <div class="acc-panel"><div><ul class="pt-3 text-navy/80 space-y-2 list-disc pl-5">
-        <li><strong>Fabric:</strong> Comfort Colors 1717 — 100% ring-spun cotton, garment-dyed &amp; soft-washed. Heavyweight 6.1 oz, broken-in from day one.</li>
-        <li><strong>Fit:</strong> Unisex, relaxed — size down for a classic fit.</li>
-        <li><strong>Print:</strong> DTG (direct-to-garment), detailed and soft to the touch.</li>
-        <li><strong>Care:</strong> Machine wash cold, inside out. Tumble dry low.</li>
-      </ul></div></div>
+      <div class="acc-panel"><div><ul class="pt-3 text-navy/80 space-y-2 list-disc pl-5">@@FABRIC@@</ul></div></div>
     </details>
 
     <details class="acc border-b-2 border-navy/15 py-4">
@@ -440,7 +435,7 @@ tailwind.config = {
 <div id="buybar" class="buybar lg:hidden fixed bottom-0 inset-x-0 z-40 bg-cream border-t-[3px] border-navy px-4 py-3 flex items-center gap-3 translate-y-full">
   <div class="min-w-0">
     <p class="font-bold text-navy text-sm truncate">@@NAME@@</p>
-    <p id="buybar-price" class="text-burgundy font-bold text-sm">$32.99</p>
+    <p id="buybar-price" class="text-burgundy font-bold text-sm">@@PRICE0@@</p>
   </div>
   <button id="add-to-cart-mobile" class="btn btn-hard ml-auto bg-peri text-navy font-bold rounded-full px-6 py-3">Add to cart</button>
 </div>
@@ -470,7 +465,7 @@ tailwind.config = {
     @@COLORS_JS@@
   ];
   var SIZES = @@SIZES_JS@@;
-  var SIZE_DIMS = {S:[18,28],M:[20,29],L:[22,30],XL:[24,31],'2XL':[26,32],'3XL':[28,33],'4XL':[30,34]};
+  var SIZE_DIMS = {S:[18,28],M:[20,29],L:[22,30],XL:[24,31],'2XL':[26,32],'3XL':[28,33],'4XL':[30,34],'5XL':[32,35]};
   var BASE='@@BASE_JS@@';
   var EXTRA = { @@EXTRA_JS@@ };
 
@@ -499,7 +494,7 @@ tailwind.config = {
   // ---- size guide rows ----
   var sgr=$('#sizeguide-rows');
   SIZES.forEach(function(o){
-    var d=SIZE_DIMS[o.s]; var tr=document.createElement('tr');
+    var d=SIZE_DIMS[o.s]; if(!d) return; var tr=document.createElement('tr');
     tr.className='border-b border-navy/10';
     tr.innerHTML='<td class="py-2 font-bold">'+o.s+'</td><td>'+d[0]+'</td><td>'+d[1]+'</td>';
     sgr.appendChild(tr);

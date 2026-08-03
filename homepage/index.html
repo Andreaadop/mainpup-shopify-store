@@ -1177,7 +1177,9 @@ tailwind.config = {
         // one letter blinks every few seconds, so it hints at the effect without nagging.
         insts.forEach(i => i.bindHover());
         const heroInsts = insts.filter(i => i.el.closest('#hero'));
-        ambient(heroInsts, { max: 1, showMin: 300, showMax: 640, gapMin: 2600, gapMax: 4400, refresh: 0 });
+        // keep ~3 hero letters flipped into a ransom clipping at once, cycling
+        // quickly (with a cutout re-swap) so the effect reads as lively and obvious
+        ambient(heroInsts, { max: 3, showMin: 1200, showMax: 2200, gapMin: 480, gapMax: 1000, refresh: 600 });
       } else if (!reduced) {
         // Touch devices have no hover, so auto-play a few letters continuously.
         ambient(insts, { max: 3, showMin: 1500, showMax: 2600, gapMin: 520, gapMax: 1150, refresh: 560 });

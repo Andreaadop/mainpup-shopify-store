@@ -120,23 +120,22 @@ def build(d):
     )
     extra_js = ",".join("%s:'%s'" % (k, v) for k, v in extra.items())
 
-    # floating "same design, other styles"
-    tee_float = f"{base}{front0}"
-    styles = f'''<div class="grid grid-cols-3 gap-3 sm:gap-4">
-      <div class="style-card style-card--on rounded-2xl p-3 pt-4 text-center relative">
-        <span class="style-badge">Selected</span>
-        <div class="float-wrap"><img src="{tee_float}" alt="{d['name']} relaxed tee" class="float-garment"></div>
-        <span class="block font-bold text-navy text-sm mt-1">Relaxed Tee</span>
+    # floating "same design, other styles" — bare cutout PNGs, no card
+    cut = f"{base}cut/"
+    styles = f'''<div class="grid grid-cols-3 gap-4 sm:gap-8 max-w-3xl">
+      <div class="style-opt group">
+        <div class="style-figure"><img src="{cut}{slug}-tee.png" alt="{d['name']} relaxed tee" class="float-garment"></div>
+        <span class="block font-bold text-navy text-sm mt-2">Relaxed Tee <span class="style-tag">Selected</span></span>
         <span class="text-xs text-navy/60">from $32.99</span>
       </div>
-      <div class="style-card rounded-2xl p-3 pt-4 text-center">
-        <div class="float-wrap"><img src="{base}{slug}-sweatshirt.jpg" alt="{d['name']} sweatshirt" class="float-garment"></div>
-        <span class="block font-bold text-navy text-sm mt-1">Sweatshirt</span>
+      <div class="style-opt group">
+        <div class="style-figure"><img src="{cut}{slug}-sweatshirt.png" alt="{d['name']} sweatshirt" class="float-garment"></div>
+        <span class="block font-bold text-navy text-sm mt-2">Sweatshirt</span>
         <span class="text-xs text-navy/60">from $41.99</span>
       </div>
-      <div class="style-card rounded-2xl p-3 pt-4 text-center">
-        <div class="float-wrap"><img src="{base}{slug}-softstyle.jpg" alt="{d['name']} softstyle tee" class="float-garment"></div>
-        <span class="block font-bold text-navy text-sm mt-1">Softstyle Tee</span>
+      <div class="style-opt group">
+        <div class="style-figure"><img src="{cut}{slug}-softstyle.png" alt="{d['name']} softstyle tee" class="float-garment"></div>
+        <span class="block font-bold text-navy text-sm mt-2">Softstyle Tee</span>
         <span class="text-xs text-navy/60">from $27.99</span>
       </div>
     </div>'''

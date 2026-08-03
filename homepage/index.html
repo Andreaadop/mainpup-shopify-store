@@ -249,7 +249,7 @@ tailwind.config = {
 
   /* tennis ball that rolls after the cursor across the products section */
   .tennis-ball { position: absolute; left: 0; top: 0; width: clamp(70px, 7vw, 96px);
-    z-index: 40; pointer-events: none; opacity: 0; will-change: transform;
+    z-index: 0; pointer-events: none; opacity: 0; will-change: transform;
     filter: drop-shadow(0 7px 9px rgba(11,45,79,.32)); }
   .tennis-ball img { display: block; width: 100%; }
 
@@ -621,7 +621,7 @@ tailwind.config = {
     </div>
 
     <div class="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7">
-      <a href="#" class="tile-wrap group product-card block rotate-[-1deg]">
+      <a href="/homepage/product.html" class="tile-wrap group product-card block rotate-[-1deg]">
         <div class="tile tile-sticker relative rounded-2xl overflow-hidden bg-white aspect-[6/7]">
           <span class="absolute top-3 left-3 z-10 text-[.7rem] pixel font-bold uppercase tracking-wide bg-white text-navy border-2 border-navy rounded-full px-2.5 py-1 rotate-[-3deg]">Apparel</span>
           <img src="/brand_assets/products/web/best-dog.jpg" alt="World's Best Dog custom pet tee" loading="lazy" class="w-full h-full object-cover">
@@ -883,7 +883,7 @@ tailwind.config = {
   <img src="/brand_assets/Logo/mainpup-badge-darkblue.svg" alt="" aria-hidden="true"
        class="float-el absolute top-8 right-[8%] w-16 md:w-20 rotate-[10deg] hidden sm:block">
   <img src="/brand_assets/stickers/web/main-pups-sniff-tested-tail-approved_red-starburst_new.webp" alt="" aria-hidden="true"
-       class="page-sticker w-20 sm:w-32 md:w-44 -left-4 sm:-left-10 md:-left-12 bottom-5 sm:bottom-6 rotate-[10deg]">
+       class="page-sticker w-20 sm:w-32 md:w-44 left-3 sm:-left-10 md:-left-12 bottom-7 sm:bottom-6 rotate-[10deg]">
   <div class="max-w-5xl mx-auto px-5 relative grid md:grid-cols-[1fr_auto] items-center gap-10 md:gap-16 text-center md:text-left">
     <div>
       <p class="reveal text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">Get on the list</p>
@@ -1665,11 +1665,30 @@ tailwind.config = {
 
   if (vids.length > 1) setInterval(advance, HOLD);
 
-  // If the webm never decodes (iOS/Safari have no VP9-alpha), swap the canvas for
-  // the static transparent tee so the hero doesn't show a dark video box.
-  setTimeout(() => {
-    if (!vids.some(v => v.videoWidth > 0)) stage.classList.add('use-fallback');
-  }, 1600);
+  // Swap the canvas for a static transparent tee when the browser can't render a
+  // transparent webm. iOS/Safari DECODE the video (videoWidth > 0) but drop the
+  // alpha channel, showing a dark box — so a plain "did it decode" check isn't
+  // enough. Detect iOS directly, and also sample a corner pixel for opacity.
+  const useFallback = () => stage.classList.add('use-fallback');
+  const ua = navigator.userAgent;
+  const iOSish = /iPhone|iPad|iPod|CriOS|FxiOS/i.test(ua)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);   // iPadOS
+  if (iOSish) {
+    useFallback();
+  } else {
+    let decided = false;
+    const decide = () => {
+      if (decided || !vids[0].videoWidth) return;
+      const t = document.createElement('canvas'); t.width = t.height = 8;
+      const tx = t.getContext('2d', { willReadFrequently: true });
+      tx.clearRect(0, 0, 8, 8);
+      try { tx.drawImage(vids[0], 0, 0, 8, 8); } catch (e) { return; }
+      decided = true;
+      if (tx.getImageData(0, 0, 1, 1).data[3] > 250) useFallback();  // opaque corner = alpha lost
+    };
+    vids[0].addEventListener('loadeddata', decide);
+    setTimeout(() => { decided ? 0 : (vids[0].videoWidth ? decide() : useFallback()); }, 1800);
+  }
 })();
 </script>
 
@@ -1678,8 +1697,7 @@ tailwind.config = {
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const paws = [...document.querySelectorAll('[data-paw]')];
-  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (reduced || !fine || !paws.length || !window.gsap) return;   // cursor-only
+  if (reduced || !paws.length || !window.gsap) return;
 
   const REACH = 270;            // px: how close the cursor must be to wake a paw
   const state = paws.map(el => {
@@ -1715,43 +1733,43 @@ tailwind.config = {
     }
   };
   const ping = () => { if (!raf) raf = requestAnimationFrame(update); };
+  const retract = () => state.forEach(p => { p.y(100); p.x(0); p.r(0); p.s(1); });
   addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; ping(); }, { passive: true });
   addEventListener('scroll', ping, { passive: true });
-  addEventListener('pointerleave', () => state.forEach(p => { p.y(100); p.x(0); p.r(0); p.s(1); }));
+  addEventListener('pointerleave', retract);
+  addEventListener('pointerup', retract);        // touch: retract when the finger lifts
+  addEventListener('pointercancel', retract);
 })();
 </script>
 
-<!-- a paw that pops in from the left edge while you hover the first headline -->
+<!-- a paw that rides the products' left border, following the cursor/finger -->
 <script>
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wrap = document.querySelector('[data-side-paw]');
-  const h2 = document.querySelector('#shop h2');
-  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (reduced || !fine || !wrap || !h2 || !window.gsap) return;   // cursor-only
-  const section = wrap.closest('section');
+  const section = document.querySelector('#shop');
+  if (reduced || !wrap || !section || !window.gsap) return;
 
-  gsap.set(wrap, { xPercent: -118, yPercent: -50, rotation: -5 });
-  // keep the paw pinned to the left edge, level with the headline's middle
-  const place = () => {
-    const sr = section.getBoundingClientRect(), hr = h2.getBoundingClientRect();
-    wrap.style.top = (hr.top - sr.top + hr.height / 2) + 'px';
-  };
-  place();
-  addEventListener('scroll', place, { passive: true });
-  addEventListener('resize', place);
+  gsap.set(wrap, { xPercent: -118, yPercent: -50, rotation: -3 });
+  const qx = gsap.quickTo(wrap, 'xPercent', { duration: .5, ease: 'power3' });
+  const qy = gsap.quickTo(wrap, 'y',        { duration: .3, ease: 'power2' });
 
-  let out = false;
-  const show = () => {
-    if (out) return; out = true; place();
-    gsap.to(wrap, { xPercent: 32, rotation: 7, duration: .5, ease: 'back.out(1.7)' });
+  let raf = 0, py = -9999, out = false;
+  const update = () => {
+    raf = 0;
+    const r = section.getBoundingClientRect();
+    const inside = py >= r.top + 20 && py <= r.bottom - 20;   // pointer within the section band
+    if (inside) {
+      wrap.style.top = (py - r.top) + 'px';                   // follow the pointer vertically
+      if (!out) { out = true; qx(30); }                       // peek out from the left border
+    } else if (out) { out = false; qx(-118); }
   };
-  const hide = () => {
-    if (!out) return; out = false;
-    gsap.to(wrap, { xPercent: -118, rotation: -5, duration: .4, ease: 'power2.in' });
-  };
-  h2.addEventListener('mouseenter', show);
-  h2.addEventListener('mouseleave', hide);
+  const ping = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('pointermove', e => { py = e.clientY; ping(); }, { passive: true });
+  addEventListener('scroll', ping, { passive: true });
+  const away = () => { py = -9999; ping(); };
+  addEventListener('pointerup', away);        // touch: tuck back when the finger lifts
+  addEventListener('pointercancel', away);
 })();
 </script>
 
@@ -1761,24 +1779,29 @@ tailwind.config = {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ball = document.querySelector('[data-tennis]');
   const section = document.querySelector('#shop');
-  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (reduced || !fine || !ball || !section || !window.gsap) return;   // cursor-only
+  if (reduced || !ball || !section || !window.gsap) return;
 
   gsap.set(ball, { xPercent: -50, yPercent: -50, x: -200, y: -200 });
   const qx = gsap.quickTo(ball, 'x', { duration: .38, ease: 'power3' });
   const qy = gsap.quickTo(ball, 'y', { duration: .38, ease: 'power3' });
   const qr = gsap.quickTo(ball, 'rotation', { duration: .55, ease: 'power2' });
-  let rot = 0, lastX = null;
+  let rot = 0, lastX = null, shown = false;
+  const fade = v => gsap.to(ball, { opacity: v, duration: .25 });
 
-  section.addEventListener('pointerenter', () => gsap.to(ball, { opacity: 1, duration: .25 }));
-  section.addEventListener('pointerleave', () => { lastX = null; gsap.to(ball, { opacity: 0, duration: .25 }); });
-  section.addEventListener('pointermove', e => {
+  const move = (cx, cy) => {
     const r = section.getBoundingClientRect();
-    const x = e.clientX - r.left, y = e.clientY - r.top;
+    if (cy < r.top || cy > r.bottom) { if (shown) { shown = false; fade(0); } return; }
+    if (!shown) { shown = true; fade(1); }
+    const x = cx - r.left, y = cy - r.top;
     qx(x); qy(y);
     if (lastX !== null) { rot += (x - lastX) * 2; qr(rot); }  // roll with horizontal travel
     lastX = x;
-  }, { passive: true });
+  };
+  addEventListener('pointermove', e => move(e.clientX, e.clientY), { passive: true });
+  addEventListener('scroll', () => { if (shown) { shown = false; lastX = null; fade(0); } }, { passive: true });
+  const away = () => { lastX = null; if (shown) { shown = false; fade(0); } };
+  addEventListener('pointerup', away);            // touch: drop the ball when the finger lifts
+  addEventListener('pointercancel', away);
 })();
 </script>
 </body>

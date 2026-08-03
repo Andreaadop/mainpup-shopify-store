@@ -491,6 +491,12 @@ tailwind.config = {
     color: transparent; -webkit-text-stroke: 0; opacity: .6;
   }
 
+  /* static tee shown when the webm can't decode (e.g. iOS has no VP9-alpha) */
+  .garment-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+    display: none; filter: drop-shadow(0 18px 24px rgba(11,45,79,.22)); }
+  .garment-stage.use-fallback .garment-canvas { display: none; }
+  .garment-stage.use-fallback .garment-fallback { display: block; }
+
   /* paws that lunge up from a section border to swipe at the cursor */
   .snatch-paw {
     position: absolute; bottom: 0; left: 50%; width: clamp(74px, 9vw, 132px);
@@ -542,19 +548,20 @@ tailwind.config = {
   </div>
 
   <div class="max-w-6xl w-full mx-auto px-5 pt-24 md:pt-28 pb-[10vh] md:pb-[9vh] grid md:grid-cols-[1.1fr_.9fr] items-center gap-8 relative flex-1">
-    <div class="max-w-2xl relative z-20">
+    <div class="max-w-2xl relative z-20 text-center md:text-left mx-auto md:mx-0">
       <p class="hero-eyebrow inline-block bg-white/95 border-2 border-navy rounded-full px-4 py-1 text-navy font-bold tracking-[.14em] uppercase text-sm pixel rotate-[-2deg] shadow-[3px_3px_0_#0B2D4F] mb-7">A mainpups inquiry ✦</p>
       <h1 class="sr-only">Custom gifts for the main character of your home.</h1>
       <div id="ransom-headline" class="ransom" aria-hidden="true" data-text="CUSTOM GIFTS|FOR THE|MAIN CHARACTER|OF YOUR HOME"></div>
-      <p class="hero-sub mt-6 text-lg md:text-xl text-navy/90 max-w-xl [text-shadow:0_1px_10px_rgba(255,255,255,.6)]">Portraits, shirts, mugs, and pillows — each one starts with a photo of your dog or cat. You approve the proof before we ever charge you.</p>
-      <div class="hero-cta mt-9">
-        <a href="#shop" id="magnetic-cta" class="btn win-cta win-cta--scarlet inline-block font-bold rounded-full px-8 py-4 text-lg">Shop the collection →</a>
+      <p class="hero-sub mt-6 text-base md:text-xl text-navy/90 max-w-xl mx-auto md:mx-0 [text-shadow:0_1px_10px_rgba(255,255,255,.6)]">Portraits, shirts, mugs, and pillows — each one starts with a photo of your dog or cat. You approve the proof before we ever charge you.</p>
+      <div class="hero-cta mt-8 md:mt-9">
+        <a href="#shop" id="magnetic-cta" class="btn win-cta win-cta--scarlet inline-block font-bold rounded-full px-6 py-3 text-base md:px-8 md:py-4 md:text-lg">Shop the collection →</a>
       </div>
     </div>
 
     <!-- rotating floating garments: transparent clips drawn to a canvas, glitch cut between them -->
     <div class="garment-stage relative z-[24] pointer-events-none justify-self-center md:justify-self-end self-center w-[min(74vw,380px)] md:w-[min(45vw,590px)] md:-ml-28 lg:-ml-40 md:-mt-6 aspect-square" data-garment-stage aria-hidden="true">
       <canvas class="garment-canvas" data-garment-canvas></canvas>
+      <img class="garment-fallback" data-garment-fallback src="/brand_assets/product-videos/web/tee_kiwi_static.webp" alt="">
       <video class="garment-src" autoplay muted loop playsinline preload="auto"
              src="/brand_assets/product-videos/web/tee_kiwi_walk_3s.webm"></video>
       <video class="garment-src" muted loop playsinline preload="auto"
@@ -838,7 +845,7 @@ tailwind.config = {
 <!-- ============ 7 · FOUNDER NOTE ============ -->
 <section id="story" class="torn-top -mt-6 speckle-bg py-16 md:py-24 relative overflow-hidden">
   <img src="/brand_assets/stickers/web/in-dog-we-trust_kraft-rectangle_new.webp" alt="" aria-hidden="true"
-       class="page-sticker w-24 sm:w-32 md:w-40 -right-6 md:-right-10 top-16 rotate-[9deg]">
+       class="page-sticker w-24 sm:w-32 md:w-40 -right-6 md:-right-10 top-44 sm:top-16 rotate-[9deg]">
   <img src="/brand_assets/stickers/web/no-bad-dogs_yellow-stamp_new.webp" alt="" aria-hidden="true"
        class="page-sticker w-24 sm:w-28 md:w-36 -left-6 md:-left-8 bottom-16 rotate-[-11deg]">
   <div class="max-w-3xl mx-auto px-5 relative z-10">
@@ -876,7 +883,7 @@ tailwind.config = {
   <img src="/brand_assets/Logo/mainpup-badge-darkblue.svg" alt="" aria-hidden="true"
        class="float-el absolute top-8 right-[8%] w-16 md:w-20 rotate-[10deg] hidden sm:block">
   <img src="/brand_assets/stickers/web/main-pups-sniff-tested-tail-approved_red-starburst_new.webp" alt="" aria-hidden="true"
-       class="page-sticker w-20 sm:w-32 md:w-44 -left-8 sm:-left-10 md:-left-12 -bottom-3 sm:bottom-6 rotate-[10deg]">
+       class="page-sticker w-20 sm:w-32 md:w-44 -left-4 sm:-left-10 md:-left-12 bottom-5 sm:bottom-6 rotate-[10deg]">
   <div class="max-w-5xl mx-auto px-5 relative grid md:grid-cols-[1fr_auto] items-center gap-10 md:gap-16 text-center md:text-left">
     <div>
       <p class="reveal text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">Get on the list</p>
@@ -1657,6 +1664,12 @@ tailwind.config = {
   };
 
   if (vids.length > 1) setInterval(advance, HOLD);
+
+  // If the webm never decodes (iOS/Safari have no VP9-alpha), swap the canvas for
+  // the static transparent tee so the hero doesn't show a dark video box.
+  setTimeout(() => {
+    if (!vids.some(v => v.videoWidth > 0)) stage.classList.add('use-fallback');
+  }, 1600);
 })();
 </script>
 
@@ -1665,7 +1678,8 @@ tailwind.config = {
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const paws = [...document.querySelectorAll('[data-paw]')];
-  if (reduced || !paws.length || !window.gsap) return;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (reduced || !fine || !paws.length || !window.gsap) return;   // cursor-only
 
   const REACH = 270;            // px: how close the cursor must be to wake a paw
   const state = paws.map(el => {
@@ -1713,7 +1727,8 @@ tailwind.config = {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wrap = document.querySelector('[data-side-paw]');
   const h2 = document.querySelector('#shop h2');
-  if (reduced || !wrap || !h2 || !window.gsap) return;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (reduced || !fine || !wrap || !h2 || !window.gsap) return;   // cursor-only
   const section = wrap.closest('section');
 
   gsap.set(wrap, { xPercent: -118, yPercent: -50, rotation: -5 });
@@ -1746,7 +1761,8 @@ tailwind.config = {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ball = document.querySelector('[data-tennis]');
   const section = document.querySelector('#shop');
-  if (reduced || !ball || !section || !window.gsap) return;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (reduced || !fine || !ball || !section || !window.gsap) return;   // cursor-only
 
   gsap.set(ball, { xPercent: -50, yPercent: -50, x: -200, y: -200 });
   const qx = gsap.quickTo(ball, 'x', { duration: .38, ease: 'power3' });

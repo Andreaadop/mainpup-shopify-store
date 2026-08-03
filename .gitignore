@@ -17,7 +17,12 @@ theme/
 animation-lab/libs/
 animation-lab/inspiration/
 brand_assets/references/awesome-nanobanana-pro/
+brand_assets/letter-cutouts/originals/
 designsforproducts/
 *.log
 .DS_Store
 Thumbs.db
+
+# build tooling — keep private, do not publish
+tools/build_pdps.py
+tools/pdp_template.html

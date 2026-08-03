@@ -1,0 +1,53 @@
+{
+ "default_slug": "white",
+ "colors": [
+  {
+   "name": "White",
+   "slug": "white",
+   "front": "best-dog-white-front.jpg",
+   "person-5-context": "best-dog-white-person-5-context.jpg",
+   "back": "best-dog-white-back.jpg",
+   "folded": "best-dog-white-folded.jpg"
+  },
+  {
+   "name": "Chambray",
+   "slug": "chambray",
+   "front": "best-dog-chambray-front.jpg"
+  },
+  {
+   "name": "Ivory",
+   "slug": "ivory",
+   "front": "best-dog-ivory-front.jpg"
+  },
+  {
+   "name": "Blossom",
+   "slug": "blossom",
+   "front": "best-dog-blossom-front.jpg"
+  },
+  {
+   "name": "Grey",
+   "slug": "grey",
+   "front": "best-dog-grey-front.jpg"
+  },
+  {
+   "name": "Pepper",
+   "slug": "pepper",
+   "front": "best-dog-pepper-front.jpg"
+  },
+  {
+   "name": "Berry",
+   "slug": "berry",
+   "front": "best-dog-berry-front.jpg"
+  },
+  {
+   "name": "True Navy",
+   "slug": "true-navy",
+   "front": "best-dog-true-navy-front.jpg"
+  },
+  {
+   "name": "Black",
+   "slug": "black",
+   "front": "best-dog-black-front.jpg"
+  }
+ ]
+}

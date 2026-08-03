@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World's Best Dog — Custom Pet Tee | mainpups</title>
-<meta name="description" content="Turn your dog or cat into the World's Best Dog custom tee. Upload a photo, approve the proof, then we print. No proof, no charge.">
+<title>@@TITLE@@</title>
+<meta name="description" content="@@META@@">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -185,7 +185,7 @@ tailwind.config = {
       <li aria-hidden="true">/</li>
       <li><a href="index.html#shop" class="hover:text-navy">Apparel</a></li>
       <li aria-hidden="true">/</li>
-      <li class="text-navy" aria-current="page">World's Best Dog</li>
+      <li class="text-navy" aria-current="page">@@NAME@@</li>
     </ol>
   </nav>
 
@@ -198,16 +198,13 @@ tailwind.config = {
         <img src="../brand_assets/stickers/web/approved-by-kiwi_pink-scallop-seal_new.webp" alt="" aria-hidden="true"
              class="absolute z-20 w-20 md:w-28 -top-5 -right-3 md:-top-7 md:-right-5 rotate-[10deg] pointer-events-none drop-shadow">
         <div class="gallery-main sticker rounded-3xl overflow-hidden aspect-square">
-          <img id="main-img" src="../brand_assets/products/web/pdp/best-dog/best-dog-true-navy-front.jpg"
-               alt="World's Best Dog custom pet tee, front" class="w-full h-full object-cover">
+          <img id="main-img" src="@@MAIN_IMG@@"
+               alt="@@NAME@@ custom pet tee, front" class="w-full h-full object-cover">
         </div>
       </div>
       <!-- thumbnails -->
       <div id="thumbs" class="mt-4 grid grid-cols-4 gap-3">
-        <button class="thumb rounded-xl overflow-hidden aspect-square" data-view="front" aria-current="true" aria-label="Front view"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-true-navy-front.jpg" alt="" class="w-full h-full object-cover"></button>
-        <button class="thumb rounded-xl overflow-hidden aspect-square" data-view="lifestyle" aria-current="false" aria-label="On-model view"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-true-navy-person-5-context.jpg" alt="" class="w-full h-full object-cover"></button>
-        <button class="thumb rounded-xl overflow-hidden aspect-square" data-view="back" aria-current="false" aria-label="Back view"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-true-navy-back.jpg" alt="" class="w-full h-full object-cover"></button>
-        <button class="thumb rounded-xl overflow-hidden aspect-square" data-view="folded" aria-current="false" aria-label="Folded view"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-true-navy-folded.jpg" alt="" class="w-full h-full object-cover"></button>
+        @@THUMBS@@
       </div>
     </div>
 
@@ -215,13 +212,13 @@ tailwind.config = {
     <div>
       <p class="pixel inline-block bg-cream border-2 border-navy rounded-full px-4 py-1.5 text-navy font-bold tracking-[.14em] uppercase text-xs shadow-[3px_3px_0_#0B2D4F] mb-4">Custom pet apparel ✦</p>
 
-      <h1 class="text-navy text-[clamp(2rem,5vw,3.2rem)]">World's Best Dog</h1>
+      <h1 class="text-navy text-[clamp(2rem,5vw,3.2rem)]">@@NAME@@</h1>
       <p class="text-navy/70 mt-1">Dualtone custom pet tee · Comfort Colors® garment-dyed</p>
 
       <!-- rating -->
       <div class="flex items-center gap-2 mt-3">
         <span class="text-scarlet text-lg tracking-tight" aria-hidden="true">★★★★★</span>
-        <span class="text-sm text-navy/70">4.9 · 214 reviews</span>
+        <span class="text-sm text-navy/70">@@RATING@@ · @@REVIEWS@@ reviews</span>
       </div>
 
       <!-- price -->
@@ -230,12 +227,12 @@ tailwind.config = {
         <span class="text-sm text-navy/55">Free proof before you pay</span>
       </div>
 
-      <p class="mt-4 text-navy/85 max-w-prose">Your dog, printed in a bold two-tone portrait ringed with “world's best dog.” Send one clear photo — we turn it into the design and show you a proof before anything gets printed.</p>
+      <p class="mt-4 text-navy/85 max-w-prose">@@DESC@@</p>
 
       <!-- color -->
       <div class="mt-7">
         <div class="flex items-center justify-between mb-3">
-          <p class="pixel uppercase tracking-wide text-sm text-navy/70">Color: <span id="color-name" class="text-navy font-bold">True Navy</span></p>
+          <p class="pixel uppercase tracking-wide text-sm text-navy/70">Color: <span id="color-name" class="text-navy font-bold">@@DEFAULT_COLOR@@</span></p>
         </div>
         <div id="swatches" class="flex flex-wrap gap-3"></div>
       </div>
@@ -317,7 +314,7 @@ tailwind.config = {
         <span class="font-bold text-navy text-lg">Description</span>
         <span class="chev text-navy" aria-hidden="true">▾</span>
       </summary>
-      <div class="acc-panel"><div><p class="pt-3 text-navy/80">Your dog, printed in a bold two-tone portrait ringed with “world's best dog.” Send one clear photo — we turn it into the design and show you a proof before anything gets printed. Works with any dog or cat.</p></div></div>
+      <div class="acc-panel"><div><p class="pt-3 text-navy/80">@@DESC@@ Works with any dog or cat.</p></div></div>
     </details>
 
     <details class="acc border-b-2 border-navy/15 py-4">
@@ -348,53 +345,13 @@ tailwind.config = {
   <section class="torn-top -mt-6 bg-white py-14 md:py-20 relative z-20">
     <div class="max-w-6xl mx-auto px-5">
     <h2 class="text-navy text-[clamp(1.5rem,3vw,2.2rem)] mb-5">Same design, other styles</h2>
-    <div class="grid grid-cols-3 gap-3 sm:gap-4">
-      <div class="style-card style-card--on rounded-2xl p-3 pt-4 text-center relative">
-        <span class="style-badge">Selected</span>
-        <div class="float-wrap"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-true-navy-front.jpg" alt="World's Best Dog relaxed tee" class="float-garment"></div>
-        <span class="block font-bold text-navy text-sm mt-1">Relaxed Tee</span>
-        <span class="text-xs text-navy/60">from $32.99</span>
-      </div>
-      <div class="style-card rounded-2xl p-3 pt-4 text-center">
-        <div class="float-wrap"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-sweatshirt.jpg" alt="World's Best Dog sweatshirt" class="float-garment"></div>
-        <span class="block font-bold text-navy text-sm mt-1">Sweatshirt</span>
-        <span class="text-xs text-navy/60">from $41.99</span>
-      </div>
-      <div class="style-card rounded-2xl p-3 pt-4 text-center">
-        <div class="float-wrap"><img src="../brand_assets/products/web/pdp/best-dog/best-dog-softstyle.jpg" alt="World's Best Dog softstyle tee" class="float-garment"></div>
-        <span class="block font-bold text-navy text-sm mt-1">Softstyle Tee</span>
-        <span class="text-xs text-navy/60">from $27.99</span>
-      </div>
-    </div>
+    @@STYLES@@
     </div>
 
     <div class="max-w-6xl mx-auto px-5 mt-14 md:mt-20">
     <h2 class="text-navy text-[clamp(1.7rem,3.5vw,2.6rem)] mb-6">You might also like</h2>
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-      <a href="/homepage/royalty.html" class="tile-wrap group block rotate-[-1deg]">
-        <div class="tile tile-sticker rounded-2xl overflow-hidden bg-white aspect-[6/7]">
-          <img src="../brand_assets/products/web/royalty.jpg" alt="Royalty Portrait custom pet tee" loading="lazy" class="w-full h-full object-cover">
-        </div>
-        <div class="mt-3 px-1"><h3 class="font-bold text-navy text-sm">Royalty Portrait</h3><p class="text-xs text-navy/55 italic">"your pet already thinks this."</p></div>
-      </a>
-      <a href="/homepage/sunflower.html" class="tile-wrap group block rotate-[1deg]">
-        <div class="tile tile-sticker rounded-2xl overflow-hidden bg-white aspect-[6/7]">
-          <img src="../brand_assets/products/web/sunflower.jpg" alt="Sunflower Collage custom pet tee" loading="lazy" class="w-full h-full object-cover">
-        </div>
-        <div class="mt-3 px-1"><h3 class="font-bold text-navy text-sm">Sunflower Collage</h3><p class="text-xs text-navy/55 italic">"peak summer, peak pet."</p></div>
-      </a>
-      <a href="/homepage/pixel-pet.html" class="tile-wrap group block rotate-[-1deg]">
-        <div class="tile tile-sticker rounded-2xl overflow-hidden bg-white aspect-[6/7]">
-          <img src="../brand_assets/products/web/pixelated.jpg" alt="Pixel Pet custom pet tee" loading="lazy" class="w-full h-full object-cover">
-        </div>
-        <div class="mt-3 px-1"><h3 class="font-bold text-navy text-sm">Pixel Pet</h3><p class="text-xs text-navy/55 italic">"best boy detected. loading…"</p></div>
-      </a>
-      <a href="/homepage/rookie-card.html" class="tile-wrap group block rotate-[1deg]">
-        <div class="tile tile-sticker rounded-2xl overflow-hidden bg-white aspect-[6/7]">
-          <img src="../brand_assets/products/web/athlete.jpg" alt="Rookie Card custom pet tee" loading="lazy" class="w-full h-full object-cover">
-        </div>
-        <div class="mt-3 px-1"><h3 class="font-bold text-navy text-sm">Rookie Card</h3><p class="text-xs text-navy/55 italic">"undefeated at napping."</p></div>
-      </a>
+      @@TILES@@
     </div>
     </div>
   </section>
@@ -412,7 +369,7 @@ tailwind.config = {
 <!-- ============ MOBILE STICKY BUY BAR ============ -->
 <div id="buybar" class="buybar lg:hidden fixed bottom-0 inset-x-0 z-40 bg-cream border-t-[3px] border-navy px-4 py-3 flex items-center gap-3 translate-y-full">
   <div class="min-w-0">
-    <p class="font-bold text-navy text-sm truncate">World's Best Dog</p>
+    <p class="font-bold text-navy text-sm truncate">@@NAME@@</p>
     <p id="buybar-price" class="text-burgundy font-bold text-sm">$32.99</p>
   </div>
   <button id="add-to-cart-mobile" class="btn btn-hard ml-auto bg-peri text-navy font-bold rounded-full px-6 py-3">Add to cart</button>
@@ -440,20 +397,12 @@ tailwind.config = {
 <script>
 (function(){
   var COLORS = [
-    {name:"True Navy", hex:'#1F2036', front:'best-dog-true-navy-front.jpg'},
-    {name:"White", hex:'#ffffff', front:'best-dog-white-front.jpg'},
-    {name:"Ivory", hex:'#FFF7E7', front:'best-dog-ivory-front.jpg'},
-    {name:"Chambray", hex:'#C7D9E4', front:'best-dog-chambray-front.jpg'},
-    {name:"Blossom", hex:'#F4CBDD', front:'best-dog-blossom-front.jpg'},
-    {name:"Grey", hex:'#8f8f8f', front:'best-dog-grey-front.jpg'},
-    {name:"Pepper", hex:'#5F605B', front:'best-dog-pepper-front.jpg'},
-    {name:"Berry", hex:'#7E4B63', front:'best-dog-berry-front.jpg'},
-    {name:"Black", hex:'#101010', front:'best-dog-black-front.jpg'}
+    @@COLORS_JS@@
   ];
-  var SIZES = [{s:'S',price:33.99},{s:'M',price:32.99},{s:'L',price:33.99},{s:'XL',price:33.99},{s:'2XL',price:34.99},{s:'3XL',price:34.99},{s:'4XL',price:42.05}];
+  var SIZES = @@SIZES_JS@@;
   var SIZE_DIMS = {S:[18,28],M:[20,29],L:[22,30],XL:[24,31],'2XL':[26,32],'3XL':[28,33],'4XL':[30,34]};
-  var BASE='../brand_assets/products/web/pdp/best-dog/';
-  var EXTRA = { lifestyle:'best-dog-true-navy-person-5-context.jpg',back:'best-dog-true-navy-back.jpg',folded:'best-dog-true-navy-folded.jpg' };
+  var BASE='@@BASE_JS@@';
+  var EXTRA = { @@EXTRA_JS@@ };
 
   var state = { color:0, size:1, view:'front', qty:1 };
   var $ = function(s){return document.querySelector(s);};
@@ -500,7 +449,7 @@ tailwind.config = {
     var price='$'+s.price.toFixed(2);
     $('#price').textContent=price; $('#buybar-price').textContent=price;
     $('#main-img').src=mainSrc();
-    $('#main-img').alt="World's Best Dog custom pet tee, "+c.name+" "+state.view;
+    $('#main-img').alt="@@NAME@@ custom pet tee, "+c.name+" "+state.view;
     var frontThumb=document.querySelector('.thumb[data-view="front"] img');
     if(frontThumb) frontThumb.src=BASE+c.front;
     document.querySelectorAll('.thumb').forEach(function(t){ t.setAttribute('aria-current', t.getAttribute('data-view')===state.view?'true':'false'); });

@@ -248,8 +248,8 @@ tailwind.config = {
   .btn-hard:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #0B2D4F; }
 
   /* tennis ball that rolls after the cursor across the products section */
-  .tennis-ball { position: absolute; left: 0; top: 0; width: clamp(70px, 7vw, 96px);
-    z-index: 0; pointer-events: none; opacity: 0; will-change: transform;
+  .tennis-ball { position: absolute; left: 0; top: 0; width: clamp(64px, 6.5vw, 92px);
+    z-index: 22; pointer-events: none; opacity: 0; will-change: transform;
     filter: drop-shadow(0 7px 9px rgba(11,45,79,.32)); }
   .tennis-ball img { display: block; width: 100%; }
 
@@ -505,7 +505,7 @@ tailwind.config = {
     will-change: transform;
   }
   /* a paw that swipes in from the left edge when the cursor nears the first headline */
-  .side-paw { position: absolute; left: 0; top: 0; width: clamp(96px, 11vw, 152px);
+  .side-paw { position: absolute; left: 0; top: 0; width: clamp(120px, 13vw, 172px);
     pointer-events: none; z-index: 30; transform-origin: left center; will-change: transform; }
   .side-paw img { display: block; width: 100%; transform: rotate(90deg);
     filter: drop-shadow(8px 0 11px rgba(11,45,79,.3)); }
@@ -884,7 +884,7 @@ tailwind.config = {
   <img src="../brand_assets/Logo/mainpup-badge-darkblue.svg" alt="" aria-hidden="true"
        class="float-el absolute top-8 right-[8%] w-16 md:w-20 rotate-[10deg] hidden sm:block">
   <img src="../brand_assets/stickers/web/main-pups-sniff-tested-tail-approved_red-starburst_new.webp" alt="" aria-hidden="true"
-       class="page-sticker w-20 sm:w-32 md:w-44 left-3 sm:-left-10 md:-left-12 bottom-7 sm:bottom-6 rotate-[10deg]">
+       class="page-sticker hidden sm:block w-20 sm:w-32 md:w-44 -left-10 md:-left-12 bottom-6 rotate-[10deg]">
   <div class="max-w-5xl mx-auto px-5 relative grid md:grid-cols-[1fr_auto] items-center gap-10 md:gap-16 text-center md:text-left">
     <div>
       <p class="reveal text-burgundy font-bold tracking-[.18em] uppercase text-sm pixel mb-4">Get on the list</p>
@@ -1756,7 +1756,7 @@ tailwind.config = {
     const inside = py >= r.top + 20 && py <= r.bottom - 20;   // pointer within the section band
     if (inside) {
       wrap.style.top = (py - r.top) + 'px';                   // follow the pointer vertically
-      if (!out) { out = true; qx(30); }                       // peek out from the left border
+      if (!out) { out = true; qx(62); }                       // reach well out from the left border
     } else if (out) { out = false; qx(-118); }
   };
   const ping = () => { if (!raf) raf = requestAnimationFrame(update); };

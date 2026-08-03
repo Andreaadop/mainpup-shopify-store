@@ -607,5 +607,95 @@ tailwind.config = {
   render();
 })();
 </script>
+<!-- ===== ZOOM-LIGHTBOX (shared PDP image zoom) ===== -->
+<style>
+  .gallery-main { cursor: zoom-in; }
+  .zoom-hint {
+    position:absolute; bottom:12px; right:12px; z-index:20; display:inline-flex; align-items:center; gap:.35rem;
+    background:rgba(11,45,79,.82); color:#F8EEE5; font-family:'Pixelify Sans',monospace; font-size:.72rem; letter-spacing:.03em;
+    padding:.38rem .68rem; border-radius:9999px; pointer-events:none; box-shadow:0 4px 10px rgba(11,45,79,.35);
+    opacity:0; transform:translateY(4px); transition:opacity .2s ease, transform .2s ease;
+  }
+  .gallery-main:hover .zoom-hint { opacity:1; transform:translateY(0); }
+  @media (hover:none){ .zoom-hint { opacity:1; transform:none; } }
+
+  .lightbox {
+    position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center;
+    background:rgba(11,45,79,.93); padding:clamp(1rem,4vw,3rem);
+    -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+  }
+  .lightbox.open { display:flex; animation:lb-in .18s ease; }
+  @keyframes lb-in { from { opacity:0; } to { opacity:1; } }
+  .lightbox img {
+    max-width:92vw; max-height:88vh; object-fit:contain; border-radius:14px; background:#fff;
+    box-shadow:0 24px 70px -14px rgba(0,0,0,.6); transition:transform .18s ease; transform:scale(1);
+    cursor:zoom-in; -webkit-user-select:none; user-select:none; touch-action:none;
+  }
+  .lightbox img.zoomed { transform:scale(2.4); cursor:zoom-out; transition:none; }
+  .lb-close {
+    position:absolute; top:16px; right:18px; z-index:2; width:44px; height:44px; border-radius:9999px;
+    border:2px solid #0B2D4F; background:linear-gradient(180deg,#3E6FB8,#16406F); color:#fff; font-size:1rem;
+    display:grid; place-items:center; cursor:pointer;
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(2,15,33,.5), 2px 2px 0 rgba(2,15,33,.35);
+  }
+  .lb-close:hover { transform:translateY(-1px); }
+  .lb-close:focus-visible { outline:3px solid #F31F13; outline-offset:3px; }
+</style>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Product image zoom">
+  <button class="lb-close" id="lb-close" aria-label="Close zoom">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+<script>
+(function(){
+  var gallery=document.querySelector('.gallery-main');
+  var main=document.getElementById('main-img');
+  var lb=document.getElementById('lightbox');
+  var lbImg=document.getElementById('lb-img');
+  var closeBtn=document.getElementById('lb-close');
+  if(!gallery||!main||!lb){ return; }
+
+  var hint=document.createElement('span');
+  hint.className='zoom-hint';
+  hint.textContent='🔍 Click to zoom';
+  gallery.style.position='relative';
+  gallery.appendChild(hint);
+
+  function openLb(){
+    lbImg.src=main.currentSrc||main.src;
+    lbImg.alt=main.alt||'Product image';
+    lbImg.classList.remove('zoomed');
+    lbImg.style.transformOrigin='center';
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+    closeBtn.focus();
+  }
+  function closeLb(){
+    lb.classList.remove('open');
+    lbImg.classList.remove('zoomed');
+    document.body.style.overflow='';
+  }
+  function pan(cx,cy){
+    if(!lbImg.classList.contains('zoomed')) return;
+    var r=lbImg.getBoundingClientRect();
+    var x=Math.max(0,Math.min(100,((cx-r.left)/r.width)*100));
+    var y=Math.max(0,Math.min(100,((cy-r.top)/r.height)*100));
+    lbImg.style.transformOrigin=x+'% '+y+'%';
+  }
+
+  gallery.addEventListener('click', openLb);
+  lbImg.addEventListener('click', function(e){
+    e.stopPropagation();
+    lbImg.classList.toggle('zoomed');
+    pan(e.clientX,e.clientY);
+  });
+  lbImg.addEventListener('mousemove', function(e){ pan(e.clientX,e.clientY); });
+  lbImg.addEventListener('touchmove', function(e){ if(e.touches[0]){ pan(e.touches[0].clientX,e.touches[0].clientY); e.preventDefault(); } }, {passive:false});
+  lb.addEventListener('click', closeLb);
+  closeBtn.addEventListener('click', function(e){ e.stopPropagation(); closeLb(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && lb.classList.contains('open')) closeLb(); });
+})();
+</script>
+<!-- ===== /ZOOM-LIGHTBOX ===== -->
+
 </body>
 </html>

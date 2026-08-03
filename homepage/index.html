@@ -611,7 +611,7 @@ tailwind.config = {
 <!-- ============ 2 · TICKER ============ -->
 <div class="marquee win-marquee py-3" aria-hidden="true">
   <div class="marquee-track" style="--speed:26s">
-    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+    <div class="flex items-center gap-8 pr-8 win-font text-navy font-bold tracking-[.08em] uppercase text-base whitespace-nowrap">
       <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
       <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
       <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
@@ -621,7 +621,7 @@ tailwind.config = {
       <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
       <span>Only pay when you love it</span><span class="text-burgundy">✦</span>
     </div>
-    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+    <div class="flex items-center gap-8 pr-8 win-font text-navy font-bold tracking-[.08em] uppercase text-base whitespace-nowrap">
       <span>We make merch of your pet</span><span class="text-scarlet">✦</span>
       <span>Approve the design before you buy</span><span class="text-burgundy">✦</span>
       <span>Shirts, mugs, portraits &amp; more</span><span class="text-scarlet">✦</span>
@@ -743,7 +743,7 @@ tailwind.config = {
 <!-- ============ marquee 2 (reverse) ============ -->
 <div class="marquee win-marquee-peri py-3" aria-hidden="true">
   <div class="marquee-track rev" style="--speed:30s">
-    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+    <div class="flex items-center gap-8 pr-8 win-font text-navy font-bold tracking-[.08em] uppercase text-base whitespace-nowrap">
       <span>Upload a photo</span><span class="text-burgundy">★</span>
       <span>Approve the proof</span><span class="text-scarlet">★</span>
       <span>We print it</span><span class="text-burgundy">★</span>
@@ -753,7 +753,7 @@ tailwind.config = {
       <span>We print it</span><span class="text-burgundy">★</span>
       <span>Your pet, immortalized</span><span class="text-scarlet">★</span>
     </div>
-    <div class="flex items-center gap-8 pr-8 text-navy font-bold tracking-[.08em] uppercase text-sm whitespace-nowrap">
+    <div class="flex items-center gap-8 pr-8 win-font text-navy font-bold tracking-[.08em] uppercase text-base whitespace-nowrap">
       <span>Upload a photo</span><span class="text-burgundy">★</span>
       <span>Approve the proof</span><span class="text-scarlet">★</span>
       <span>We print it</span><span class="text-burgundy">★</span>
@@ -1779,9 +1779,11 @@ tailwind.config = {
   const update = () => {
     raf = 0;
     const r = section.getBoundingClientRect();
-    const inside = py >= r.top + 20 && py <= r.bottom - 20;   // pointer within the section band
+    const inside = py >= r.top + 40 && py <= r.bottom - 40;   // pointer within the section band
     if (inside) {
-      wrap.style.top = (py - r.top) + 'px';                   // follow the pointer vertically
+      // keep the paw clear of the top heading and the bottom border (marquee)
+      const ty = Math.max(140, Math.min(r.height - 210, py - r.top));
+      wrap.style.top = ty + 'px';
       if (!out) { out = true; qx(62); }                       // reach well out from the left border
     } else if (out) { out = false; qx(-118); }
   };
